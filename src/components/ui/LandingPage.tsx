@@ -4,14 +4,15 @@ import Navbar from '../fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import { human1, logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
-import { IoChatbubblesSharp } from 'react-icons/io5'
+import { IoChatbubblesSharp, IoLocationOutline } from 'react-icons/io5'
 import { FaUsersGear } from 'react-icons/fa6'
-import { FaCreditCard, FaGraduationCap } from "react-icons/fa6"
 import { BsPersonFillGear } from "react-icons/bs";
-import { HiClipboardDocumentList, HiCursorArrowRays } from "react-icons/hi2"
+import { HiCursorArrowRays } from "react-icons/hi2"
 import { IoIosPeople } from "react-icons/io"
 import { GiGearHammer } from "react-icons/gi";
-import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { MdOutlineMail } from "react-icons/md";
+import { FaWhatsapp } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
 import { AiOutlineFileDone } from 'react-icons/ai'
 
 
@@ -46,6 +47,38 @@ const LandingPage = () => {
             title: 'Laporan Selesai',
             subtitle: 'Ketika laporan selesai maka akan menginformasikan status kerjaan laporan terhadap pelapor, dan bisa menilai dan berkomentar terkait kinerja perusahaan',
             icon: <AiOutlineFileDone size={25} color="#024395" />
+        },
+    ]
+
+    const informationData = [
+        {
+            icon: <IoLocationOutline />,
+            text: 'Jl. Cipatat No. 12 Spanyol 16431'
+        },
+        {
+            icon: <MdOutlineMail />,
+            text: 'garut@gmail.com'
+        },
+        {
+            icon: <FaWhatsapp />,
+            text: '0895385744763'
+        },
+    ]
+    const pages = [
+        {
+            text: 'Beranda'
+        },
+        {
+            text: 'Alur Aduan'
+        },
+        {
+            text: 'Kategori'
+        },
+        {
+            text: 'Laporan'
+        },
+        {
+            text: 'Lokasi'
         },
     ]
     return (
@@ -134,6 +167,43 @@ const LandingPage = () => {
                     <hr className="border-3 rounded-md border-primary mb-5 w-22" />
                 </div>
             </section >
+
+            <section className="about bg-[#1C1C1C]" id='footer'>
+                <div className="container mx-auto py-10 px-3 md:px-0">
+                    <div className="grid grid-cols-1 gap-5 md:gap-0  md:grid-cols-3  mt-7">
+                        <div className="information  space-y-2">
+                            <div className="flex gap-3">
+                                <Image src={logo} alt="logo" className='w-auto h-20' />
+                                <h1 className='text-primary font-bold' >PT CITRA PRADANA  <br /> MANDIRI TBK </h1>
+                            </div>
+                            <p className='text-white font-light' >kota garut maju bersama indonesia emas</p>
+
+
+                        </div>
+                        <div className="information  space-y-2">
+                            <h1 className='text-white font-medium' >Pages</h1>
+                            {pages.map((item, index) => (
+                                <div className="flex justify-start items-center gap-2 text-white font-light" key={index}>
+
+                                    <p className=' text-sm md:text-base' >{item.text}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="folow-me  space-y-2">
+                            <h1 className='text-white font-medium'  >Contact</h1>
+                            {informationData.map((item, index) => (
+                                <div className="flex justify-start items-center gap-2 text-white font-light" key={index}>
+                                    {item.icon}
+                                    <p className='text-sm md:text-base' >{item.text}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </section>
         </>
     )
 }
