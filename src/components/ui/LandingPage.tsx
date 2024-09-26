@@ -7,12 +7,15 @@ import ButtonPrimary from '../elements/buttonPrimary'
 import { IoChatbubblesSharp } from 'react-icons/io5'
 import { FaUsersGear } from 'react-icons/fa6'
 import { FaCreditCard, FaGraduationCap } from "react-icons/fa6"
+import { BsPersonFillGear } from "react-icons/bs";
 import { HiClipboardDocumentList, HiCursorArrowRays } from "react-icons/hi2"
 import { IoIosPeople } from "react-icons/io"
+import { GiGearHammer } from "react-icons/gi";
+import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { AiOutlineFileDone } from 'react-icons/ai'
 
-type Props = {}
 
-const LandingPage = (props: Props) => {
+const LandingPage = () => {
     const dataText = [
         {
             no: '#1',
@@ -30,28 +33,28 @@ const LandingPage = (props: Props) => {
             no: '#3',
             title: 'Pengecekan Oleh Admin',
             subtitle: 'Laporan yang telah anda buat akan di tindak lanjuti oleh admin dan di selidiki sebelum di tugaskan ke pegawai. ',
-            icon: <FaCreditCard size={20} color="#024395" />
+            icon: <BsPersonFillGear size={26} color="#024395" />
         },
         {
             no: '#4',
             title: 'Pelaksanaan Pelaporan',
             subtitle: 'Kemudian admin akan menugaskan pelaksanaan pelaporan ke pegawai, sehingga pelaporan dapat ditindak lanjuti. dan pegawai akan selalu meng informasikan status kerjaan nya',
-            icon: <FaGraduationCap size={25} color="#024395" />
+            icon: <GiGearHammer size={25} color="#024395" />
         },
         {
             no: '#5',
             title: 'Laporan Selesai',
             subtitle: 'Ketika laporan selesai maka akan menginformasikan status kerjaan laporan terhadap pelapor, dan bisa menilai dan berkomentar terkait kinerja perusahaan',
-            icon: <FaGraduationCap size={25} color="#024395" />
+            icon: <AiOutlineFileDone size={25} color="#024395" />
         },
     ]
     return (
         <>
             <Navbar />
             <section className=' container mx-auto min-h-[100vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
-                <div className="title col-span-3">
-                    <h1 className='text-2xl lg:text-6xl font-bold' >Selamat Datang di website <span className='text-primary' >Desa Garut</span> </h1>
-                    <p className='mt-5' >Masyarakat dapat mengadukan permasalahan yang terjadi di garut perihal keamanan, ketertiban umum, kesejahtraan
+                <div className="title col-span-3 mt-19 lg:mt-0">
+                    <h1 className='text-3xl lg:text-6xl font-bold' >Selamat Datang di website <span className='text-primary' >Desa Garut</span> </h1>
+                    <p className='mt-5 textsm md:text-base' >Masyarakat dapat mengadukan permasalahan yang terjadi di garut perihal keamanan, ketertiban umum, kesejahtraan
                         sosial, pemberdayaan masyarakat, pemerintahan, ekonomi dan pembangunan</p>
                     <ButtonPrimary className='py-2 px-4 mt-10 rounded-full'>Buat Laporan</ButtonPrimary>
                     <div className="flex gap-5 mt-2">
@@ -105,7 +108,7 @@ const LandingPage = (props: Props) => {
                             {dataText.map((item, index) => (
                                 <div className={`  sm:mt-0 sm:mb-12`} key={index}>
                                     <div className='flex flex-col sm:flex-row items-center'>
-                                        <div className={`rounded-full bg-white border-white shadow-2  border-4 w-11 h-11 absolute  flex justify-center items-center  ${index === 4 ? "md:bottom-0" : ""}  ${index === 0 ? "md:top-0" : ""}     transform lg:-translate-x-1/2 `}>
+                                        <div className={`rounded-full bg-white border-white shadow-2   border-4 w-11 h-11 absolute  flex justify-center items-center  ${index === 4 ? "md:bottom-0" : ""}  ${index === 0 ? "md:top-0" : ""}     transform lg:-translate-x-1/2 `}>
                                             {item.icon}
                                         </div>
                                         <div className='flex justify-start w-full mx-auto items-center'>
