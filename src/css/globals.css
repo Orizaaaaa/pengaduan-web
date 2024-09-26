@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+.swiper-pagination-bullet {
+    background-color: #D9D9D9 !important;
+    width: 12px !important;
+    height: 12px !important;
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #FFFFFF !important;
+    width: 12px !important;
+    height: 12px !important;
+    /* Ubah warna latar belakang bullet aktif */
+}
+
+
+/* Change background navbar */
+.navbarbgActive {
+    background: white;
+    transition: 0.4s;
+}
+
+nav .line {
+    fill: none;
+    stroke: #024395;
+    stroke-width: 6;
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+nav .line1 {
+    stroke-dasharray: 60 207;
+    stroke-width: 6;
+}
+
+nav .line2 {
+    stroke-dasharray: 60 60;
+    stroke-width: 6;
+}
+
+nav .line3 {
+    stroke-dasharray: 60 207;
+    stroke-width: 6;
+}
+
+nav .opened .line1 {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134;
+    stroke-width: 6;
+}
+
+nav .opened .line2 {
+    stroke-dasharray: 1 60;
+    stroke-dashoffset: -30;
+    stroke-width: 6;
+}
+
+nav .opened .line3 {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134;
+    stroke-width: 6;
+}
+
+nav .title-section {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+nav .flex ul li a:hover,
+nav .flex ul li a.active {
+    color: #024395;
+    font-weight: 600;
+}
+
+nav .flex a:hover::after {
+    width: 100%;
+}
+
+nav .flex ul li a.active::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #024395;
+    transition: width .3s;
+}
+
+nav .flex ul li a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #024395;
+    transition: width .3s;
+}
+
+@media screen and (max-width: 1256px) {
+    .flex .self-center .flex span:last-child {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1020px) {
+    .flex .self-center .flex span:last-child {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    nav {
+        background: white;
+        transition: 0.4s;
+    }
+
+    nav .flex ul {
+        background-color: #cbd5e1;
+    }
+}
