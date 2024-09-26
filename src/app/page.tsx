@@ -1,13 +1,11 @@
-import Navbar from '@/components/fragemnts/navbar/Navbar'
+import LandingPage from '@/components/ui/LandingPage'
 import React from 'react'
 
 type Props = {}
 
 const page = (props: Props) => {
   return (
-    <div>
-      <Navbar />
-    </div>
+    <LandingPage />
   )
 }
 

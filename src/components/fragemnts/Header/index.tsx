@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import DropdownUser from "./DropdownUser";
-import { oneLogo } from "@/app/image";
+import { logo2 } from "@/app/image";
 import Image from "next/image";
 
 const Header = (props: {
@@ -55,7 +55,7 @@ const Header = (props: {
             <Image
               width={37}
               height={40}
-              src={oneLogo}
+              src={logo2}
               alt="Logo"
             />
           </Link>
