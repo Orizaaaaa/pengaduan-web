@@ -15,7 +15,7 @@ const LandingPage = () => {
     return (
         <>
             <Navbar />
-            <section className=' container mx-auto min-h-[100vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
+            <section id='beranda' className=' container mx-auto min-h-[100vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
                 <div className="title col-span-3 mt-19 lg:mt-0">
                     <h1 className='text-3xl lg:text-6xl font-bold' >Selamat Datang di website <span className='text-primary' >Desa Garut</span> </h1>
                     <p className='mt-5 textsm md:text-base' >Masyarakat dapat mengadukan permasalahan yang terjadi di garut perihal keamanan, ketertiban umum, kesejahtraan

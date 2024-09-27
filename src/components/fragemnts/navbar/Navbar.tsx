@@ -25,7 +25,7 @@ const Navbar = (props: Props) => {
     const changeBackground = () => {
         if (typeof window !== 'undefined') {
             // Check if window is defined before accessing scrollY
-            if (window.scrollY >= 80) {
+            if (window.scrollY >= 90) {
                 setnavbarBg(true);
             } else {
                 setnavbarBg(false);
@@ -69,7 +69,7 @@ const Navbar = (props: Props) => {
 
 
     return (
-        <nav className={`fixed top-0 left-0 py-2.5 w-full z-10  ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
+        <nav className={`fixed top-0 left-0 py-2.5 w-full z-999999  ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
             <div className="container mx-auto flex flex-wrap items-center justify-between ">
 
                 <div className="flex justify-start">

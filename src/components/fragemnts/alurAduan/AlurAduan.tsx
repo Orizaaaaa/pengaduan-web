@@ -7,7 +7,7 @@ type Props = {}
 
 const AlurAduan = (props: Props) => {
     return (
-        <section className="container mx-auto">
+        <section className="container mx-auto" id='alur aduan'>
             <div className="flex justify-center">
                 <hr className="border-3 rounded-md border-primary my-5 w-22" />
             </div>
