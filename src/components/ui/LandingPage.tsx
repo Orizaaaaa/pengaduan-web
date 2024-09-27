@@ -7,6 +7,7 @@ import { IoChatbubblesSharp } from 'react-icons/io5'
 import { FaUsersGear } from 'react-icons/fa6'
 import Footer from '../fragemnts/footer/Footer'
 import AlurAduan from '../fragemnts/alurAduan/AlurAduan'
+import Location from '../fragemnts/location/Location'
 
 
 const LandingPage = () => {
@@ -45,6 +46,7 @@ const LandingPage = () => {
 
             </section>
             <AlurAduan />
+            <Location />
             <Footer />
         </>
     )
