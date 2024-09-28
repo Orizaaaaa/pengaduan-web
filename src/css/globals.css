@@ -101,6 +101,15 @@ nav .flex ul li a::after {
     transition: width .3s;
 }
 
+
+#beranda {
+    background-image: url('./../assets/bgBeranda.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+
 @media screen and (max-width: 1256px) {
     .flex .self-center .flex span:last-child {
         display: none;

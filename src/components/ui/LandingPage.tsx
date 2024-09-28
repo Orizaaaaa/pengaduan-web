@@ -8,6 +8,8 @@ import { FaUsersGear } from 'react-icons/fa6'
 import Footer from '../fragemnts/footer/Footer'
 import AlurAduan from '../fragemnts/alurAduan/AlurAduan'
 import Location from '../fragemnts/location/Location'
+import Category from '../fragemnts/category/Category'
+import AboutUs from '../fragemnts/aboutUs/AboutUs'
 
 
 const LandingPage = () => {
@@ -15,38 +17,25 @@ const LandingPage = () => {
     return (
         <>
             <Navbar />
-            <section id='beranda' className=' container mx-auto min-h-[100vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
-                <div className="title col-span-3 mt-19 lg:mt-0">
-                    <h1 className='text-3xl lg:text-6xl font-bold' >Selamat Datang di website <span className='text-primary' >Desa Garut</span> </h1>
-                    <p className='mt-5 textsm md:text-base' >Masyarakat dapat mengadukan permasalahan yang terjadi di garut perihal keamanan, ketertiban umum, kesejahtraan
-                        sosial, pemberdayaan masyarakat, pemerintahan, ekonomi dan pembangunan</p>
-                    <ButtonPrimary className='py-2 px-4 mt-10 rounded-full'>Buat Laporan</ButtonPrimary>
-                    <div className="flex gap-5 mt-2">
-                        <div className="flex justify-start mt-3 gap-2">
-                            <IoChatbubblesSharp size={24} color='#024395' />
-                            <div className="flex-col font-semibold text-black">
-                                <p>10</p>
-                                <p>Total Pengaduan</p>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-start mt-3 gap-2">
-                            <FaUsersGear size={24} color='#024395' />
-                            <div className="flex-col font-semibold text-black">
-                                <p>4</p>
-                                <p>aduan yang telah di tindak lanjuti</p>
-                            </div>
-                        </div>
+            <section id='beranda'>
+                <div className=' container mx-auto min-h-[102vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
+                    <div className="title col-span-3 mt-8 lg:mt-0 order-last lg:order-first">
+                        <h1 className='text-3xl lg:text-6xl font-bold text-secondary' >Selamat Datang di website <span className='text-white' >Desa Garut</span> </h1>
+                        <p className='mt-5 text-sm md:text-base text-white' >Masyarakat dapat mengadukan permasalahan yang terjadi di garut perihal keamanan, ketertiban umum, kesejahtraan
+                            sosial, pemberdayaan masyarakat, pemerintahan, ekonomi dan pembangunan</p>
+                        <ButtonPrimary className='py-2 px-4 mt-10 rounded-full bg-secondary'>Buat Laporan</ButtonPrimary>
                     </div>
-                </div>
 
-                <div className="flex justify-center items-center col-span-2">
-                    <Image src={logo} alt="logo" className='w-auto h-70' />
-                </div>
+                    <div className="flex justify-center items-center col-span-2 mt-12 lg:mt-0">
+                        <Image src={logo} alt="logo" className='w-auto h-70' />
+                    </div>
 
+                </div>
             </section>
+            <AboutUs />
             <AlurAduan />
             <Location />
+            <Category />
             <Footer />
         </>
     )
