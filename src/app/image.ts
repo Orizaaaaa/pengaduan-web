@@ -21,6 +21,7 @@ import galery3 from '../assets/galery3.jpg'
 import galery4 from '../assets/galery4.png'
 import galery5 from '../assets/galery5.png'
 import galery6 from '../assets/galery6.png'
+import warning from '../assets/warning.png'
 
 
 
@@ -28,7 +29,7 @@ import galery6 from '../assets/galery6.png'
 
 
 export {
-    logo, logo2, employe, human1, education, garbage,
+    logo, logo2, employe, human1, education, garbage, warning,
     hospital, medicalKit, nationalPark, noParking, road, tree,
     waterPolution, titleGaleri, image1, image2, image3, galery1, galery2, galery3, galery4, galery5, galery6
 };
