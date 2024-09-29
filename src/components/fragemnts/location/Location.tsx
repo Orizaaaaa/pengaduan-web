@@ -20,7 +20,7 @@ const Location = () => {
     const center = { lat: -6.937998511449565, lng: 107.60711431503297 };
 
     return (
-        <section className='container mx-auto' id='lokasi'>
+        <section className='container mx-auto my-22' id='lokasi'>
             <div className="text-2xl">
                 <h1 className="text-primary font-medium">Lokasi</h1>
                 <h2 className="text-primary font-bold">Lokasi Desa Kami Saat Ini</h2>

@@ -23,25 +23,22 @@ const News = (props: Props) => {
         },
     ]
     return (
-        <section className='news mt-12 mb-12' id='news' >
+        <section className='news my-12' id='news' >
             <div className="container mx-auto p-2 lg:p-0">
 
                 {/* hero1 */}
                 <div className="hero-1">
-                    <div className="flex justify-between border-b-2 border-gray-300 py-5 mx-3 md:mx-0 ">
-                        <h1 className='font-bold text-xl md:text-2xl text-primary' >Berita</h1>
-                        <Link href='' className="flex justify-center items-center gap-2" >
-                            <h2 className='font-medium text-xl md:text-2xl' >Semua</h2>
-                            <FaArrowRight size={20} />
-                        </Link>
+                    <div className="flex justify-between mb-5">
+                        <h2 className=" text-xl md:text-2xl font-bold ">Berita</h2>
+                        <Link href={''} className='text-primary' >Lihat semua berita</Link>
                     </div>
                 </div>
 
                 {/* hero2 */}
                 <div className="hero-2 mt-6 ">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-3 lg:gap-10 ">
-                        <div className="col-span-3 ">
-                            <Image className='w-full h-fit object-cover' src={titleGaleri} alt="news" />
+                        <div className="col-span-3 h-80 ">
+                            <Image className='w-full h-full object-cover rounded-md' src={titleGaleri} alt="news" />
                         </div>
 
                         <div className="desc col-span-2 flex flex-col justify-between h-full">
@@ -59,8 +56,8 @@ const News = (props: Props) => {
                 {/* hero 3 bottom*/}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
                     {datahero3.map((item, index) => (
-                        <div key={index}>
-                            <Image className='w-full' src={item.image} alt='news_btm' />
+                        <div className='h-60 ' key={index}>
+                            <Image className='w-full h-full rounded-md' src={item.image} alt='news_btm' />
                             <p className='text-sm md:text-base' >{item.title}</p>
                         </div>
                     ))}
