@@ -9,6 +9,7 @@ import AboutUs from '../fragemnts/aboutUs/AboutUs'
 import EmployeList from '../fragemnts/employeList/EmployeList'
 import Galery from '../fragemnts/galery/Galery'
 import News from '../fragemnts/news/News'
+import Faq from '../fragemnts/faq/Faq'
 
 
 const LandingPage = () => {
@@ -36,6 +37,7 @@ const LandingPage = () => {
             <Galery />
             <News />
             <Location />
+            <Faq />
             <Footer />
         </>
     )
