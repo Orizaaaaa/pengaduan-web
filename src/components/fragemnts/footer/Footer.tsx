@@ -7,14 +7,18 @@ import React from 'react'
 const Footer = () => {
     return (
         <section className=" bg-[#1C1C1C]" id='footer'>
-            <div className="container mx-auto py-10 px-3 md:px-0">
+            <div className="container mx-auto py-5 px-3 md:px-0">
                 <div className="grid grid-cols-1 gap-5 md:gap-0  md:grid-cols-3  mt-7">
                     <div className="information  space-y-2">
                         <div className="flex gap-3">
                             <Image src={logo} alt="logo" className='w-auto h-20' />
-                            <h1 className='text-primary font-bold' >PT CITRA PRADANA  <br /> MANDIRI TBK </h1>
+                            <div className="text">
+                                <h1 className='text-primary font-bold' >PT CITRA PRADANA  <br /> MANDIRI TBK </h1>
+                                <p className='text-white font-light' >Kota garut maju bersama indonesia emas</p>
+                            </div>
+
                         </div>
-                        <p className='text-white font-light' >kota garut maju bersama indonesia emas</p>
+
 
 
                     </div>
