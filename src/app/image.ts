@@ -10,7 +10,12 @@ import noParking from '../assets/no-parking.png';
 import road from '../assets/road.png';
 import tree from '../assets/tree.png';
 import waterPolution from '../assets/water-polution.png';
+import employe from '../assets/employe.png'
+import titleGaleri from '../assets/news1.svg'
+import image1 from '../assets/image1.svg'
+import image2 from '../assets/image2.svg'
+import image3 from '../assets/image3.svg'
 
 
 
-export { logo, logo2, human1, education, garbage, hospital, medicalKit, nationalPark, noParking, road, tree, waterPolution };
+export { logo, logo2, employe, human1, education, garbage, hospital, medicalKit, nationalPark, noParking, road, tree, waterPolution, titleGaleri, image1, image2, image3 };

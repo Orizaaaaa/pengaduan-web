@@ -3,13 +3,12 @@ import Navbar from '../fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
-import { IoChatbubblesSharp } from 'react-icons/io5'
-import { FaUsersGear } from 'react-icons/fa6'
 import Footer from '../fragemnts/footer/Footer'
-import AlurAduan from '../fragemnts/alurAduan/AlurAduan'
 import Location from '../fragemnts/location/Location'
-import Category from '../fragemnts/category/Category'
 import AboutUs from '../fragemnts/aboutUs/AboutUs'
+import EmployeList from '../fragemnts/employeList/EmployeList'
+import Galery from '../fragemnts/galery/Galery'
+import News from '../fragemnts/news/News'
 
 
 const LandingPage = () => {
@@ -33,9 +32,10 @@ const LandingPage = () => {
                 </div>
             </section>
             <AboutUs />
-            <AlurAduan />
+            <EmployeList />
+            <Galery />
+            <News />
             <Location />
-            <Category />
             <Footer />
         </>
     )
