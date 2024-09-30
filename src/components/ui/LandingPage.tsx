@@ -4,13 +4,7 @@ import Navbar from '../fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
-import Footer from '../fragemnts/footer/Footer'
-import Location from '../fragemnts/location/Location'
-import AboutUs from '../fragemnts/aboutUs/AboutUs'
-import EmployeList from '../fragemnts/employeList/EmployeList'
-import Galery from '../fragemnts/galery/Galery'
-import News from '../fragemnts/news/News'
-import Faq from '../fragemnts/faq/Faq'
+
 
 
 const LandingPage = () => {
@@ -33,13 +27,6 @@ const LandingPage = () => {
 
                 </div>
             </section>
-            <AboutUs />
-            <EmployeList />
-            <Galery />
-            <News />
-            <Location />
-            <Faq />
-            <Footer />
         </>
     )
 }
