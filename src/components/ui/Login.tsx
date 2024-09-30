@@ -1,4 +1,4 @@
-"use client";  // Pastikan seluruh komponen ini dirender di sisi klien
+"use client"; // Pastikan seluruh komponen ini dirender di sisi klien
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -37,37 +37,31 @@ const Login = () => {
             [name]: value,
         };
 
-        if (updatedValues.email !== "" && updatedValues.password !== "" && (updatedValues.email.includes('@gmail.com') || updatedValues.email.includes('@test.com'))) {
-            setDisabled(false);
-        } else {
-            setDisabled(true);
-        }
+        // Update the disabled state based on the form values
+        setDisabled(!(updatedValues.email.includes('@gmail.com') || updatedValues.email.includes('@test.com')) || updatedValues.password === "");
     };
 
     const handleLogin = async (e: React.FormEvent) => {
-        setLoading(true);
         e.preventDefault();
+        setLoading(true);
 
         await loginService(form, (status: boolean, res: any) => {
+            setLoading(false);
             if (status) {
-                const tokenCookies = document.cookie = `token=${res.data.token}`;
-                if (tokenCookies) {
-                    console.log(res.data);
+                const tokenCookies = `token=${res.data.token}`;
+                document.cookie = tokenCookies; // Set cookie
 
-                    if (typeof window !== 'undefined') {
-                        // Only access localStorage on the client side
-                        localStorage.setItem('name', res?.data?.username);
-                        localStorage.setItem('role', res?.data?.role);
-                        localStorage.setItem('token', res?.data?.token);
-                    }
-
-                    router.push('/dashboard');
+                // Only access localStorage on the client side
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('name', res.data.username);
+                    localStorage.setItem('role', res.data.role);
+                    localStorage.setItem('token', res.data.token);
                 }
-                setLoading(false);
+
+                router.push('/dashboard');
             } else {
                 setErrorLogin('*Email atau password salah');
                 console.log(res.data);
-                setLoading(false);
             }
         });
     };
