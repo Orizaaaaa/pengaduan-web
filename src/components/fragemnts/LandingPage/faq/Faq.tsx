@@ -29,7 +29,7 @@ const Faq = () => {
     ];
 
     return (
-        <section className='container mx-auto mb-22'>
+        <section className='container mx-auto my-22'>
             <h1 className='md:text-2xl font-bold text-center text-primary'>FAQ</h1>
             <Accordion>
                 {faqData.map((item) => (

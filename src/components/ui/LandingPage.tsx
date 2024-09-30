@@ -4,12 +4,13 @@ import Navbar from '../fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
-import AboutUs from '../fragemnts/aboutUs/AboutUs'
-import EmployeList from '../fragemnts/employeList/EmployeList'
-import Galery from '../fragemnts/galery/Galery'
-import News from '../fragemnts/news/News'
-import Faq from '../fragemnts/faq/Faq'
-import Footer from '../fragemnts/footer/Footer'
+import AboutUs from '../fragemnts/LandingPage/aboutUs/AboutUs'
+import EmployeList from '../fragemnts/LandingPage/employeList/EmployeList'
+import Galery from '../fragemnts/LandingPage/galery/Galery'
+import News from '../fragemnts/LandingPage/news/News'
+import Faq from '../fragemnts/LandingPage/faq/Faq'
+import Footer from '../fragemnts/LandingPage/footer/Footer'
+
 
 
 
