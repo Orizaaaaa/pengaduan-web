@@ -24,17 +24,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
-  let storedSidebarExpanded = "true";
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
 
-  const [sidebarExpanded, setSidebarExpanded] = useState(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === "true",
-  );
-
-  //role localStorage
-  const role: any = localStorage.getItem('role')
-  const fakeRole = 'admin'
-
-
+  // Mengambil role dari localStorage hanya di client-side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedRole = localStorage.getItem('role');
+      const storedSidebarExpanded = localStorage.getItem("sidebar-expanded");
+      setRole(storedRole);
+      setSidebarExpanded(storedSidebarExpanded === "true");
+    }
+  }, []);
 
   // close on click outside
   useEffect(() => {
@@ -42,15 +43,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       if (!sidebar.current || !trigger.current) return;
       if (
         !sidebarOpen ||
-        sidebar.current.contains(target) ||
-        trigger.current.contains(target)
+        sidebar.current.contains(target as Node) ||
+        trigger.current.contains(target as Node)
       )
         return;
       setSidebarOpen(false);
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
-  });
+  }, [sidebarOpen]);
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -60,26 +61,29 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
-  });
+  }, [sidebarOpen]);
 
   useEffect(() => {
-    localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
-    if (sidebarExpanded) {
-      document.querySelector("body")?.classList.add("sidebar-expanded");
-    } else {
-      document.querySelector("body")?.classList.remove("sidebar-expanded");
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
+      if (sidebarExpanded) {
+        document.querySelector("body")?.classList.add("sidebar-expanded");
+      } else {
+        document.querySelector("body")?.classList.remove("sidebar-expanded");
+      }
     }
   }, [sidebarExpanded]);
 
-
-  const route = useRouter()
+  const route = useRouter();
   const handleLogout = () => {
-    localStorage.clear();
-    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    route.push("/")
-  }
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+      document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    }
+    route.push("/");
+  };
 
-  const setSidebar = (role: string) => {
+  const setSidebar = (role: string | null) => {
     if (role === 'user') {
       return (
         <>
@@ -87,14 +91,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/laporan-saya-user" />
           <NavigationList icon={<FaBookOpen size={19} />} title="Semua Laporan" pathname="/semua-laporan-user" />
         </>
-      )
+      );
     } else if (role === 'officer') {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-officer" />
           <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/laporan-saya-officer" />
         </>
-      )
+      );
     } else if (role === 'admin') {
       return (
         <>
@@ -104,11 +108,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/kategori-admin" />
           <NavigationList icon={<BsBuildingAdd size={19} />} title="Unit Kerja" pathname="/unit-kerja-admin" />
         </>
-      )
-
-
+      );
     }
-  }
+  };
 
   return (
     <aside
@@ -139,7 +141,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           >
             <path
               d="M19 8.175H2.98748L9.36248 1.6875C9.69998 1.35 9.69998 0.825 9.36248 0.4875C9.02498 0.15 8.49998 0.15 8.16248 0.4875L0.399976 8.3625C0.0624756 8.7 0.0624756 9.225 0.399976 9.5625L8.16248 17.4375C8.31248 17.5875 8.53748 17.7 8.76248 17.7C8.98748 17.7 9.17498 17.625 9.36248 17.475C9.69998 17.1375 9.69998 16.6125 9.36248 16.275L3.02498 9.8625H19C19.45 9.8625 19.825 9.4875 19.825 9.0375C19.825 8.55 19.45 8.175 19 8.175Z"
-              fill=""
+              fill="currentColor"
             />
           </svg>
         </button>
@@ -153,14 +155,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <div>
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
-              {setSidebar(fakeRole)}
+              {setSidebar(role)}
 
-              <ButtonSecondary className="w-full py-1 rounded-md font-medium" onClick={handleLogout} >Logout</ButtonSecondary>
-
-
+              <ButtonSecondary className="w-full py-1 rounded-md font-medium" onClick={handleLogout}>Logout</ButtonSecondary>
             </ul>
           </div>
-
         </nav>
         {/* <!-- Sidebar Menu --> */}
       </div>
