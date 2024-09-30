@@ -92,6 +92,13 @@ nav .flex ul li a::after {
 }
 
 
+#header-report {
+    background-image: url('./../assets/pengaduanBg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
 #beranda {
     background-image: url('./../assets/bgBeranda.png');
     background-repeat: no-repeat;
