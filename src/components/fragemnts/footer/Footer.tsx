@@ -1,3 +1,4 @@
+'use client'
 import { logo } from '@/app/image'
 import { informationData, pages } from '@/utils/dataObject'
 import Image from 'next/image'

@@ -1,3 +1,5 @@
+'use client'
+
 import { image1, image2, image3, titleGaleri } from '@/app/image'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import Image from 'next/image'

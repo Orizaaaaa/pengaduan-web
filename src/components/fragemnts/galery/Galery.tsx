@@ -1,3 +1,5 @@
+'use client'
+
 import { galery1, galery2, galery3, galery4, galery5, galery6 } from '@/app/image';
 import Image from 'next/image';
 import Link from 'next/link';
