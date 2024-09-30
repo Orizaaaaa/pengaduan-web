@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputForm from '@/components/elements/input/InputForm';
 import ButtonPrimary from '@/components/elements/buttonPrimary';
 import { FaEyeSlash } from 'react-icons/fa6';
@@ -51,7 +51,7 @@ const Login = () => {
                 const tokenCookies = `token=${res.data.token}`;
                 document.cookie = tokenCookies; // Set cookie
 
-                // Only access localStorage on the client side
+                // Akses localStorage hanya di sisi klien
                 if (typeof window !== 'undefined') {
                     localStorage.setItem('name', res.data.username);
                     localStorage.setItem('role', res.data.role);
@@ -65,6 +65,13 @@ const Login = () => {
             }
         });
     };
+
+    // Memindahkan logika untuk menyimpan data ke localStorage ke dalam useEffect
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // Panggil kembali jika Anda ingin melakukan sesuatu dengan localStorage saat komponen dimount
+        }
+    }, []);
 
     return (
         <div className="login">
