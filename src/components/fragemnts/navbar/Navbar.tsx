@@ -10,21 +10,17 @@ import Image from 'next/image';
 type Props = {}
 
 const Navbar = (props: Props) => {
-    const pathname = usePathname()
+    const pathname = usePathname();
     const [navbarBg, setnavbarBg] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
 
-
-    // untuk navbar change
     const changeBackground = () => {
         if (typeof window !== 'undefined') {
-            // Check if window is defined before accessing scrollY
             if (window.scrollY >= 90) {
                 setnavbarBg(true);
             } else {
@@ -34,40 +30,37 @@ const Navbar = (props: Props) => {
     };
 
     useEffect(() => {
-        window.addEventListener('scroll', changeBackground);
+        // Pastikan kode ini hanya dijalankan di client-side
+        if (typeof window !== 'undefined') {
+            window.addEventListener('scroll', changeBackground);
+        }
 
         return () => {
-            // Cleanup: remove the event listener when the component is unmounted
-            window.removeEventListener('scroll', changeBackground);
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('scroll', changeBackground);
+            }
         };
     }, []);
-
 
     useEffect(() => {
-        const handleScroll = () => {
+        if (typeof window !== 'undefined') {
+            const handleScroll = () => {
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 330 && rect.bottom >= 330) {
+                        setActiveSection(section.id);
+                    }
+                });
+            };
 
-            const sections = document.querySelectorAll('section');
+            window.addEventListener('scroll', handleScroll);
 
-            sections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-
-                if (rect.top <= 330 && rect.bottom >= 330) {
-                    setActiveSection(section.id);
-                }
-            });
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        console.log(window);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-
-        };
+            return () => {
+                window.removeEventListener('scroll', handleScroll);
+            };
+        }
     }, []);
-
-
-
     return (
         <nav className={`fixed top-0 left-0 py-2.5 w-full z-999999  ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
             <div className="container mx-auto flex flex-wrap items-center justify-between ">
