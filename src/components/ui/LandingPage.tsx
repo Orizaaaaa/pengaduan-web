@@ -4,6 +4,7 @@ import Navbar from '../fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
+import AboutUs from '../fragemnts/aboutUs/AboutUs'
 
 
 
@@ -27,6 +28,7 @@ const LandingPage = () => {
 
                 </div>
             </section>
+            <AboutUs />
         </>
     )
 }
