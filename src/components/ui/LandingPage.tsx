@@ -5,6 +5,11 @@ import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
 import AboutUs from '../fragemnts/aboutUs/AboutUs'
+import EmployeList from '../fragemnts/employeList/EmployeList'
+import Galery from '../fragemnts/galery/Galery'
+import News from '../fragemnts/news/News'
+import Faq from '../fragemnts/faq/Faq'
+import Footer from '../fragemnts/footer/Footer'
 
 
 
@@ -29,6 +34,11 @@ const LandingPage = () => {
                 </div>
             </section>
             <AboutUs />
+            <EmployeList />
+            <Galery />
+            <News />
+            <Faq />
+            <Footer />
         </>
     )
 }
