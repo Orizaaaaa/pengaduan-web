@@ -1,8 +1,8 @@
-'use client'
+"use client";  // Pastikan seluruh komponen ini dirender di sisi klien
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
 import InputForm from '@/components/elements/input/InputForm';
 import ButtonPrimary from '@/components/elements/buttonPrimary';
 import { FaEyeSlash } from 'react-icons/fa6';

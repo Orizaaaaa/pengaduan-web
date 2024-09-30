@@ -1,10 +1,14 @@
-'use client'
+'use client';
+
 import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'; // Pastikan untuk mengimpor CSS Leaflet
+
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
+// Atur ikon default untuk marker
 let DefaultIcon = L.icon({
     iconUrl: icon.src,
     shadowUrl: iconShadow.src,
@@ -13,6 +17,7 @@ let DefaultIcon = L.icon({
     popupAnchor: [1, -34], // Posisi popup relatif terhadap ikon
 });
 
+// Atur ikon marker default
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const Location = () => {
