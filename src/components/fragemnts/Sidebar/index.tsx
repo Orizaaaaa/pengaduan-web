@@ -26,7 +26,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [role, setRole] = useState<string | null>(null);
-
+  const fakeRole = 'admin';
   // Mengambil role dari localStorage hanya di client-side
   useEffect(() => {
     if (typeof window !== 'undefined') {

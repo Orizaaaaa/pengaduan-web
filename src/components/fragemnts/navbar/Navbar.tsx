@@ -1,6 +1,7 @@
-'use client'
+'use client';
+
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import ButtonPrimary from '../../elements/buttonPrimary';
 import { navigation } from '@/utils/dataObject';
 import { usePathname } from 'next/navigation';
@@ -11,7 +12,7 @@ type Props = {}
 
 const Navbar = (props: Props) => {
     const pathname = usePathname();
-    const [navbarBg, setnavbarBg] = useState(false);
+    const [navbarBg, setNavbarBg] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -20,18 +21,16 @@ const Navbar = (props: Props) => {
     };
 
     const changeBackground = () => {
-        if (typeof window !== 'undefined') {
-            if (window.scrollY >= 90) {
-                setnavbarBg(true);
-            } else {
-                setnavbarBg(false);
-            }
+        if (window.scrollY >= 90) {
+            setNavbarBg(true);
+        } else {
+            setNavbarBg(false);
         }
     };
 
     useEffect(() => {
-        // Pastikan kode ini hanya dijalankan di client-side
         if (typeof window !== 'undefined') {
+            // Event listener untuk mengubah background navbar saat scroll
             window.addEventListener('scroll', changeBackground);
         }
 
@@ -61,14 +60,13 @@ const Navbar = (props: Props) => {
             };
         }
     }, []);
+
     return (
-        <nav className={`fixed top-0 left-0 py-2.5 w-full z-999999  ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
-            <div className="container mx-auto flex flex-wrap items-center justify-between ">
-
+        <nav className={`fixed top-0 left-0 py-2.5 w-full z-999999 ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
+            <div className="container mx-auto flex flex-wrap items-center justify-between">
                 <div className="flex justify-start">
-                    <Image className='portfolio-icon w-70 h-12 md:h-10' src={logo2} alt="logo2" />
+                    <Image className="portfolio-icon w-70 h-12 md:h-10" src={logo2} alt="logo2" />
                 </div>
-
 
                 <div className="flex items-center justify-end lg:hidden">
                     <div className="hidden mt-2 mr-4 sm:inline-block">
@@ -77,7 +75,7 @@ const Navbar = (props: Props) => {
 
                     <button
                         onClick={toggleMobileMenu}
-                        className={`{ navbar-toggler lg:hidden border-0 ${mobileMenuOpen ? "opened" : ""}`}
+                        className={`navbar-toggler lg:hidden border-0 ${mobileMenuOpen ? 'opened' : ''}`}
                         type="button"
                     >
                         <span>
@@ -97,21 +95,20 @@ const Navbar = (props: Props) => {
                 </div>
 
                 <div
-                    className={` flex-col col-span-2 lg:col-span-2 w-full  px-2 lg:flex lg:w-auto lg:order-1  overflow-hidden ${mobileMenuOpen ? 'block' : 'hidden'}`}
+                    className={`flex-col col-span-2 lg:col-span-2 w-full px-2 lg:flex lg:w-auto lg:order-1 overflow-hidden ${mobileMenuOpen ? 'block' : 'hidden'}`}
                     id="mobile-menu-2"
                 >
-                    <ul className="flex  flex-col mt-4   p-3 lg:p-0 text-black font-medium lg:flex-row lg:space-x-8 lg:mt-0 w-full rounded-lg gap-1 lg:gap-0">
+                    <ul className="flex flex-col mt-4 p-3 lg:p-0 text-black font-medium lg:flex-row lg:space-x-8 lg:mt-0 w-full rounded-lg gap-1 lg:gap-0">
                         {navigation.map((item, index) => (
                             <li key={index}>
-                                <Link className={`link  no-underline ${activeSection === item.location || pathname === item.location ? 'active' : ''}`}
-
+                                <Link className={`link no-underline ${activeSection === item.location || pathname === item.location ? 'active' : ''}`}
                                     href={item.location !== '/portfolio' ? `/#${item.location}` : item.location}>
                                     {item.title}
                                 </Link>
                             </li>
                         ))}
                         <li>
-                            <ButtonPrimary className='items-center mt-3 justify-center font-medium gap-2  px-4 py-2 rounded-md block lg:hidden  w-full'>
+                            <ButtonPrimary className="items-center mt-3 justify-center font-medium gap-2 px-4 py-2 rounded-md block lg:hidden w-full">
                                 Login
                             </ButtonPrimary>
                         </li>
@@ -119,7 +116,7 @@ const Navbar = (props: Props) => {
                 </div>
             </div>
         </nav>
-    )
+    );
 }
 
-export default Navbar
+export default Navbar;
