@@ -1,3 +1,5 @@
+'use client'
+
 import LandingPage from '@/components/ui/LandingPage'
 import React from 'react'
 
