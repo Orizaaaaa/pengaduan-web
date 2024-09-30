@@ -11,55 +11,62 @@ import Image from 'next/image';
 type Props = {}
 
 const Navbar = (props: Props) => {
-    const pathname = usePathname();
-    const [navbarBg, setNavbarBg] = useState(false);
-    const [activeSection, setActiveSection] = useState('home');
+    const pathname = usePathname()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+    // Fungsi untuk mengubah status tampilan menu mobile
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
 
+    const [navbarBg, setnavbarBg] = useState(false);
+
+    // untuk navbar glassmorphine
     const changeBackground = () => {
-        if (window.scrollY >= 90) {
-            setNavbarBg(true);
-        } else {
-            setNavbarBg(false);
+        if (typeof window !== 'undefined') {
+            // Check if window is defined before accessing scrollY
+            if (window.scrollY >= 80) {
+                setnavbarBg(true);
+            } else {
+                setnavbarBg(false);
+            }
         }
     };
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            // Event listener untuk mengubah background navbar saat scroll
-            window.addEventListener('scroll', changeBackground);
-        }
+        window.addEventListener('scroll', changeBackground);
 
         return () => {
-            if (typeof window !== 'undefined') {
-                window.removeEventListener('scroll', changeBackground);
-            }
+            // Cleanup: remove the event listener when the component is unmounted
+            window.removeEventListener('scroll', changeBackground);
         };
     }, []);
 
+
+    const [activeSection, setActiveSection] = useState('home');
+
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const handleScroll = () => {
-                const sections = document.querySelectorAll('section');
-                sections.forEach(section => {
-                    const rect = section.getBoundingClientRect();
-                    if (rect.top <= 330 && rect.bottom >= 330) {
-                        setActiveSection(section.id);
-                    }
-                });
-            };
+        const handleScroll = () => {
 
-            window.addEventListener('scroll', handleScroll);
+            const sections = document.querySelectorAll('section');
 
-            return () => {
-                window.removeEventListener('scroll', handleScroll);
-            };
-        }
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+
+                if (rect.top <= 330 && rect.bottom >= 330) {
+                    setActiveSection(section.id);
+                }
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
+
+
 
     return (
         <nav className={`fixed top-0 left-0 py-2.5 w-full z-999999 ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
