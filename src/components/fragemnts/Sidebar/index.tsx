@@ -26,7 +26,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [role, setRole] = useState<string | null>(null);
-  const fakeRole = 'admin';
+
   // Mengambil role dari localStorage hanya di client-side
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -39,28 +39,32 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   // close on click outside
   useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
-      if (!sidebar.current || !trigger.current) return;
-      if (
-        !sidebarOpen ||
-        sidebar.current.contains(target as Node) ||
-        trigger.current.contains(target as Node)
-      )
-        return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener("click", clickHandler);
-    return () => document.removeEventListener("click", clickHandler);
+    if (typeof window !== 'undefined') {
+      const clickHandler = ({ target }: MouseEvent) => {
+        if (!sidebar.current || !trigger.current) return;
+        if (
+          !sidebarOpen ||
+          sidebar.current.contains(target as Node) ||
+          trigger.current.contains(target as Node)
+        )
+          return;
+        setSidebarOpen(false);
+      };
+      document.addEventListener("click", clickHandler);
+      return () => document.removeEventListener("click", clickHandler);
+    }
   }, [sidebarOpen]);
 
   // close if the esc key is pressed
   useEffect(() => {
-    const keyHandler = ({ key }: KeyboardEvent) => {
-      if (!sidebarOpen || key !== "Escape") return;
-      setSidebarOpen(false);
-    };
-    document.addEventListener("keydown", keyHandler);
-    return () => document.removeEventListener("keydown", keyHandler);
+    if (typeof window !== 'undefined') {
+      const keyHandler = ({ key }: KeyboardEvent) => {
+        if (!sidebarOpen || key !== "Escape") return;
+        setSidebarOpen(false);
+      };
+      document.addEventListener("keydown", keyHandler);
+      return () => document.removeEventListener("keydown", keyHandler);
+    }
   }, [sidebarOpen]);
 
   useEffect(() => {
