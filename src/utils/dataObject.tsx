@@ -11,11 +11,11 @@ import { MdOutlineMail } from "react-icons/md"
 export const navigation = [
     {
         title: 'Beranda',
-        location: 'beranda'
+        location: '/'
     },
     {
         title: 'Pengaduan',
-        location: 'report'
+        location: '/report'
     },
     {
         title: 'Lokasi',

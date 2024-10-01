@@ -11,6 +11,8 @@ import Image from 'next/image';
 type Props = {}
 
 const Navbar = (props: Props) => {
+    const [activeSection, setActiveSection] = useState('beranda');
+    const [navbarBg, setnavbarBg] = useState(false);
     const pathname = usePathname()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -19,7 +21,7 @@ const Navbar = (props: Props) => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
 
-    const [navbarBg, setnavbarBg] = useState(false);
+
 
     // untuk navbar glassmorphine
     const changeBackground = () => {
@@ -43,7 +45,7 @@ const Navbar = (props: Props) => {
     }, []);
 
 
-    const [activeSection, setActiveSection] = useState('home');
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -108,8 +110,8 @@ const Navbar = (props: Props) => {
                     <ul className="flex flex-col mt-4 p-3 lg:p-0 text-black font-medium lg:flex-row lg:space-x-8 lg:mt-0 w-full rounded-lg gap-1 lg:gap-0">
                         {navigation.map((item, index) => (
                             <li key={index}>
-                                <Link className={`link no-underline ${activeSection === item.location || pathname === item.location ? 'active' : ''}`}
-                                    href={item.location !== '/portfolio' ? `/#${item.location}` : item.location}>
+                                <Link className={`link no-underline ${pathname === item.location ? 'active' : ''}`}
+                                    href={item.location}>
                                     {item.title}
                                 </Link>
                             </li>

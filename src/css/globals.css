@@ -17,6 +17,10 @@ html {
     transition: 0.4s;
 }
 
+.navbarbgActive .flex ul li a {
+    color: black;
+}
+
 nav .line {
     fill: none;
     stroke: #024395;
@@ -62,6 +66,9 @@ nav .title-section {
     margin-bottom: 50px;
 }
 
+nav .flex ul li a {
+    color: #ffff;
+}
 
 nav .flex ul li a:hover,
 nav .flex ul li a.active {
