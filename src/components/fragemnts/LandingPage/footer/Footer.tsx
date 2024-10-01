@@ -45,7 +45,9 @@ const Footer = () => {
 
             </div>
 
-
+            <div className="bg-primary text-center text-white text-sm py-2">
+                © 2022 PT. Citra Pradana Mandiri TBK
+            </div>
         </section>
     )
 }
