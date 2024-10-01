@@ -17,14 +17,32 @@ const EmployeList = (props: Props) => {
                 <h1 className="text-primary font-medium" >Staff Karyawan</h1>
                 <h1 className="text-primary font-bold" >Berikut adalah staff kami</h1>
             </div>
+
             <Swiper
-                slidesPerView={3}
+                slidesPerView={3} // Jumlah default slide yang ditampilkan
                 spaceBetween={30}
                 autoplay={{
-                    delay: 3000, // Durasi waktu sebelum slide berganti (dalam milidetik)
-                    disableOnInteraction: false, // Tetap autoplay meski ada interaksi pengguna
+                    delay: 3000,
+                    disableOnInteraction: false,
                 }}
-                modules={[Autoplay]} // Tambahkan Autoplay module
+                breakpoints={{
+                    // Saat lebar layar >= 1024px
+                    1024: {
+                        slidesPerView: 3, // 3 slide
+                        spaceBetween: 30,
+                    },
+                    // Saat lebar layar >= 768px
+                    768: {
+                        slidesPerView: 2, // 2 slide
+                        spaceBetween: 20,
+                    },
+                    // Untuk layar <= 640px, 1 slide akan ditampilkan
+                    0: {
+                        slidesPerView: 1, // 1 slide
+                        spaceBetween: 10,
+                    },
+                }}
+                modules={[Autoplay]}
                 className="mySwiper"
             >
                 <SwiperSlide >
