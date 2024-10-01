@@ -12,7 +12,7 @@ const NewReport = (props: Props) => {
                 <h1 className="text-primary font-bold" >Berikut Adalah Laporan Terbaru</h1>
             </div>
 
-            <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4  mt-12 gap-4">
+            <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  mt-12 gap-4">
                 <CardReport title='Jalan Rusak' location='Bandung' address='Jl. Moch. Toha No. 77' desc='Jalan Rusak' status='Menunggu'
                     date='12.12.2022' image={human1} />
                 <CardReport title='Jalan Rusak' location='Bandung' address='Jl. Moch. Toha No. 77' desc='Jalan Rusak' status='Menunggu'
