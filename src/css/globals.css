@@ -68,6 +68,7 @@ nav .title-section {
 
 nav .flex ul li a {
     color: #ffff;
+    font-weight: 400;
 }
 
 nav .flex ul li a:hover,
@@ -111,6 +112,7 @@ nav .flex ul li a::after {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    height: 100vh;
 }
 
 
@@ -128,11 +130,13 @@ nav .flex ul li a::after {
 
 @media screen and (max-width: 1024px) {
     nav {
-        background: white;
+        background: rgba(211, 202, 202, 0.3);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         transition: 0.4s;
     }
 
-    nav .flex ul {
+    /* nav .flex ul {
         background-color: #cbd5e1;
-    }
+    } */
 }
