@@ -14,8 +14,8 @@ export const navigation = [
         location: 'beranda'
     },
     {
-        title: 'Alur Aduan',
-        location: 'alur aduan'
+        title: 'Pengaduan',
+        location: 'report'
     },
     {
         title: 'Lokasi',

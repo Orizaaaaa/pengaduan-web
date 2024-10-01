@@ -15,6 +15,18 @@ import titleGaleri from '../assets/news1.svg'
 import image1 from '../assets/image1.svg'
 import image2 from '../assets/image2.svg'
 import image3 from '../assets/image3.svg'
+
+import brand1 from '../assets/brand1.svg'
+import brand2 from '../assets/brand2.svg'
+import brand3 from '../assets/brand3.svg'
+import brand4 from '../assets/brand4.svg'
+import brand5 from '../assets/brand5.svg'
+import brand6 from '../assets/brand6.svg'
+import brand7 from '../assets/brand7.svg'
+import brand8 from '../assets/brand8.svg'
+import brand9 from '../assets/brand9.svg'
+import brand10 from '../assets/brand10.svg'
+
 import galery1 from '../assets/galery1.jpg'
 import galery2 from '../assets/galery2.jpg'
 import galery3 from '../assets/galery3.jpg'
@@ -31,5 +43,8 @@ import warning from '../assets/warning.png'
 export {
     logo, logo2, employe, human1, education, garbage, warning,
     hospital, medicalKit, nationalPark, noParking, road, tree,
-    waterPolution, titleGaleri, image1, image2, image3, galery1, galery2, galery3, galery4, galery5, galery6
+    waterPolution, titleGaleri, image1, image2, image3, galery1,
+    galery2, galery3, galery4, galery5, galery6,
+    brand1, brand2, brand3, brand4, brand5, brand6, brand7,
+    brand8, brand9, brand10
 };

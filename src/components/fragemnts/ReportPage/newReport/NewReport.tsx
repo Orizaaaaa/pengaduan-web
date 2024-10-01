@@ -7,7 +7,7 @@ type Props = {}
 const NewReport = (props: Props) => {
     return (
         <section className='container mx-auto my-20' >
-            <div className="text-center text-2xl">
+            <div className="text-start text-2xl">
                 <h1 className="text-primary font-medium" >Laporan</h1>
                 <h1 className="text-primary font-bold" >Berikut Adalah Laporan Terbaru</h1>
             </div>
