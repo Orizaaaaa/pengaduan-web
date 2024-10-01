@@ -1,4 +1,16 @@
 
+
+export const statusChange = (value: string) => {
+    if (value === 'Diproses') {
+        return ('bg-[#FF7F0A]')
+    } else if (value === 'Menunggu') {
+        return ('bg-primary')
+    } else if (value === 'Selesai') {
+        return ('bg-lime-700')
+    }
+}
+
+
 export const formatDate = (tanggal: any) => {
     const date = new Date(tanggal);  // Pastikan 'tanggal' adalah objek Date
 
@@ -21,22 +33,7 @@ export function formatCatrgory(text: string, maxLength: number = 34): string {
     return text;
 }
 
-export const changeTypeAccount = (type: number): string => {
-    switch (type) {
-        case 1:
-            return 'Aset';
-        case 2:
-            return 'Kewajiban';
-        case 3:
-            return 'Ekuitas';
-        case 4:
-            return 'Pendapatan';
-        case 5:
-            return 'Beban';
-        default:
-            return 'Tipe tidak dikenal'; // Mengembalikan nilai default jika tipe tidak ditemukan
-    }
-};
+
 
 
 export function formatRupiah(amount: number | undefined): string {
