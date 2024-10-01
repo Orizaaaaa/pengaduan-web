@@ -23,26 +23,33 @@ const Navbar = (props: Props) => {
 
 
 
-    // untuk navbar glassmorphine
-    const changeBackground = () => {
-        if (typeof window !== 'undefined') {
-            // Check if window is defined before accessing scrollY
-            if (window.scrollY >= 80) {
-                setnavbarBg(true);
-            } else {
-                setnavbarBg(false);
-            }
-        }
-    };
-
     useEffect(() => {
+        const changeBackground = () => {
+            if (typeof window !== 'undefined') {
+                // Jika scroll lebih dari 80, bg langsung ada
+                if (window.scrollY >= 80) {
+                    setnavbarBg(true);
+                } else if (pathname !== '/' && pathname !== '/report') {
+                    // Navbar langsung muncul kecuali di halaman '/' dan '/report'
+                    setnavbarBg(true);
+                } else {
+                    setnavbarBg(false);
+                }
+            }
+        };
+
+        // Cek kondisi saat halaman pertama kali dibuka
+        changeBackground();
+
+        // Event listener untuk perubahan scroll
         window.addEventListener('scroll', changeBackground);
 
         return () => {
-            // Cleanup: remove the event listener when the component is unmounted
             window.removeEventListener('scroll', changeBackground);
         };
-    }, []);
+    }, [pathname]); // pathname untuk memantau perubahan halaman
+    // Tambahkan pathname ke dependency array untuk mendeteksi perubahan
+
 
 
 

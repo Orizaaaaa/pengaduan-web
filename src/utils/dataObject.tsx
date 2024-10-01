@@ -18,8 +18,8 @@ export const navigation = [
         location: '/report'
     },
     {
-        title: 'Lokasi',
-        location: 'lokasi'
+        title: 'Galeri',
+        location: '/galery'
     },
     {
         title: 'Kategori',
