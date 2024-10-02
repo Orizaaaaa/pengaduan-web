@@ -10,6 +10,7 @@ import { IoEye } from 'react-icons/io5';
 import { loginService } from '@/api/auth';
 import { Spinner } from '@nextui-org/react';
 import { logo } from '@/app/image';
+import Link from 'next/link';
 
 const Login = () => {
     const router = useRouter();
@@ -82,6 +83,7 @@ const Login = () => {
                     <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2`}>
                         {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Sign In'}
                     </ButtonPrimary>
+                    <p className='text-sm'>Belum punya akun ? <Link className='text-primary font-medium ' href={'/register'} > Daftar</Link></p>
                 </form>
             </div>
         </div>
