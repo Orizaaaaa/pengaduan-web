@@ -12,7 +12,7 @@ const Article = (props: Props) => {
     return (
         <>
             <Navbar />
-            <section className='container mx-auto my-20'>
+            <section className='container mx-auto min-h-[80vh]'>
                 <Search placeholder='Cari artikel...' />
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-7">
                     <CardLink href="/">
