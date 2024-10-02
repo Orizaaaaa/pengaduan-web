@@ -11,8 +11,8 @@ type Props = {
 const CardLink = ({ children, href }: Props) => {
     return (
         <Link href={href} className="rounded-md hover: border-stroke transform transition-transform 
-        duration-300 hover:scale-105 bg-white p-3 lg:px-3 lg:py-3 shadow-default 
-        dark:border-strokedark h-full grid">
+        duration-300 hover:scale-105 bg-white  shadow-default 
+        dark:border-strokedark ">
             {children}
         </Link>
     )

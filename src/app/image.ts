@@ -35,6 +35,8 @@ import galery5 from '../assets/galery5.png'
 import galery6 from '../assets/galery6.png'
 import warning from '../assets/warning.png'
 
+import bgPengaduan from '../assets/pengaduanBg.png'
+
 
 
 
@@ -46,5 +48,5 @@ export {
     waterPolution, titleGaleri, image1, image2, image3, galery1,
     galery2, galery3, galery4, galery5, galery6,
     brand1, brand2, brand3, brand4, brand5, brand6, brand7,
-    brand8, brand9, brand10
+    brand8, brand9, brand10, bgPengaduan
 };

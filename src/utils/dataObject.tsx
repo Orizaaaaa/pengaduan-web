@@ -22,8 +22,8 @@ export const navigation = [
         location: '/galery'
     },
     {
-        title: 'Kategori',
-        location: 'category'
+        title: 'Artikel',
+        location: '/articles'
     },
     {
         title: 'Laporan',
