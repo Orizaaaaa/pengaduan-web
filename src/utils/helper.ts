@@ -56,5 +56,13 @@ export const getFirstDayOfMonth = (date: Date) => {
     return new Date(date.getFullYear(), date.getMonth(), 1);
 };
 
+export const parseCoordinate = (coord: string): number => {
+    const parsedCoord = parseFloat(coord);
+    if (isNaN(parsedCoord)) {
+        throw new Error(`Invalid coordinate value: ${coord}`);
+    }
+    return parsedCoord;
+};
+
 const dateNow = new Date();
 export const dateFirst = getFirstDayOfMonth(dateNow);
