@@ -3,6 +3,7 @@ import CardLink from '../elements/card/CardLink'
 import Image from 'next/image'
 import { bgPengaduan, human1, image1 } from '@/app/image'
 import Navbar from '../fragemnts/navbar/Navbar'
+import Footer from '../fragemnts/LandingPage/footer/Footer'
 
 type Props = {}
 
@@ -23,6 +24,8 @@ const Article = (props: Props) => {
                     </CardLink>
                 </div>
             </section>
+
+            <Footer />
 
         </>
 

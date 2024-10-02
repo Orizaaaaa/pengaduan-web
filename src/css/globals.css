@@ -9,6 +9,12 @@ html {
 
 
 
+body::-webkit-scrollbar {
+    display: none !important;
+}
+
+
+
 /* Change background navbar */
 .navbarbgActive {
     background: rgba(211, 202, 202, 0.3);
@@ -113,6 +119,14 @@ nav .flex ul li a::after {
     background-size: cover;
     background-position: center;
     height: 100vh;
+}
+
+#footer {
+    padding-top: 140px;
+    background-image: url('./../assets/bgFooter.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 
