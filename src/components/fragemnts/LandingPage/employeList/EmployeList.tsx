@@ -49,7 +49,7 @@ const EmployeList = (props: Props) => {
                     <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
                         <Image className="w-auto" src={employe} alt="human" />
                         <div className="p-4 bg-white w-full text-center">
-                            <p className=' font-bold' >Gabriel kafir</p>
+                            <p className=' font-bold' >Gabriel yonathan</p>
                             <p className='text-slate-500 text-sm' >Psikolog Klinis | Spesialis Keluarga</p>
                         </div>
                     </div>
