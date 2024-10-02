@@ -122,11 +122,12 @@ nav .flex ul li a::after {
 }
 
 #footer {
-    padding-top: 140px;
+    padding-top: 10%;
     background-image: url('./../assets/bgFooter.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+    height: max-content;
 }
 
 
