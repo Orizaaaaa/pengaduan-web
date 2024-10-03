@@ -12,9 +12,9 @@ import tree from '../assets/tree.png';
 import waterPolution from '../assets/water-polution.png';
 import employe from '../assets/employe.png'
 import titleGaleri from '../assets/news1.svg'
-import image1 from '../assets/image1.svg'
-import image2 from '../assets/image2.svg'
-import image3 from '../assets/image3.svg'
+import image1 from '../assets/image1.png'
+import image2 from '../assets/image2.png'
+import image3 from '../assets/image3.png'
 
 import brand1 from '../assets/brand1.svg'
 import brand2 from '../assets/brand2.svg'

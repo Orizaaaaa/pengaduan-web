@@ -26,8 +26,12 @@ export const navigation = [
         location: '/articles'
     },
     {
-        title: 'Laporan',
-        location: 'galery'
+        title: 'Toko Online',
+        location: '/shop'
+    },
+    {
+        title: 'Pembangunan',
+        location: '/pembangunan'
     },
 
 
@@ -133,4 +137,12 @@ export const categoryData = [
         image: tree,
         name: 'Pohon tumbang'
     },
+]
+
+
+export const kategoriShop = [
+    {
+        label: 'Semua Kategori',
+        value: 'semua kategori',
+    }
 ]
