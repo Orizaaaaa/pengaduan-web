@@ -1,23 +1,26 @@
 'use client'
-import React, { useState } from 'react'
 import Navbar from '../fragemnts/navbar/Navbar'
-import { Autocomplete, AutocompleteItem } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, useDisclosure } from '@nextui-org/react'
 import { kategoriShop } from '@/utils/dataObject'
 import Search from '../fragemnts/search/Search'
-import CardLink from '../elements/card/CardLink'
 import Image from 'next/image'
 import { bgPengaduan, human1 } from '@/app/image'
-import { MdOutlinePersonPin, MdOutlinePersonPinCircle } from 'react-icons/md'
-import { IoPersonCircleSharp, IoPersonSharp } from 'react-icons/io5'
+import { IoPersonSharp } from 'react-icons/io5'
 import ButtonPrimary from '../elements/buttonPrimary'
 import { HiMapPin } from 'react-icons/hi2'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
+import ButtonSecondary from '../elements/buttonSecondary'
+import ModalDefault from '../fragemnts/modal/modal'
+
 
 type Props = {}
 
 const Shop = (props: Props) => {
-
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const openDetail = () => {
+        onOpen()
+    }
 
     return (
         <>
@@ -38,6 +41,7 @@ const Shop = (props: Props) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
+
                     <div className="rounded-md hover: border-stroke bg-white  shadow-default 
                       dark:border-strokedark ">
                         <Swiper
@@ -76,15 +80,21 @@ const Shop = (props: Props) => {
 
                             <div className="flex  items-center gap-1">
                                 <HiMapPin color='#94a3b8' size={15} />
-                                <p className='text-small text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat</p>
+                                <p className='text-small text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat...</p>
                             </div>
 
                         </div>
-                        <div className="flex px-2 justify-end py-2 items-center">
+                        <div className="flex px-2 justify-end py-2 items-center gap-3 mt-2">
                             <ButtonPrimary className='py-2 px-4   rounded-md text-sm lg:text-base'>Beli Sekarang</ButtonPrimary>
+                            <ButtonSecondary onClick={openDetail} className='py-2 px-4   rounded-md text-sm lg:text-base' >Detail</ButtonSecondary>
                         </div>
                     </div>
+
                 </div>
+
+                <ModalDefault onClose={onClose} isOpen={isOpen}>
+                    <h1 className='text-xl font-semibold'>Domba</h1>
+                </ModalDefault>
             </section>
         </>
 
