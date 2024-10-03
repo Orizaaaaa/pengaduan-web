@@ -4,7 +4,7 @@ import { Autocomplete, AutocompleteItem, useDisclosure } from '@nextui-org/react
 import { kategoriShop } from '@/utils/dataObject'
 import Search from '../fragemnts/search/Search'
 import Image from 'next/image'
-import { bgPengaduan, human1 } from '@/app/image'
+import { bgPengaduan, headerShop, human1 } from '@/app/image'
 import { IoPersonSharp } from 'react-icons/io5'
 import ButtonPrimary from '../elements/buttonPrimary'
 import { HiMapPin } from 'react-icons/hi2'
@@ -25,6 +25,67 @@ const Shop = (props: Props) => {
     return (
         <>
             <Navbar />
+
+            {/* header */}
+            <section className='header-shop' >
+                <Swiper
+                    slidesPerView={1} // Jumlah default slide yang ditampilkan
+                    spaceBetween={0}
+                    pagination={{
+                        clickable: true, // Pagination akan bisa diklik
+                    }}
+                    modules={[Pagination]}
+                    className="mySwiper"
+                >
+                    <SwiperSlide >
+                        <div className="images h-[80vh] w-full relative">
+                            <Image className="rounded-t-lg w-full h-full object-cover" src={headerShop} alt="header" />
+                            <div className="container mx-auto absolute flex flex-col justify-center items-center md:items-start inset-0  z-10">
+                                <h1 className='text-3xl md:text-5xl' > <span className='text-primary font-extrabold'>Buah Dan Sayur</span> <span className='font-light'>dari desa kami</span> </h1>
+                                <h1 className='text-3xl md:text-5xl font-extrabold'>Fresh</h1>
+                                <p className='text-slate-500 mt-2 text-sm' >Buah buahan dan sayuran hasil dari desa kami</p>
+                                <div className="flex gap-3 ">
+                                    <ButtonPrimary className='mt-4 px-4 py-2 rounded-full' >Beli Sekarang</ButtonPrimary>
+                                    <button className='mt-4 px-4 py-2 rounded-full bg-black text-white' >Daftar Sekarang</button>
+                                </div>
+                                <div className="flex items-center gap-10 mt-10 ">
+
+                                    <div className="md:flex items-center gap-3">
+                                        <h1 className=' text-xl md:text-3xl font-black'>14k+</h1>
+                                        <div className="flex flex-col space-y-0 text-sm">
+                                            <p className=' font-light' >VARIAN </p>
+                                            <p className=' font-light' >PRODUK</p>
+                                        </div>
+                                    </div>
+                                    <div className="md:flex items-center gap-3">
+                                        <h1 className=' text-xl md:text-3xl font-black'>50k+</h1>
+                                        <div className="flex flex-col space-y-0 text-sm">
+                                            <p className=' font-light' >CUSTOMER </p>
+                                            <p className=' font-light' >BAHAGIA</p>
+                                        </div>
+                                    </div>
+                                    <div className="md:flex items-center gap-3 ">
+                                        <h1 className=' text-xl md:text-3xl font-black'>10k+</h1>
+                                        <div className="flex flex-col space-y-0 text-sm">
+                                            <p className=' font-light' >SEMUA </p>
+                                            <p className=' font-light' >PETANI</p>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </SwiperSlide>
+                    <SwiperSlide >
+                        <div className="images h-[80vh] w-full ">
+                            <Image className='rounded-t-lg w-full h-full' src={headerShop} alt='header' />
+                        </div>
+                    </SwiperSlide>
+                </Swiper>
+            </section>
+
             <section className='container mx-auto my-20'>
                 <div className="filtered space-y-3 md:space-y-0 md:flex justify-center items-center gap-10">
                     <Autocomplete
@@ -65,8 +126,6 @@ const Shop = (props: Props) => {
                                 </div>
 
                             </SwiperSlide>
-
-
                         </Swiper>
 
                         <div className="text px-2 py-1 space-y-1">

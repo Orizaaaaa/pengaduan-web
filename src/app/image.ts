@@ -26,6 +26,7 @@ import brand7 from '../assets/brand7.svg'
 import brand8 from '../assets/brand8.svg'
 import brand9 from '../assets/brand9.svg'
 import brand10 from '../assets/brand10.svg'
+import headerShop from '../assets/bgShop.png'
 
 import galery1 from '../assets/galery1.jpg'
 import galery2 from '../assets/galery2.jpg'
@@ -50,5 +51,5 @@ export {
     waterPolution, titleGaleri, image1, image2, image3, galery1,
     galery2, galery3, galery4, galery5, galery6,
     brand1, brand2, brand3, brand4, brand5, brand6, brand7,
-    brand8, brand9, brand10, bgPengaduan, imageLogin, camera
+    brand8, brand9, brand10, bgPengaduan, imageLogin, camera, headerShop
 };
