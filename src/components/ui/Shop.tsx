@@ -23,7 +23,7 @@ const Shop = (props: Props) => {
         <>
             <Navbar />
             <section className='container mx-auto my-20'>
-                <div className="filtered flex justify-center items-center gap-10">
+                <div className="filtered space-y-3 md:space-y-0 md:flex justify-center items-center gap-10">
                     <Autocomplete
                         aria-label='dropdown'
                         clearButtonProps={{ size: 'sm' }}
@@ -37,7 +37,7 @@ const Shop = (props: Props) => {
                     <Search placeholder="Cari Produk" />
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-7">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
                     <div className="rounded-md hover: border-stroke bg-white  shadow-default 
                       dark:border-strokedark ">
                         <Swiper
@@ -76,12 +76,12 @@ const Shop = (props: Props) => {
 
                             <div className="flex  items-center gap-1">
                                 <HiMapPin color='#94a3b8' size={15} />
-                                <p className='text-sm text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat</p>
+                                <p className='text-small text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat</p>
                             </div>
 
                         </div>
                         <div className="flex px-2 justify-end py-2 items-center">
-                            <ButtonPrimary className='py-2 px-4   rounded-md'>Beli Sekarang</ButtonPrimary>
+                            <ButtonPrimary className='py-2 px-4   rounded-md text-sm lg:text-base'>Beli Sekarang</ButtonPrimary>
                         </div>
                     </div>
                 </div>
