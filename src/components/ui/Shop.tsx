@@ -1,17 +1,18 @@
 'use client'
 import Navbar from '../fragemnts/navbar/Navbar'
 import { Autocomplete, AutocompleteItem, useDisclosure } from '@nextui-org/react'
-import { kategoriShop } from '@/utils/dataObject'
+import { categoryCaraosel, kategoriShop } from '@/utils/dataObject'
 import Search from '../fragemnts/search/Search'
 import Image from 'next/image'
-import { bgPengaduan, headerShop, human1 } from '@/app/image'
+import { bgPengaduan, employe, headerShop, human1, shop1, shop2, shop3, shop4 } from '@/app/image'
 import { IoPersonSharp } from 'react-icons/io5'
 import ButtonPrimary from '../elements/buttonPrimary'
 import { HiMapPin } from 'react-icons/hi2'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination } from 'swiper/modules'
+import { Autoplay, Pagination } from 'swiper/modules'
 import ButtonSecondary from '../elements/buttonSecondary'
 import ModalDefault from '../fragemnts/modal/modal'
+import { title } from 'process'
 
 
 type Props = {}
@@ -21,6 +22,7 @@ const Shop = (props: Props) => {
     const openDetail = () => {
         onOpen()
     }
+
 
     return (
         <>
@@ -87,69 +89,119 @@ const Shop = (props: Props) => {
             </section>
 
             <section className='container mx-auto my-20'>
-                <div className="filtered space-y-3 md:space-y-0 md:flex justify-center items-center gap-10">
-                    <Autocomplete
-                        aria-label='dropdown'
-                        clearButtonProps={{ size: 'sm' }}
-                        defaultItems={kategoriShop}
-                        defaultSelectedKey={"semua kategori"}
-                        className=" w-[100%] lg:max-w-xs border-2 border-black rounded-lg"
-                        size='sm'
+
+
+                {/* categories 2 */}
+                <section className='my-20' >
+                    <h1 className='text-2xl font-bold my-10'>Kategori</h1>
+                    <Swiper
+                        slidesPerView={7} // Jumlah default slide yang ditampilkan
+                        spaceBetween={30}
+                        autoplay={{
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        }}
+                        loop={true} // Membuat slide menjadi infinite loop
+                        breakpoints={{
+                            // Saat lebar layar >= 1024px
+                            1024: {
+                                slidesPerView: 7, // 6 slide
+                                spaceBetween: 30,
+                            },
+                            // Saat lebar layar >= 768px
+                            768: {
+                                slidesPerView: 2, // 2 slide
+                                spaceBetween: 20,
+                            },
+                            // Untuk layar <= 640px, 1 slide akan ditampilkan
+                            0: {
+                                slidesPerView: 1, // 1 slide
+                                spaceBetween: 10,
+                            },
+                        }}
+                        modules={[Autoplay]}
+                        className="mySwiper"
                     >
-                        {(item) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
-                    </Autocomplete>
-                    <Search placeholder="Cari Produk" />
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
-
-                    <div className="rounded-md hover: border-stroke bg-white  shadow-default 
-                      dark:border-strokedark ">
-                        <Swiper
-                            slidesPerView={1} // Jumlah default slide yang ditampilkan
-                            spaceBetween={30}
-                            pagination={{
-                                clickable: true, // Pagination akan bisa diklik
-                            }}
-                            modules={[Pagination]}
-                            className="mySwiper"
-                        >
-                            <SwiperSlide >
-                                <div className="images h-[150px] ">
-                                    <Image className='rounded-t-lg w-full h-full' src={bgPengaduan} alt="jalan rusak" />
+                        {categoryCaraosel.map((item, index) => (
+                            <SwiperSlide key={index}>
+                                <div className="flex flex-col justify-center items-center">
+                                    <div className="w-40 h-40 rounded-full overflow-hidden">
+                                        <Image className="w-full h-full object-cover" src={item.image} alt="shop1" />
+                                    </div>
+                                    <p className='text-center mt-2 text-sm' >{item.title}</p>
                                 </div>
-
                             </SwiperSlide>
-                            <SwiperSlide >
-                                <div className="images h-[150px] ">
-                                    <Image className='rounded-t-lg w-full h-full' src={human1} alt="jalan rusak" />
-                                </div>
+                        ))}
 
-                            </SwiperSlide>
-                        </Swiper>
+                    </Swiper>
 
-                        <div className="text px-2 py-1 space-y-1">
-                            <h1 className=' text-sm ' >Domba</h1>
-                            <h1 className='font-semibold'>Rp 1.000.000</h1>
+                </section>
 
-                            <div className="flex  items-center gap-1">
-                                <IoPersonSharp color='#94a3b8' size={15} />
-                                <p className='text-sm text-slate-400' >ORIZA SATIVA</p>
-                            </div>
 
-                            <div className="flex  items-center gap-1">
-                                <HiMapPin color='#94a3b8' size={15} />
-                                <p className='text-small text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat...</p>
-                            </div>
-
-                        </div>
-                        <div className="flex px-2 justify-end py-2 items-center gap-3 mt-2">
-                            <ButtonPrimary className='py-2 px-4   rounded-md text-sm lg:text-base'>Beli Sekarang</ButtonPrimary>
-                            <ButtonSecondary onClick={openDetail} className='py-2 px-4   rounded-md text-sm lg:text-base' >Detail</ButtonSecondary>
+                {/* product */}
+                <section >
+                    <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
+                        <h1 className='text-2xl font-bold my-10'>Produk</h1>
+                        <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
+                            <Search className='border-2 border-primary' placeholder="Cari Produk" />
                         </div>
                     </div>
 
-                </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
+
+                        <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark ">
+                            <Swiper
+                                slidesPerView={1} // Jumlah default slide yang ditampilkan
+                                spaceBetween={30}
+                                pagination={{
+                                    clickable: true, // Pagination akan bisa diklik
+                                }}
+                                modules={[Pagination]}
+                                className="mySwiper"
+                            >
+                                <SwiperSlide >
+                                    <div className="images h-[150px] ">
+                                        <Image className='rounded-t-lg w-full h-full' src={bgPengaduan} alt="jalan rusak" />
+                                    </div>
+
+                                </SwiperSlide>
+                                <SwiperSlide >
+                                    <div className="images h-[150px] ">
+                                        <Image className='rounded-t-lg w-full h-full' src={human1} alt="jalan rusak" />
+                                    </div>
+
+                                </SwiperSlide>
+                            </Swiper>
+
+                            <div className="text px-2 py-1 space-y-1">
+                                <h1 className=' text-sm ' >Domba</h1>
+                                <h1 className='font-semibold'>Rp 1.000.000</h1>
+
+                                <div className="flex  items-center gap-1">
+                                    <IoPersonSharp color='#94a3b8' size={15} />
+                                    <p className='text-sm text-slate-400' >ORIZA SATIVA</p>
+                                </div>
+
+                                <div className="flex  items-center gap-1">
+                                    <HiMapPin color='#94a3b8' size={15} />
+                                    <p className='text-small text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat...</p>
+                                </div>
+
+                            </div>
+                            <div className="flex px-2 justify-end py-2 items-center gap-3 mt-2">
+                                <ButtonPrimary className='py-2 px-4   rounded-md text-sm lg:text-base'>Beli Sekarang</ButtonPrimary>
+                                <ButtonSecondary onClick={openDetail} className='py-2 px-4   rounded-md text-sm lg:text-base' >Detail</ButtonSecondary>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+
 
                 <ModalDefault onClose={onClose} isOpen={isOpen}>
                     <h1 className='text-xl font-semibold'>Domba</h1>

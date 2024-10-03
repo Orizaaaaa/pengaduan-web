@@ -1,4 +1,4 @@
-import { education, garbage, hospital, medicalKit, nationalPark, noParking, road, tree, waterPolution } from "@/app/image"
+import { education, garbage, hospital, medicalKit, nationalPark, noParking, road, shop1, shop2, shop3, shop4, shop5, shop6, shop7, tree, waterPolution } from "@/app/image"
 import { AiOutlineFileDone } from "react-icons/ai"
 import { BsPersonFillGear } from "react-icons/bs"
 import { FaWhatsapp } from "react-icons/fa6"
@@ -145,4 +145,39 @@ export const kategoriShop = [
         label: 'Semua Kategori',
         value: 'semua kategori',
     }
+]
+
+export const categoryCaraosel = [
+    {
+        image: shop1,
+        title: 'Buah Buahan'
+    },
+    {
+        image: shop2,
+        title: 'Sayur'
+    },
+    {
+        image: shop3,
+        title: 'Daging'
+    },
+    {
+        image: shop4,
+        title: 'Telor'
+    },
+    {
+        image: shop5,
+        title: 'Hewan Ternak'
+    },
+    {
+        image: shop6,
+        title: 'Makanan'
+    },
+    {
+        image: shop7,
+        title: 'Fashion'
+    },
+    {
+        image: shop7,
+        title: 'Fashion'
+    },
 ]
