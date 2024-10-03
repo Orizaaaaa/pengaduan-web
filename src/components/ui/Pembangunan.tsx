@@ -1,10 +1,17 @@
 import React from 'react'
+import Navbar from '../fragemnts/navbar/Navbar'
 
 type Props = {}
 
 const Pembangunan = (props: Props) => {
     return (
-        <div>Pembangunan</div>
+        <>
+            <Navbar />
+            <section className='pembangunan'>
+
+            </section>
+        </>
+
     )
 }
 

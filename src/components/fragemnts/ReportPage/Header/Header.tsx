@@ -52,18 +52,18 @@ const Header = (props: Props) => {
 
             {/* Section untuk menempatkan teks "hallo" di tengah */}
             <section className='relative '>
-                <div className='flex gap-10 px-4 md:px-0 md:gap-20 justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-white shadow-xl w-[90%] min-h-[100px] py-2 rounded-xl'>
+                <div className='flex gap-10 px-4 md:px-0 md:gap-20 justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-secondary shadow-xl w-[80%] min-h-[90px] py-2 rounded-xl'>
                     <div className="flex flex-col justify-center">
-                        <p className='text-3xl font-semibold text-primary'>{waitingCount} +</p>
-                        <p className='text-slate-500 text-sm text-start'>Menunggu</p>
+                        <p className='text-3xl font-semibold text-white'>{waitingCount} +</p>
+                        <p className='text-primary text-sm text-start'>Menunggu</p>
                     </div>
                     <div className="flex flex-col justify-center">
-                        <p className='text-3xl font-semibold text-primary'>{processingCount} +</p>
-                        <p className='text-slate-500 text-sm text-start'>Di Proses</p>
+                        <p className='text-3xl font-semibold text-white'>{processingCount} +</p>
+                        <p className='text-primary text-sm text-start'>Di Proses</p>
                     </div>
                     <div className="flex flex-col justify-center">
-                        <p className='text-3xl font-semibold text-primary'>{completedCount} +</p>
-                        <p className='text-slate-500 text-sm text-start'>Selesai</p>
+                        <p className='text-3xl font-semibold text-white'>{completedCount} +</p>
+                        <p className='text-primary text-sm text-start'>Selesai</p>
                     </div>
                 </div>
             </section>
