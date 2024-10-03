@@ -117,6 +117,12 @@ nav .flex ul li a::after {
     transition: width .3s;
 }
 
+#header-pengaduan {
+    background-image: url('./../assets/bgPengaduan.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
 
 #header-report {
     background-image: url('./../assets/pengaduanBg.png');

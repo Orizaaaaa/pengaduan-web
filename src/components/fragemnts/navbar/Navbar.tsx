@@ -29,7 +29,7 @@ const Navbar = (props: Props) => {
                 // Jika scroll lebih dari 80, bg langsung ada
                 if (window.scrollY >= 80) {
                     setnavbarBg(true);
-                } else if (pathname !== '/' && pathname !== '/report' && pathname !== '/shop') {
+                } else if (pathname !== '/' && pathname !== '/report' && pathname !== '/shop' && pathname !== '/pembangunan') {
                     // Navbar langsung muncul kecuali di halaman '/' dan '/report'
                     setnavbarBg(true);
                 } else {
