@@ -34,13 +34,13 @@ const LandingPage = () => {
 
                 </div>
             </section>
-            <AboutUs />
+            {/* <AboutUs />
             <EmployeList />
             <Galery />
             <News />
             <Location />
             <Faq />
-            <Footer />
+            <Footer /> */}
         </>
     )
 }
