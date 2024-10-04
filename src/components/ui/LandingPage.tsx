@@ -34,10 +34,10 @@ const LandingPage = () => {
 
                 </div>
             </section>
-            {/* <AboutUs />
+            <AboutUs />
             <EmployeList />
             <Galery />
-            <News />
+            {/* <News />
             <Location />
             <Faq />
             <Footer /> */}
