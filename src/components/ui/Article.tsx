@@ -13,7 +13,12 @@ const Article = (props: Props) => {
         <>
             <Navbar />
             <section className='container mx-auto min-h-[80vh]'>
-                <Search placeholder='Cari artikel...' />
+                <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10 mt-17">
+                    <h1 className='text-2xl font-bold'>Artikel</h1>
+                    <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
+                        <Search className='border-2 border-black' placeholder="Cari artikel..." />
+                    </div>
+                </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-7">
                     <CardLink href="/">
                         <div className="images h-[150px] ">
