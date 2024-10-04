@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-import Navbar from '../fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
@@ -19,7 +18,7 @@ const LandingPage = () => {
 
     return (
         <>
-            <Navbar />
+            {/* <Navbar /> */}
             <section id='beranda'>
                 <div className=' container mx-auto min-h-[90vh] lg:min-h-[102vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
                     <div className="title col-span-3 mt-8 lg:mt-0 order-last lg:order-first">
