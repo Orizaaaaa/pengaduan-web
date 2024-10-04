@@ -1,9 +1,12 @@
 'use client'
-import { pembangunan, } from '@/app/image'
+import { bgPengaduan, pembangunan, } from '@/app/image'
 import Map from '@/components/fragemnts/maps/Map'
 import Navbar from '@/components/fragemnts/navbar/Navbar'
+
 import Image from 'next/image'
 import React from 'react'
+import { Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 type Props = {}
 
@@ -42,7 +45,33 @@ const page = (props: Props) => {
                 <h1 className='text-2xl font-bold text-center'>Pembangunan aula kantor</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 my-10">
-                    <Image className='rounded-lg w-full h-full' src={pembangunan} alt="jalan rusak" />
+                    <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark">
+                        <Swiper
+                            slidesPerView={1} // Jumlah default slide yang ditampilkan
+                            spaceBetween={30}
+                            pagination={{
+                                clickable: true, // Pagination akan bisa diklik
+                            }}
+                            modules={[Pagination]}
+                            className="mySwiper"
+                        >
+
+                            <SwiperSlide >
+                                <div className="images h-[300px]  ">
+                                    <Image className='rounded-lg w-full h-full' src={pembangunan} alt="jalan rusak" />
+                                </div>
+
+                            </SwiperSlide>
+
+                            <SwiperSlide >
+                                <div className="images h-[300px] ">
+                                    <Image className='rounded-lg w-full h-full' src={bgPengaduan} alt="jalan rusak" />
+                                </div>
+                            </SwiperSlide>
+
+                        </Swiper>
+                    </div>
+
                     <div className="text">
                         <h1 className='text-lg font-medium'>Deskripsi</h1>
                         <p className='text-sm' >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae ut voluptas sequi iste mollitia alias quidem reiciendis laborum, labore quos, impedit enim est. Cumque recusandae est qui soluta tempora expedita.</p>
@@ -70,32 +99,7 @@ const page = (props: Props) => {
 
                 </section>
 
-                {/* <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark mb-20">
-                    <Swiper
-                        slidesPerView={1} // Jumlah default slide yang ditampilkan
-                        spaceBetween={30}
-                        pagination={{
-                            clickable: true, // Pagination akan bisa diklik
-                        }}
-                        modules={[Pagination]}
-                        className="mySwiper"
-                    >
 
-                        <SwiperSlide >
-                            <div className="images h-[300px] w-[50px] ">
-                                <Image className='rounded-lg w-full h-full' src={pembangunan} alt="jalan rusak" />
-                            </div>
-
-                        </SwiperSlide>
-
-                        <SwiperSlide >
-                            <div className="images h-[300px] w-[50px]">
-                                <Image className='rounded-lg w-full h-full' src={bgPengaduan} alt="jalan rusak" />
-                            </div>
-                        </SwiperSlide>
-
-                    </Swiper>
-                </div> */}
 
                 <div className="text space-y-2 mt-20">
                     <h1 className='font-medium'>Lokasi Pembangunan</h1>
