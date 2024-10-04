@@ -9,7 +9,7 @@ import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords } from "@/utils/helper";
-import { Autocomplete, AutocompleteItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 const OfficerList = () => {
@@ -17,7 +17,6 @@ const OfficerList = () => {
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [disabled, setDisabled] = useState(true)
     const [errorMsg, setErrorMsg] = useState(' ')
-    const [selectedUnitWork, setSelectedUnitWork] = useState('');
     const [unitKerja, setUnitKerja] = useState([]);
     const [dataUser, setDataUser] = useState([]);
     const [formData, setFormData] = useState({
@@ -34,8 +33,9 @@ const OfficerList = () => {
     //get all user
     useEffect(() => {
         getAllUser((result: any) => {
+            console.log(result);
             const data = result.data ? result.data.filter((role: any) =>
-                role.role !== 'user') : [];
+                role.role === 'admin') : [];
             setDataUser(data)
         })
     }, []);
@@ -93,25 +93,6 @@ const OfficerList = () => {
     }));
 
 
-    //get item dari dropdown
-    const getItem = (item: any, type: string) => {
-        if (type === 'form') {
-            setFormData({ ...formData, unitWork: item.value })
-        } else {
-            console.log(item.label);
-            setSelectedUnitWork(item.label)
-        }
-    }
-
-
-    // filter data by get item dropdown
-    const filteredData = dataUser.filter((item: any) => {
-        console.log(item.unitWork);
-        return (
-            item?.unitWork?.name && item.unitWork.name.includes(selectedUnitWork)
-        );
-    });
-
 
     //membuat petugas
     const createOfficer = async (e: any) => {
@@ -164,6 +145,7 @@ const OfficerList = () => {
         })
         onWarningClose();
     }
+
     return (
         <DefaultLayout>
 
@@ -180,21 +162,8 @@ const OfficerList = () => {
 
 
             <Card>
-                <div className="grid grid-cols-2 p-3 gap-3">
-                    <Autocomplete
-                        label="Filter Berdasarkan Unit Kerja"
-                        className=""
-                        clearButtonProps={{ size: 'sm', onClick: () => setSelectedUnitWork('') }}
-                    >
-                        {dataDropdown.map((item) => (
-                            <AutocompleteItem key={item.value} value={item.value}
-                                onClick={() => getItem(item, 'dropdown')}   >
-                                {item.label}
-                            </AutocompleteItem>
-
-                        ))}
-                    </Autocomplete>
-                    <ButtonPrimary className=" rounded-md" onClick={handleAddCategory} >Tambah Petugas</ButtonPrimary>
+                <div className="flex justify-end my-5">
+                    <ButtonPrimary className=" rounded-md py-2 px-4" onClick={handleAddCategory} >Tambah Petugas</ButtonPrimary>
                 </div>
 
 
@@ -202,18 +171,22 @@ const OfficerList = () => {
                     <TableHeader>
                         <TableColumn>N0</TableColumn>
                         <TableColumn>NAME</TableColumn>
+                        <TableColumn>EMAIL</TableColumn>
+                        <TableColumn>NO HP</TableColumn>
                         <TableColumn>ROLE</TableColumn>
                         <TableColumn>UNIT KERJA</TableColumn>
                         <TableColumn>ACTION</TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {filteredData?.map((user: any, index: any) => (
+                        {dataUser?.map((user: any, index: any) => (
                             <TableRow key={index}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{capitalizeWords(user.name)}</TableCell>
+                                <TableCell>{capitalizeWords(user.email)}</TableCell>
+                                <TableCell>{capitalizeWords(user.number_phone)}</TableCell>
                                 <TableCell>{capitalizeWords(user.role)}</TableCell>
                                 <TableCell>{user.unitWork ? capitalizeWords(user.unitWork.name) : '-'}</TableCell>
-                                <TableCell><ButtonPrimary className="bg-red-700 rounded-md w-full"
+                                <TableCell><ButtonPrimary className="bg-red-700 rounded-md w-full py-2"
                                     onClick={() => handleDeleteModal(user.id)}>Delete</ButtonPrimary></TableCell>
                             </TableRow>
                         ))}
