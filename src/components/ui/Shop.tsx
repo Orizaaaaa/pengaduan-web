@@ -144,7 +144,7 @@ const Shop = (props: Props) => {
                     <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
                         <h1 className='text-2xl font-bold my-10'>Produk</h1>
                         <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
-                            <Search className='border-2 border-primary' placeholder="Cari Produk" />
+                            <Search className='border-2 border-black' placeholder="Cari Produk" />
                         </div>
                     </div>
 

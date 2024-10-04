@@ -140,7 +140,7 @@ nav .flex ul li a::after {
 }
 
 #footer {
-    padding-top: 10%;
+    padding-top: 21vh;
     background-image: url('./../assets/bgFooter.png');
     background-repeat: no-repeat;
     background-size: cover;
