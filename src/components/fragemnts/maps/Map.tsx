@@ -1,4 +1,5 @@
-'use client'
+'use client'; // Tambahkan ini di bagian atas file
+
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; // Pastikan untuk mengimpor CSS Leaflet
@@ -9,7 +10,6 @@ type Props = {
     lat: number,
     lng: number
 }
-
 
 // Atur ikon default untuk marker
 let DefaultIcon = L.icon({
@@ -22,7 +22,6 @@ let DefaultIcon = L.icon({
 
 // Atur ikon marker default
 L.Marker.prototype.options.icon = DefaultIcon;
-
 
 const Map = ({ lat, lng }: Props) => {
     const center = { lat: lat, lng: lng };
@@ -44,7 +43,7 @@ const Map = ({ lat, lng }: Props) => {
                 </Popup>
             </Marker>
         </MapContainer>
-    )
-}
+    );
+};
 
-export default Map
+export default Map;
