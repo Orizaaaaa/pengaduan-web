@@ -1,5 +1,3 @@
-'use client'
-
 import LandingUi from "@/components/ui/LandingUi"
 
 

@@ -1,4 +1,4 @@
-
+'use client'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; // Pastikan untuk mengimpor CSS Leaflet
