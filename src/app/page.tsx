@@ -1,13 +1,10 @@
 'use client'
-
 import LandingPage from '@/components/ui/LandingPage'
-import React from 'react'
 
-type Props = {}
 
-const page = (props: Props) => {
+const page = () => {
   return (
-    <p>hallo</p>
+    <LandingPage />
   )
 }
 
