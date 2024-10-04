@@ -5,21 +5,23 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination } from 'swiper/modules'
 import Image from 'next/image'
 import ButtonPrimary from '../elements/buttonPrimary'
-import { bgPengaduan, headerPengaduan, headerShop, human1, pembangunan } from '@/app/image'
+import { bgPengaduan, pembangunan } from '@/app/image'
 import Search from '../fragemnts/search/Search'
-import { IoPersonSharp } from 'react-icons/io5'
 import { HiMapPin } from 'react-icons/hi2'
-import ButtonSecondary from '../elements/buttonSecondary'
 import { MdOutlineCalendarToday } from 'react-icons/md'
 import { IoIosArrowForward } from 'react-icons/io'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
 const Pembangunan = (props: Props) => {
+
+    const router = useRouter()
+
     return (
         <>
             <Navbar />
-            <section className='mb-30' id='header-pengaduan'>
+            <section className='mb-20' id='header-pengaduan'>
                 <div className='container mx-auto min-h-[100vh] grid items-center px-4 pt-5 md:px-20 overflow-x-hidden'>
                     <div className="title">
                         <h1 className='text-4xl lg:text-6xl font-bold text-white'>
@@ -39,7 +41,7 @@ const Pembangunan = (props: Props) => {
 
             <section className='container mx-auto'>
                 <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
-                    <h1 className='text-2xl font-bold my-10'>Pembangunan</h1>
+                    <h1 className='text-2xl font-bold '>Pembangunan</h1>
                     <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
                         <Search className='border-2 border-black' placeholder="Cari Pembangunan..." />
                     </div>
@@ -88,10 +90,9 @@ const Pembangunan = (props: Props) => {
 
                         </div>
                         <div className="flex px-2 justify-end py-2 items-center gap-3 mt-2">
-                            <ButtonPrimary className='py-2 px-4 flex justify-center items-center   rounded-xl text-sm lg:text-base'>Selengkap nya <IoIosArrowForward /> </ButtonPrimary>
+                            <ButtonPrimary onClick={() => router.push('/pembangunan/12')} className='py-2 px-4 flex justify-center items-center   rounded-xl text-sm lg:text-base'>Selengkap nya <IoIosArrowForward /> </ButtonPrimary>
                         </div>
                     </div>
-
                 </div>
             </section>
 

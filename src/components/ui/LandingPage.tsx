@@ -10,6 +10,7 @@ import Galery from '../fragemnts/LandingPage/galery/Galery'
 import News from '../fragemnts/LandingPage/news/News'
 import Faq from '../fragemnts/LandingPage/faq/Faq'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
+import Location from '../fragemnts/LandingPage/location/Location'
 
 
 
@@ -38,6 +39,7 @@ const LandingPage = () => {
             <EmployeList />
             <Galery />
             <News />
+            <Location />
             <Faq />
             <Footer />
         </>
