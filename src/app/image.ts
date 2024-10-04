@@ -33,6 +33,12 @@ import shop5 from '../assets/shop5.jpg'
 import pembangunan from '../assets/pembangunan.jpg'
 import shop6 from '../assets/shop6.png'
 import shop7 from '../assets/shop7.png'
+import calendar from '../assets/calendar.png'
+import mapIcon from '../assets/mapIcon.png'
+import moneyIcon from '../assets/moneyIcon.png'
+import pelaksana from '../assets/pelaksana.png'
+import salary from '../assets/salary.png'
+import volume from '../assets/volume.png'
 import brand10 from '../assets/brand10.svg'
 import headerShop from '../assets/bgShop.png'
 import headerPengaduan from '../assets/bgPengaduan.png'
@@ -61,5 +67,6 @@ export {
     galery2, galery3, galery4, galery5, galery6,
     brand1, brand2, brand3, brand4, brand5, brand6, brand7,
     brand8, brand9, brand10, bgPengaduan, imageLogin, camera,
-    headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7, headerPengaduan, pembangunan
+    headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
+    calendar, mapIcon, moneyIcon, pelaksana, salary, volume, headerPengaduan, pembangunan
 };
