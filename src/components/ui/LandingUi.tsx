@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+import dynamic from 'next/dynamic';
 import Image from 'next/image'
 import { logo } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
@@ -9,11 +10,13 @@ import Galery from '../fragemnts/LandingPage/galery/Galery'
 import News from '../fragemnts/LandingPage/news/News'
 import Faq from '../fragemnts/LandingPage/faq/Faq'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
-import Map from '../fragemnts/maps/Map'
 import Navbar from '../fragemnts/navbar/Navbar'
 
 
-
+// Import komponen Map secara dinamis tanpa SSR
+const Map = dynamic(() => import('../fragemnts/maps/Map'), {
+    ssr: false
+});
 
 
 
