@@ -40,6 +40,7 @@ import pelaksana from '../assets/pelaksana.png'
 import salary from '../assets/salary.png'
 import volume from '../assets/volume.png'
 import brand10 from '../assets/brand10.svg'
+import manusiaLaptop from '../assets/manusiaLaptop.svg'
 import headerShop from '../assets/bgShop.png'
 import headerPengaduan from '../assets/bgPengaduan.png'
 
@@ -68,5 +69,5 @@ export {
     brand1, brand2, brand3, brand4, brand5, brand6, brand7,
     brand8, brand9, brand10, bgPengaduan, imageLogin, camera,
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
-    calendar, mapIcon, moneyIcon, pelaksana, salary, volume, headerPengaduan, pembangunan
+    calendar, mapIcon, moneyIcon, pelaksana, salary, volume, headerPengaduan, pembangunan, manusiaLaptop
 };

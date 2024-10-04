@@ -103,7 +103,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/laporan-saya-officer" />
         </>
       );
-    } else if (role === 'admin') {
+    } else if (role === 'super_admin') {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-admin" />
@@ -159,7 +159,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <div>
             <ul className="mb-6 flex flex-col gap-1.5">
               {/* <!-- Menu Item Dashboard --> */}
-              {setSidebar(role)}
+              {setSidebar('super_admin')}
 
               <ButtonSecondary className="w-full py-1 rounded-md font-medium" onClick={handleLogout}>Logout</ButtonSecondary>
             </ul>

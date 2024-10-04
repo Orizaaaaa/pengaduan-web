@@ -4,6 +4,9 @@ import DefaultLayout from '../layouts/DefaultLayout'
 import Card from '../elements/card/Card'
 import { parseCoordinate } from '@/utils/helper'
 import { coordinateDashboard, statusDashboard } from '@/api/dashboard'
+import Image from 'next/image'
+import { manusiaLaptop } from '@/app/image'
+import MapsAdmin from '../fragemnts/maps/MapsAdmin'
 
 interface Report {
     Menunggu: number
@@ -65,6 +68,8 @@ const DashboardAdmin = () => {
         }
 
     })
+
+
     return (
         <DefaultLayout>
             <Card>
@@ -74,7 +79,7 @@ const DashboardAdmin = () => {
                         <p className="text-gray-500 text-sm md:text-base" >Senang melihat Anda kembali. Mari kita mulai hari ini dengan mengelola pengaudan yang telah di ajukan oleh masyarakat</p>
                     </div>
                     <div className="flex justify-center">
-                        <img src={''} alt="dashboard" />
+                        <Image src={manusiaLaptop} alt="dashboard" />
                     </div>
                 </div>
             </Card>
@@ -104,7 +109,7 @@ const DashboardAdmin = () => {
                 ))}
             </div >
 
-            {/* <MapsAdmin center={{ lat: -6.917464, lng: 107.619125 }} dataMarker={markers} /> */}
+            <MapsAdmin center={{ lat: -6.917464, lng: 107.619125 }} dataMarker={markers} />
 
 
 
