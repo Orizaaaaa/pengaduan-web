@@ -1,15 +1,15 @@
-'use client';
 
-import dynamic from 'next/dynamic';
-import 'leaflet/dist/leaflet.css'; // Pastikan untuk mengimpor CSS Leaflet
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'; // Pastikan untuk mengimpor CSS Leaflet
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 type Props = {
     lat: number,
     lng: number
-};
+}
+
 
 // Atur ikon default untuk marker
 let DefaultIcon = L.icon({
@@ -23,11 +23,6 @@ let DefaultIcon = L.icon({
 // Atur ikon marker default
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Gunakan dynamic import untuk MapContainer agar SSR dinonaktifkan
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 
 const Map = ({ lat, lng }: Props) => {
     const center = { lat: lat, lng: lng };
@@ -42,6 +37,7 @@ const Map = ({ lat, lng }: Props) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+
             <Marker position={center}>
                 <Popup>
                     <p>{'PT INTI ( Gedung Utama ) lt 4, JL. Moch. Toha No.77, Cigelereng, Kec.Regol, Kota Bandung, Jawa Barat 40253'}</p>
@@ -51,4 +47,4 @@ const Map = ({ lat, lng }: Props) => {
     )
 }
 
-export default Map;
+export default Map
