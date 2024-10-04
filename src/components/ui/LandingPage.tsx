@@ -37,10 +37,10 @@ const LandingPage = () => {
             <AboutUs />
             <EmployeList />
             <Galery />
-            {/* <News />
-            <Location />
+            <News />
+            {/* <Location /> */}
             <Faq />
-            <Footer /> */}
+            <Footer />
         </>
     )
 }
