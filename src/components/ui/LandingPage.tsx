@@ -38,7 +38,7 @@ const LandingPage = () => {
             <EmployeList />
             <Galery />
             <News />
-            {/* <Location /> */}
+            <Location />
             <Faq />
             <Footer />
         </>
