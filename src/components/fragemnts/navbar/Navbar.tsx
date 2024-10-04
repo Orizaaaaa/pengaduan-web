@@ -39,18 +39,16 @@ const Navbar = (props: Props) => {
         };
 
         // Cek kondisi saat halaman pertama kali dibuka
-        if (typeof window !== 'undefined') {
-            changeBackground();
-            window.addEventListener('scroll', changeBackground);
-        }
+        changeBackground();
+
+        // Event listener untuk perubahan scroll
+        window.addEventListener('scroll', changeBackground);
 
         return () => {
-            if (typeof window !== 'undefined') {
-                window.removeEventListener('scroll', changeBackground);
-            }
+            window.removeEventListener('scroll', changeBackground);
         };
-    }, [pathname]);
-
+    }, [pathname]); // pathname untuk memantau perubahan halaman
+    // Tambahkan pathname ke dependency array untuk mendeteksi perubahan
 
 
 

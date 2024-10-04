@@ -7,7 +7,7 @@ type Props = {}
 
 const page = (props: Props) => {
   return (
-    <LandingPage />
+    <p>hallo</p>
   )
 }
 
