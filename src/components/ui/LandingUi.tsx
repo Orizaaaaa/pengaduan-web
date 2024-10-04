@@ -17,7 +17,7 @@ import Navbar from '../fragemnts/navbar/Navbar'
 
 
 
-const LandingPage = () => {
+const LandingUi = () => {
 
     return (
         <>
@@ -41,17 +41,17 @@ const LandingPage = () => {
             <EmployeList />
             <Galery />
             <News />
-            {/* <section className='container mx-auto my-22' id='lokasi'>
+            <section className='container mx-auto my-22' id='lokasi'>
                 <div className="text-start text-2xl my-10">
                     <h1 className="text-primary font-medium" >Lokasi</h1>
                     <h1 className="text-primary font-bold" >Lokasi Desa Kami</h1>
                 </div>
                 <Map lat={-6.937998511449565} lng={107.60711431503297} />
-            </section> */}
+            </section>
             <Faq />
             <Footer />
         </>
     )
 }
 
-export default LandingPage
+export default LandingUi

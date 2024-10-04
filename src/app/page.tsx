@@ -1,10 +1,12 @@
 'use client'
-import LandingPage from '@/components/ui/LandingPage'
+
+import LandingUi from "@/components/ui/LandingUi"
+
 
 
 const page = () => {
   return (
-    <LandingPage />
+    <LandingUi />
   )
 }
 
