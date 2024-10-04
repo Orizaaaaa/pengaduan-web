@@ -17,7 +17,6 @@ const OfficerList = () => {
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [disabled, setDisabled] = useState(true)
     const [errorMsg, setErrorMsg] = useState(' ')
-    const [unitKerja, setUnitKerja] = useState([]);
     const [dataUser, setDataUser] = useState([]);
     const [formData, setFormData] = useState({
         name: ' ',
@@ -40,13 +39,6 @@ const OfficerList = () => {
         })
     }, []);
 
-
-    //getAllUnitKerja
-    useEffect(() => {
-        getAllUnitWork((result: any) => {
-            setUnitKerja(result.unitWork)
-        })
-    }, []);
 
     const handleAddCategory = () => {
         onOpen();
@@ -83,15 +75,6 @@ const OfficerList = () => {
             setErrorMsg('')
         }
     };
-
-
-
-    //dropdown name di ubah jadi label dan id di ubah jadi value
-    const dataDropdown = unitKerja.map((unit: { name: string, _id: string }) => ({
-        label: unit.name,
-        value: unit._id,
-    }));
-
 
 
     //membuat petugas
@@ -216,8 +199,8 @@ const OfficerList = () => {
                 <h2 className="text-lg font-semibold">Peringatan</h2>
                 <p> apakah Anda yakin ingin menghapus petugas tersebut ?</p>
                 <div className="flex justify-end gap-4 mt-4">
-                    <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 text-black rounded-md">Batal</ButtonPrimary>
-                    <ButtonPrimary onClick={handleDelete} className="bg-red-500 text-white rounded-md">Hapus</ButtonPrimary>
+                    <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 text-black rounded-md px-3 py-2">Batal</ButtonPrimary>
+                    <ButtonPrimary onClick={handleDelete} className="bg-red text-white rounded-md  px-3 py-2">Hapus</ButtonPrimary>
                 </div>
             </ModalDefault>
         </DefaultLayout>
