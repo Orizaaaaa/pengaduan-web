@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { url } from './auth';
+
 
 
 export const axiosInterceptor = axios.create({
-    baseURL: url,
+    baseURL: 'https://bedesacms.vercel.app',
     // timeout: 5000,
 });
 

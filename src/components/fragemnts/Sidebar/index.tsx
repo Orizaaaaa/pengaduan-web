@@ -108,7 +108,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-admin" />
           <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-admin/report" />
-          <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/petugas-admin" />
+          <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-admin/officer" />
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/kategori-admin" />
           <NavigationList icon={<BsBuildingAdd size={19} />} title="Unit Kerja" pathname="/unit-kerja-admin" />
         </>

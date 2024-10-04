@@ -46,6 +46,7 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
 
+        // nanti buat pengkondisian berdasarkan role
         await loginService(form, (status: boolean, res: any) => {
             setLoading(false);
             if (status) {
@@ -55,7 +56,7 @@ const Login = () => {
                 localStorage.setItem('name', res.data.username);
                 localStorage.setItem('role', res.data.role);
                 localStorage.setItem('token', res.data.token)
-                router.push('/dashboard');
+                router.push('/dashboard-admin');
             } else {
                 setErrorLogin('*Email atau password salah');
                 console.log(res.data);
