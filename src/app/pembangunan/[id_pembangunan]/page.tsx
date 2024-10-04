@@ -1,6 +1,5 @@
 'use client'
 import { pembangunan, } from '@/app/image'
-import Map from '@/components/fragemnts/maps/Map'
 import Navbar from '@/components/fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import React from 'react'
@@ -101,9 +100,9 @@ const page = (props: Props) => {
                     <h1 className='font-medium'>Lokasi Pembangunan</h1>
                     <hr className='w-full text-[#eeeeee]' />
                 </div>
-                <div className="location mt-5">
+                {/* <div className="location mt-5">
                     <Map lat={-6.937998511449565} lng={107.60711431503297} />
-                </div>
+                </div> */}
             </section>
         </>
 
