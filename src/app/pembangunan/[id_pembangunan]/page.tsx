@@ -1,45 +1,35 @@
 'use client'
-import { bgPengaduan, calendar, mapIcon, moneyIcon, pelaksana, pembangunan, salary, volume } from '@/app/image'
+import { pembangunan, } from '@/app/image'
 import Map from '@/components/fragemnts/maps/Map'
 import Navbar from '@/components/fragemnts/navbar/Navbar'
 import Image from 'next/image'
 import React from 'react'
-import { FaMoneyBill } from 'react-icons/fa6'
-import { IoHome } from 'react-icons/io5'
-import { Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
 
 type Props = {}
 
 const page = (props: Props) => {
     const dataDetail = [
         {
-            image: '',
             title: 'Anggaran',
             value: 'Rp 10.000.00'
         },
         {
-            image: '',
             title: 'Sumber Dana',
             value: 'Alokasi Anggaran Pendapatan dan Belanja Negara (Dana Desa)'
         },
         {
-            image: '',
             title: 'Volume',
             value: '500'
         },
         {
-            image: '',
             title: 'Pelaksana',
             value: 'Rehab Desa'
         },
         {
-            image: '',
             title: 'Tahun',
             value: '12/30/2024'
         },
         {
-            image: '',
             title: 'Alamat',
             value: 'RT - / RW LEMBANG'
         },
@@ -69,9 +59,6 @@ const page = (props: Props) => {
                     <div className="grid grid-cols-2 gap-5 mt-10">
                         {dataDetail.map((item, index) => (
                             <div className="flex  gap-5" key={index}>
-                                <div>
-                                    {item.image}
-                                </div>
 
                                 <div className="text">
                                     <h1 className='font-medium' >{item.title}</h1>
