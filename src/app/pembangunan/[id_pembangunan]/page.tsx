@@ -44,7 +44,7 @@ const page = (props: Props) => {
 
                 <h1 className='text-2xl font-bold text-center'>Pembangunan aula kantor</h1>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 my-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-10">
                     <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark">
                         <Swiper
                             slidesPerView={1} // Jumlah default slide yang ditampilkan
