@@ -9,6 +9,8 @@ import Galery from '../fragemnts/LandingPage/galery/Galery'
 import News from '../fragemnts/LandingPage/news/News'
 import Faq from '../fragemnts/LandingPage/faq/Faq'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
+import Map from '../fragemnts/maps/Map'
+import Navbar from '../fragemnts/navbar/Navbar'
 
 
 
@@ -19,7 +21,7 @@ const LandingPage = () => {
 
     return (
         <>
-            {/* <Navbar /> */}
+            <Navbar />
             <section id='beranda'>
                 <div className=' container mx-auto min-h-[90vh] lg:min-h-[102vh] grid grid-cols-1 lg:grid-cols-5 items-center px-4 pt-5 md:px-20  overflow-x-hidden' >
                     <div className="title col-span-3 mt-8 lg:mt-0 order-last lg:order-first">
@@ -39,6 +41,13 @@ const LandingPage = () => {
             <EmployeList />
             <Galery />
             <News />
+            <section className='container mx-auto my-22' id='lokasi'>
+                <div className="text-start text-2xl my-10">
+                    <h1 className="text-primary font-medium" >Lokasi</h1>
+                    <h1 className="text-primary font-bold" >Lokasi Desa Kami</h1>
+                </div>
+                <Map lat={-6.937998511449565} lng={107.60711431503297} />
+            </section>
             <Faq />
             <Footer />
         </>
