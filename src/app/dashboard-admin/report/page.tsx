@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const [loading, setLoading] = useState(false)
     const [dataReport, setDataReport] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -96,4 +96,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
