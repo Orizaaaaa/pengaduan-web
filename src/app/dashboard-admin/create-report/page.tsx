@@ -15,7 +15,7 @@ import { useMapEvents } from 'react-leaflet'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
 
     const [errorMsg, setErrorMsg] = useState('')
     const [category, setCategory] = useState([])
@@ -165,4 +165,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
