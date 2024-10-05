@@ -53,14 +53,20 @@ const Login = () => {
                 const tokenCookies = `token=${res.data.token}`;
                 document.cookie = tokenCookies; // Set cookie
                 // Akses localStorage hanya di sisi klien
-                localStorage.setItem('name', res.data.username);
+                localStorage.setItem('name', res.data.name);
                 localStorage.setItem('role', res.data.role);
                 localStorage.setItem('token', res.data.token)
-                router.push('/dashboard-admin');
+
+                if (res.data.role === 'admin') {
+                    router.push('/dashboard-admin');
+                } else if (res.data.role === 'user') {
+                    router.push('/dashboard-user')
+                }
             } else {
                 setErrorLogin('*Email atau password salah');
                 console.log(res.data);
             }
+
         });
     };
 
