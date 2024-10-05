@@ -6,7 +6,11 @@ import { parseCoordinate } from '@/utils/helper'
 import { coordinateDashboard, statusDashboard } from '@/api/dashboard'
 import Image from 'next/image'
 import { manusiaLaptop } from '@/app/image'
-import MapsAdmin from '../fragemnts/maps/MapsAdmin'
+import dynamic from 'next/dynamic'
+const MapsAdmin = dynamic(() => import('../fragemnts/maps/MapsAdmin'), {
+    ssr: false
+});
+
 
 interface Report {
     Menunggu: number
