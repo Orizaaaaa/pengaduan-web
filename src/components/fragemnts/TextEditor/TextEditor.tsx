@@ -19,7 +19,7 @@ const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 const TextEditor = ({ desc }: any) => {
     const router = useRouter();
     const [form, setForm] = useState({
-        name: '',
+        title: '',
         description: desc,
         image: null as File | null,
     })
@@ -127,7 +127,7 @@ const TextEditor = ({ desc }: any) => {
                             </div>
                         </div>
                         {/* This is the main initialization of the Jodit editor */}
-                        <InputForm htmlFor="name" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.name} />
+                        <InputForm htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.title} />
                         <JoditEditor
                             value={form.description}         // This is important
                             config={config}         // Only use when you declare some custom configs

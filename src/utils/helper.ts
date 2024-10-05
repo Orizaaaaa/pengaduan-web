@@ -40,6 +40,17 @@ export function formatCatrgory(text: string, maxLength: number = 34): string {
     }
     return text;
 }
+export function formatNews(text: string, maxLength: number = 43): string {
+    // Menghapus elemen HTML menggunakan regex
+    const cleanText = text.replace(/<\/?[^>]+(>|$)/g, "");
+
+    // Memotong teks jika panjangnya melebihi maxLength
+    if (cleanText.length > maxLength) {
+        return cleanText.slice(0, maxLength) + "...";
+    }
+    return cleanText;
+}
+
 
 
 
