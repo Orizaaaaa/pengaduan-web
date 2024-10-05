@@ -1,6 +1,6 @@
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import React from 'react'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
 
 type Props = {
     pathname: string,
@@ -15,19 +15,18 @@ const NavigationList = ({ pathname, title, icon }: Props) => {
     const currentPathSegments = pathnames.split('/').filter(Boolean);
     const targetPathSegments = pathname.split('/').filter(Boolean);
 
-    // Cek apakah path saat ini cocok dengan path navigasi atau merupakan parent-nya
+    // Cek apakah segmen kedua dari path saat ini cocok dengan path navigasi
     const isActive =
-        currentPathSegments.length === targetPathSegments.length &&
-        currentPathSegments.every((segment, index) => segment === targetPathSegments[index]);
+        currentPathSegments.length > 1 &&
+        targetPathSegments.length > 1 &&
+        currentPathSegments[1] === targetPathSegments[1];
 
     return (
         <li>
             <Link
-                href={`${pathname}`}
+                href={pathname}
                 className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-bodydark2 duration-300 text-gray-500 
-                 ease-in-out hover:bg-primary hover:text-white ${isActive &&
-                    "bg-primary text-white"
-                    }`}
+                 ease-in-out hover:bg-primary hover:text-white ${isActive && 'bg-primary text-white'}`}
             >
                 {icon}
                 {title}
