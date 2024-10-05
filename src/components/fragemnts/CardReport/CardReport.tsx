@@ -6,7 +6,7 @@ import Image from "next/image"
 
 type Props = {
     location: string
-    image: string
+    image: any
     title: string
     address: string
     status: string
