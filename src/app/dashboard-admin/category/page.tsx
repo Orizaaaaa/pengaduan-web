@@ -15,21 +15,17 @@ import { IoCloseCircleOutline } from 'react-icons/io5'
 
 type Props = {}
 
-const page = (props: Props) => {
-
+const Page = (props: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [category, setCategory] = useState([]);
 
-    // form data untuk create category
     const [formData, setFormData] = useState({
         name: '',
         image: null as File | null
     });
 
-    //form data untuk delete category
-    const [dataDelete, setDataDelete] = useState('')
-
+    const [dataDelete, setDataDelete] = useState('');
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -42,56 +38,52 @@ const page = (props: Props) => {
             fileInput ? fileInput.click() : null;
         } else {
             console.log('error');
-
         }
     };
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
         if (InputSelect === 'add') {
             const selectedImage = e.target.files?.[0];
             setFormData({ ...formData, image: selectedImage || null });
         } else {
             console.log('error');
-
         }
     };
 
-    //get all category
     useEffect(() => {
         getCategories((result: any) => {
-            setCategory(result.data)
-        })
+            setCategory(result.data);
+        });
     }, []);
 
-
-
     const handlecreateCategory = async (e: any) => {
-        e.preventDefault()
-        setDataDelete('')
+        e.preventDefault();
+        setDataDelete('');
         const imageUrl = await postImage({ image: formData.image });
         if (imageUrl) {
-            const data = { name: formData.name, image: imageUrl }
+            const data = { name: formData.name, image: imageUrl };
             await createCategory(data, (result: any) => {
                 console.log(result);
-                onClose()
+                onClose();
                 getCategories((result: any) => {
-                    setCategory(result.data)
-                })
+                    setCategory(result.data);
+                });
                 setFormData({
                     name: '',
                     image: null as File | null
-                })
-            })
+                });
+            });
         }
-
-    }
+    };
 
     const handleChangeId = (value: string) => {
-        setDataDelete(value)
-    }
+        setDataDelete(value);
+    };
 
     const handleAddCategory = () => {
         onOpen();
-    }
+    };
+
     const handleDeleteModal = () => {
         onWarningOpen();
     };
@@ -189,4 +181,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
