@@ -180,8 +180,8 @@ const page = (props: Props) => {
                     <h2 className="text-lg font-semibold">Peringatan</h2>
                     <p> apakah Anda yakin ingin menghapus kategori ini?</p>
                     <div className="flex justify-end gap-4 mt-4">
-                        <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 text-black rounded-md">Batal</ButtonPrimary>
-                        <ButtonPrimary onClick={confirmDelete} className="bg-red-500 text-white rounded-md">Hapus</ButtonPrimary>
+                        <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 py-2 px-4 text-black rounded-md">Batal</ButtonPrimary>
+                        <ButtonPrimary onClick={confirmDelete} className="bg-red-500 py-2 px-4 text-white rounded-md">Hapus</ButtonPrimary>
                     </div>
                 </ModalDefault>
             </div>

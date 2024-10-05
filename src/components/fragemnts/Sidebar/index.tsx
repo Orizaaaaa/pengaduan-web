@@ -9,9 +9,9 @@ import Image from "next/image";
 import ButtonSecondary from "@/components/elements/buttonSecondary";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaBookReader } from "react-icons/fa";
-import { FaBookOpen } from "react-icons/fa6";
-import { IoMdPricetags } from "react-icons/io";
-import { BsBuildingAdd } from "react-icons/bs";
+import { FaBookOpen, FaRegNewspaper } from "react-icons/fa6";
+import { IoMdImages, IoMdPricetags } from "react-icons/io";
+import { BsBuildingAdd, BsShop } from "react-icons/bs";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -111,7 +111,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookOpen size={19} />} title="Buat Laporan" pathname="/dashboard-admin/create-report" />
           <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-admin/officer" />
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-admin/category" />
-          <NavigationList icon={<BsBuildingAdd size={19} />} title="Unit Kerja" pathname="/unit-kerja-admin" />
+          <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-admin/article" />
+          <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-admin/galert" />
+          <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-admin/shop" />
         </>
       );
     }
