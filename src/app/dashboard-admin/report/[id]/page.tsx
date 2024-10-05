@@ -27,7 +27,8 @@ interface Report {
     unitWorks: any;
 }
 
-const DetailReportUser = () => {
+
+const Page = () => {
     const { id }: any = useParams(); // Menggunakan id dari useParams
     const name = typeof window !== 'undefined' ? localStorage.getItem("name") : null; // Memastikan localStorage hanya diakses di client side
     const [dataReport, setDataReport] = useState<Report | null>(null);
@@ -154,4 +155,4 @@ const DetailReportUser = () => {
     );
 };
 
-export default DetailReportUser;
+export default Page;
