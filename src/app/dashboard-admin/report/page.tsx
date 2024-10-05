@@ -46,6 +46,9 @@ const page = (props: Props) => {
         );
     });
 
+    console.log(dataReport);
+
+
     return (
         <DefaultLayout>
             {/* <div className="w-full mt-4 relative ">
@@ -76,7 +79,7 @@ const page = (props: Props) => {
                 {filteredData.map((item: any, index: number) => (
                     <CardReport
                         location={`/${item.id}`}
-                        image={item.imageReport}
+                        image={item.imageReport[0]}
                         title={item.title}
                         address={item.address}
                         status={item.status}

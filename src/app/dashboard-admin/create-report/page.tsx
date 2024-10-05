@@ -109,11 +109,11 @@ const page = (props: Props) => {
             <Card>
                 <h1 className="text-lg font-semibold text-primary py-4 border-b-2 border-primary" >Buat Laporan</h1>
                 <div className="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
-                    <div className="input-report mt-4">
+                    <div className="input-report ">
                         <InputReport htmlFor="title" title="Judul Laporan  " type="text" onChange={handleChange} value={formData.title} />
                         <InputReport htmlFor="location" title="Lokasi kejadian  " type="text" onChange={handleChange} value={formData.location} placeholder="nama jalan atau tempat.." />
                         <label className="font-medium" htmlFor="desc" >Deskripsi Laporan  </label>
-                        <textarea onChange={handleChange} name="desc" id="desc" cols={30} value={formData.desc} rows={4} className="block p-2.5 w-full bg-gray-300 rounded-md outline-none mt-2" ></textarea>
+                        <textarea onChange={handleChange} name="desc" id="desc" cols={30} value={formData.desc} rows={4} className="block p-2.5 w-full bg-slate-300 rounded-md outline-none mt-2" ></textarea>
                     </div>
 
                     {/* images input */}

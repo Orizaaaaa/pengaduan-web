@@ -6,7 +6,7 @@ import Image from "next/image"
 
 type Props = {
     location: string
-    image: any
+    image: string
     title: string
     address: string
     status: string
@@ -20,7 +20,7 @@ const CardReport = ({ location, image, title, address, status, date, desc }: Pro
         duration-300 hover:scale-105 bg-white p-4 lg:px-7.5 lg:py-6 shadow-default 
         dark:border-strokedark h-full grid" >
             <div className="images h-[150px] w-full relative">
-                <Image className='rounded-lg w-full h-full' src={image} alt="jalan rusak" />
+                <img className='rounded-lg w-full h-full' src={image} alt="image card report" />
             </div>
             <div className="space-y-2 mt-1 flex flex-col justify-between h-full">
                 <h1 className=' font-semibold text-lg'>{title}</h1>
