@@ -8,7 +8,7 @@ import useSWR from 'swr'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const { id_article }: any = useParams()
     const { data, error } = useSWR(`${url}/news/${id_article}`, fetcher, {
         keepPreviousData: true,
@@ -25,4 +25,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
