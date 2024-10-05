@@ -12,11 +12,18 @@ export const statusChange = (value: string) => {
 
 
 export const formatDate = (tanggal: any) => {
-    const date = new Date(tanggal);  // Pastikan 'tanggal' adalah objek Date
+    if (!tanggal) {
+        console.error("Tanggal tidak ada:", tanggal);
+        return "Invalid date";  // Mengembalikan nilai default jika tanggal tidak ada
+    }
 
-    // Cek apakah 'date' adalah objek Date yang valid
+    // Pastikan bahwa 'tanggal' merupakan string atau objek Date yang valid
+    const date = new Date(tanggal);
+
+    // Cek apakah objek Date valid
     if (isNaN(date.getTime())) {
-        throw new Error("Invalid date format");
+        console.error("Format tanggal tidak valid:", tanggal);
+        return "Invalid date";  // Mengembalikan nilai default jika format tanggal tidak valid
     }
 
     const tahun = date.getFullYear();
@@ -25,6 +32,7 @@ export const formatDate = (tanggal: any) => {
 
     return `${tahun}-${bulan}-${hari}`;
 };
+
 
 export function formatCatrgory(text: string, maxLength: number = 34): string {
     if (text.length > maxLength) {
