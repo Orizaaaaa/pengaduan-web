@@ -5,13 +5,15 @@ import { createReport } from '@/api/report'
 import { camera } from '@/app/image'
 import Card from '@/components/elements/card/Card'
 import InputReport from '@/components/elements/input/InputReport'
-import Map from '@/components/fragemnts/maps/Map'
-import MapChoise from '@/components/fragemnts/maps/MapChoise'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useMapEvents } from 'react-leaflet'
+const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'), {
+    ssr: false
+});
 
 type Props = {}
 
