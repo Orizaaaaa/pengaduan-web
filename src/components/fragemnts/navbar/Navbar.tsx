@@ -4,13 +4,14 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import ButtonPrimary from '../../elements/buttonPrimary';
 import { navigation } from '@/utils/dataObject';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { logo, logo2 } from '@/app/image';
 import Image from 'next/image';
 
 type Props = {}
 
 const Navbar = (props: Props) => {
+    const router = useRouter()
     const [activeSection, setActiveSection] = useState('beranda');
     const [navbarBg, setnavbarBg] = useState(false);
     const pathname = usePathname()
@@ -124,7 +125,7 @@ const Navbar = (props: Props) => {
                             </li>
                         ))}
                         <li>
-                            <ButtonPrimary className="items-center mt-3 justify-center font-medium gap-2 px-4 py-2 rounded-md block lg:hidden w-full">
+                            <ButtonPrimary onClick={() => router.push('/login')} className="items-center justify-center font-medium gap-2 px-4 py-1 rounded-md w-full lg:w-auto mt-3 lg:mt-0  ">
                                 Login
                             </ButtonPrimary>
                         </li>
