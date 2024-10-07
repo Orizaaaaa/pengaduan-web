@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import NavigationList from "../NavigationList/NavigationList";
 import { RxDashboard } from "react-icons/rx";
-import { logo } from "@/app/image";
+import { logo, logo2 } from "@/app/image";
 import Image from "next/image";
 import ButtonSecondary from "@/components/elements/buttonSecondary";
 import { AiOutlineUserSwitch } from "react-icons/ai";
@@ -12,6 +12,7 @@ import { FaBookReader } from "react-icons/fa";
 import { FaBookOpen, FaRegNewspaper } from "react-icons/fa6";
 import { IoMdImages, IoMdPricetags } from "react-icons/io";
 import { BsBuildingAdd, BsShop } from "react-icons/bs";
+import { LuBookPlus } from "react-icons/lu";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -108,7 +109,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-admin" />
           <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-admin/report" />
-          <NavigationList icon={<FaBookOpen size={19} />} title="Buat Laporan" pathname="/dashboard-admin/create-report" />
+          <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-admin/create-report" />
           <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-admin/officer" />
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-admin/category" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-admin/articles" />
@@ -128,7 +129,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between lg:justify-center gap-2 px-6 py-5.5 lg:py-6.5">
         <div >
-          <Image className="h-12" src={logo} alt="logo" />
+          <Image className="h-12" src={logo2} alt="logo" />
         </div>
 
         <button
