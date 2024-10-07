@@ -6,7 +6,7 @@ import Head from 'next/head';
 
 import { useRouter } from 'next/navigation';
 import InputForm from '@/components/elements/input/InputForm';
-import { image } from '@nextui-org/react';
+import { image, Spinner } from '@nextui-org/react';
 import Image from 'next/image';
 import { camera } from '@/app/image';
 import { createArticle } from '@/api/article';
@@ -17,6 +17,7 @@ import { postImage } from '@/api/imagePost';
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const TextEditor = ({ desc }: any) => {
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const [form, setForm] = useState({
         title: '',
@@ -74,7 +75,7 @@ const TextEditor = ({ desc }: any) => {
 
     // handle submit article
     const handleCreateArticle = async () => {
-
+        setLoading(true);
         const imageUrl = await postImage({ image: form.image });
         if (imageUrl) {
             const formSubmit: any = {
@@ -86,6 +87,7 @@ const TextEditor = ({ desc }: any) => {
                 console.log(result)
                 if (result) {
                     router.push('/dashboard-admin/articles');
+                    setLoading(false);
                 }
             })
 
@@ -140,7 +142,7 @@ const TextEditor = ({ desc }: any) => {
                     </div>
 
                     <div className="flex justify-end w-full my-4">
-                        <ButtonPrimary onClick={handleCreateArticle} className='px-4 py-2 rounded-md'>Buat Artikel</ButtonPrimary>
+                        <ButtonPrimary onClick={handleCreateArticle} className='px-4 py-2 rounded-md'>{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Buat Artikel'} </ButtonPrimary>
                     </div>
 
 
