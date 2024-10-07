@@ -28,3 +28,12 @@ export const updateArticle = (id: any, form: any, callback: any) => {
             console.log(err);
         });
 }
+
+export const deleteArticle = (id: any, callback: any) => {
+    axiosInterceptor.delete(`/news/${id}`)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}

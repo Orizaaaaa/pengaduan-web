@@ -1,12 +1,15 @@
 'use client'
-import { updateArticle } from '@/api/article'
+import { deleteArticle, updateArticle } from '@/api/article'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import { postImage } from '@/api/imagePost'
 import { camera } from '@/app/image'
+import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import InputForm from '@/components/elements/input/InputForm'
+import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { useDisclosure } from '@nextui-org/react'
 import JoditEditor from 'jodit-react'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
@@ -18,6 +21,8 @@ import useSWR, { mutate } from 'swr'
 type Props = {}
 
 const page = (props: Props) => {
+
+
 
     // state
     const [form, setForm] = useState({
@@ -90,7 +95,7 @@ const page = (props: Props) => {
     };
 
 
-    // handle submit article
+    // handle update article
     const handleUpdateArticle = async () => {
 
         if (form.image instanceof Blob) {
@@ -118,12 +123,28 @@ const page = (props: Props) => {
 
     };
 
+    // delete article
+    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
+    const openModalDelete = () => {
+        onWarningOpen()
+    }
+
+    const handleDelete = () => {
+        deleteArticle(id, (result: any) => {
+            console.log(result);
+            mutate(`${url}/news/${id}`)
+            onWarningClose()
+        })
+    }
 
     return (
         <DefaultLayout>
-            <div className=" button-action flex justify-end m-3 gap-3">
-                <FaTrashAlt color='red' />
-                <FaPen className='cursor-pointer' onClick={buttonChangeUpdate} />
+            <div className=" button-action flex justify-end m-3 gap-3 ">
+                <div className="flex bg-white justify-end gap-3 p-2 rounded-lg ">
+                    <FaTrashAlt className='cursor-pointer' color='red' onClick={openModalDelete} />
+                    <FaPen className='cursor-pointer' color='blue' onClick={buttonChangeUpdate} />
+                </div>
+
             </div>
 
             {updateOpen ?
@@ -180,7 +201,14 @@ const page = (props: Props) => {
 
                 </>}
 
+            <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
+                <h1>Apakah anda yakin ingin menghapus artikel ini yang berjudul <br /> <span className='font-medium' > " {dataArticle?.title} "</span> </h1>
 
+                <div className="flex gap-3 justify-end">
+                    <ButtonPrimary onClick={onWarningClose} className='px-4 py-2 rounded-md'>Batal</ButtonPrimary>
+                    <ButtonDelete onClick={handleDelete} className='px-4 py-2 rounded-md'>Ya, Hapus</ButtonDelete>
+                </div>
+            </ModalAlert>
 
         </DefaultLayout>
 
