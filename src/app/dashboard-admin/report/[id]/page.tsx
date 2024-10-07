@@ -1,11 +1,16 @@
 'use client'
 
 import { coment } from '@/api/coment';
-import { getReportById } from '@/api/report';
+import { deleteReport, getReportById } from '@/api/report';
+import ButtonDelete from '@/components/elements/buttonDelete';
+import ButtonPrimary from '@/components/elements/buttonPrimary';
+import DropdownCustom from '@/components/elements/dropdown/Dropdown';
 import MapChoise from '@/components/fragemnts/maps/MapChoise';
+import ModalAlert from '@/components/fragemnts/modal/modalAlert';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { capitalizeWords, formatDate, parseCoordinate } from '@/utils/helper';
-import { useParams } from 'next/navigation';
+import { AutocompleteItem, Spinner, useDisclosure } from '@nextui-org/react';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 interface Report {
@@ -29,9 +34,12 @@ interface Report {
 
 
 const Page = () => {
+    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
+    const router = useRouter()
     const { id }: any = useParams(); // Menggunakan id dari useParams
     const name = typeof window !== 'undefined' ? localStorage.getItem("name") : null; // Memastikan localStorage hanya diakses di client side
     const [dataReport, setDataReport] = useState<Report | null>(null);
+    const [loadingDelete, setLoadingDelete] = useState(false)
     const [formComent, setFormComent] = useState({
         id_report: id,
         message: ''
@@ -79,6 +87,26 @@ const Page = () => {
 
     console.log(dataReport);
 
+    const animals = [
+        { label: "Di Proses", value: "Di Proses", description: "The second most popular pet in the world" },
+        { label: "Menunggu", value: "Menunggu", description: "The second most popular pet in the world" },
+        { label: "Selesai", value: "dog", description: "The most popular pet in the world" },
+    ]
+
+    const onSelectionChange = () => {
+        console.log("test")
+    }
+
+    const handleDeleteReport = () => {
+        deleteReport(id, (res: any) => {
+            router.push('/dashboard-admin/report')
+            console.log(res);
+        })
+    }
+
+    const openModalDelete = () => {
+        onWarningOpen()
+    }
 
     return (
         <DefaultLayout>
@@ -145,12 +173,34 @@ const Page = () => {
                     value={formComent.message}
                 />
 
-                <div className="flex justify-end">
+                <div className="flex justify-between items-center">
+                    <div className="flex justify-center items-center gap-3">
+
+                        <DropdownCustom defaultSelectedKey='Menunggu' clearButton={false} defaultItems={animals} onSelect={onSelectionChange}>
+                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                        </DropdownCustom>
+
+                    </div>
+
                     <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md mt-4">
                         Kirim pesan
                     </button>
                 </div>
+
+                <ButtonDelete onClick={openModalDelete} className='mt-4 px-4 py-2 rounded-md'>
+                    Hapus Laporan
+                </ButtonDelete>
+
             </form>
+
+            <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
+                apakah anda yakin ingin menghapus laporan ini
+                <div className="flex gap-3 justify-end">
+                    <ButtonPrimary onClick={onWarningClose} className='px-4 py-2 rounded-md'>Batal</ButtonPrimary>
+                    <ButtonDelete onClick={handleDeleteReport} className='px-4 py-2 rounded-md flex justify-center items-center'>{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
+                </div>
+            </ModalAlert>
+
         </DefaultLayout>
     );
 };

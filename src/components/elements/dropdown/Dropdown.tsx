@@ -6,16 +6,18 @@ type Props = {
     onSelect: any
     defaultItems: any
     children: any
+    defaultSelectedKey?: string
 
 }
 
-const DropdownCustom = ({ clearButton, onSelect, defaultItems, children }: Props) => {
+const DropdownCustom = ({ clearButton, onSelect, defaultItems, children, defaultSelectedKey }: Props) => {
     return (
         <Autocomplete
             aria-label='dropdown'
             clearButtonProps={clearButton}
             onSelect={onSelect}
             defaultItems={defaultItems}
+            defaultSelectedKey={defaultSelectedKey}
             className="max-w-xs border-2 border-primary rounded-lg "
             size='sm'
         >
