@@ -9,7 +9,7 @@ import Image from "next/image";
 import ButtonSecondary from "@/components/elements/buttonSecondary";
 import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaBookReader } from "react-icons/fa";
-import { FaBookOpen, FaRegNewspaper } from "react-icons/fa6";
+import { FaBookOpen, FaRegAddressCard, FaRegNewspaper } from "react-icons/fa6";
 import { IoMdImages, IoMdPricetags } from "react-icons/io";
 import { BsBuildingAdd, BsShop } from "react-icons/bs";
 import { LuBookPlus } from "react-icons/lu";
@@ -111,6 +111,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-admin/report" />
           <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-admin/create-report" />
           <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-admin/officer" />
+          <NavigationList icon={<FaRegAddressCard size={19} />} title="Karyawan" pathname="/dashboard-admin/employe" />
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-admin/category" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-admin/articles" />
           <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-admin/galert" />
