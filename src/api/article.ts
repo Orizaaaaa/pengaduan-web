@@ -19,3 +19,12 @@ export const getAllArticle = (callback: any) => {
             console.log(err);
         });
 }
+
+export const updateArticle = (id: any, form: any, callback: any) => {
+    axiosInterceptor.put(`/news/${id}`, form)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}
