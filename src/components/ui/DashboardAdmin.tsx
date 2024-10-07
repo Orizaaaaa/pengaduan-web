@@ -73,6 +73,7 @@ const DashboardAdmin = () => {
 
     })
 
+    console.log(markers)
 
     return (
         <DefaultLayout>
