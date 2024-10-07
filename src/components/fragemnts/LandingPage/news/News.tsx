@@ -56,10 +56,10 @@ const News = (props: Props) => {
                 </div>
 
                 {/* hero 3 bottom*/}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 ">
                     {datahero3.map((item, index) => (
                         <div className='h-60 ' key={index}>
-                            <Image className='w-full h-full rounded-md' src={item.image} alt='news_btm' />
+                            <Image className='w-full h-full rounded-md object-cover' src={item.image} alt='news_btm' />
                             <p className='text-sm md:text-base' >{item.title}</p>
                         </div>
                     ))}
