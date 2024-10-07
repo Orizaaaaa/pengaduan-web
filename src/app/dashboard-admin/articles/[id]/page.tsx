@@ -9,7 +9,7 @@ import ButtonPrimary from '@/components/elements/buttonPrimary'
 import InputForm from '@/components/elements/input/InputForm'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { useDisclosure } from '@nextui-org/react'
+import { Spinner, useDisclosure } from '@nextui-org/react'
 import JoditEditor from 'jodit-react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
@@ -31,6 +31,8 @@ const page = (props: Props) => {
         image: null as File | null,
     })
 
+    const [loading, setLoading] = useState(false);
+    const [loadingDelete, setLoadingDelete] = useState(false);
     const { id }: any = useParams()
     const [updateOpen, setUpdateOpen] = useState(false)
     const { data, error } = useSWR(`${url}/news/${id}`, fetcher, {
@@ -97,7 +99,7 @@ const page = (props: Props) => {
 
     // handle update article
     const handleUpdateArticle = async () => {
-
+        setLoading(true)
         if (form.image instanceof Blob) {
             const imageUrl = await postImage({ image: form.image });
 
@@ -107,7 +109,7 @@ const page = (props: Props) => {
                     console.log(result);
                     mutate(`${url}/news/${id}`)
                     setUpdateOpen(false)
-
+                    setLoading(false)
                 })
             }
 
@@ -116,7 +118,7 @@ const page = (props: Props) => {
                 console.log(result);
                 mutate(`${url}/news/${id}`)
                 setUpdateOpen(false)
-
+                setLoading(false)
             })
         }
 
@@ -130,11 +132,13 @@ const page = (props: Props) => {
     }
 
     const handleDelete = () => {
+        setLoadingDelete(true)
         deleteArticle(id, (result: any) => {
             console.log(result);
             mutate(`${url}/news/${id}`)
             onWarningClose()
             router.push('/dashboard-admin/articles')
+            setLoadingDelete(false)
         })
     }
 
@@ -187,7 +191,7 @@ const page = (props: Props) => {
                         </div>
 
                         <div className="flex justify-end w-full my-4">
-                            <ButtonPrimary onClick={handleUpdateArticle} className='px-4 py-2 rounded-md'>Perbarui Artikel</ButtonPrimary>
+                            <ButtonPrimary onClick={handleUpdateArticle} className='px-4 py-2 rounded-md flex justify-center items-center'> {loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Perbarui Artikel'}  </ButtonPrimary>
                         </div>
 
                     </div>
@@ -207,7 +211,7 @@ const page = (props: Props) => {
 
                 <div className="flex gap-3 justify-end">
                     <ButtonPrimary onClick={onWarningClose} className='px-4 py-2 rounded-md'>Batal</ButtonPrimary>
-                    <ButtonDelete onClick={handleDelete} className='px-4 py-2 rounded-md'>Ya, Hapus</ButtonDelete>
+                    <ButtonDelete onClick={handleDelete} className='px-4 py-2 rounded-md flex justify-center items-center'>{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
                 </div>
             </ModalAlert>
 
