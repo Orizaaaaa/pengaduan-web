@@ -189,7 +189,7 @@ const OfficerList = () => {
 
 
                 <InputReport marginY="my-1" htmlFor="password" title="Password " type="text" onChange={handleChange} value={formData.password} />
-                <p className="text-red-600">{errorMsg}</p>
+                <p className="text-red">{errorMsg}</p>
                 <ButtonPrimary disabled={disabled} className={`rounded-md w-full my-4 py-2 ${disabled ? 'bg-slate-400' : 'bg-primary'}`} onClick={createOfficer} >Buat Petugas</ButtonPrimary>
 
             </ModalDefault>

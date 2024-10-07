@@ -160,7 +160,7 @@ const Page = (props: Props) => {
                         </div>
                     ))}
                 </div>
-                <p className="text-red-600 " >{errorMsg}</p>
+                <p className="text-red " >{errorMsg}</p>
                 <button className="bg-primary text-white px-4 py-2 rounded-md w-full mt-4" onClick={handleSubmit}>Kirim Laporan</button>
             </Card>
         </DefaultLayout>
