@@ -12,7 +12,7 @@ import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { useDisclosure } from '@nextui-org/react'
 import JoditEditor from 'jodit-react'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FaTrashAlt } from 'react-icons/fa'
 import { FaPen } from 'react-icons/fa6'
@@ -22,7 +22,7 @@ type Props = {}
 
 const page = (props: Props) => {
 
-
+    const router = useRouter()
 
     // state
     const [form, setForm] = useState({
@@ -134,6 +134,7 @@ const page = (props: Props) => {
             console.log(result);
             mutate(`${url}/news/${id}`)
             onWarningClose()
+            router.push('/dashboard-admin/articles')
         })
     }
 
