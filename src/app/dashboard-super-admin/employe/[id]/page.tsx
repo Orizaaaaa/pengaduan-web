@@ -34,7 +34,7 @@ interface Employee {
 }
 
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const router = useRouter()
     const dateNow = new Date();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
@@ -359,4 +359,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
