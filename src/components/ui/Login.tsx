@@ -64,7 +64,7 @@ const Login = () => {
                 } else if (res.data.role === 'user') {
                     router.push('/dashboard-user')
                 } else if (res.data.role === 'admin') {
-                    router.push('/dashboard-')
+                    router.push('/dashboard-officer')
                 }
             } else {
                 setErrorLogin('*Email atau password salah');
