@@ -204,8 +204,8 @@ const page = (props: Props) => {
                     >
 
                         <div className="text-white px-1 md:px-0 ">
-                            <div className="flex flex-col md:flex-row gap-10">
-                                <div className="image h-40 w-40 md:h-56 md:w-56">
+                            <div className="flex flex-col justify-center items-center md:flex-row gap-10">
+                                <div className="image flex bg-white rounded-md justify-center items-center h-40 w-40 md:h-56 md:w-56">
                                     <img src={data.image} className="w-full h-full object-cover rounded-xl" />
                                 </div>
                                 <div className="data-employe space-y-2">
@@ -268,15 +268,25 @@ const page = (props: Props) => {
                     <>
                         <ModalBody className={`overflow-x-hidden `}>
                             <form action="">
-                                <div className="images ">
+                                <div className="images  my-4">
 
                                     {form.image && form.image instanceof Blob ? (
-                                        <img className="h-[100px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
+                                        <div className='relative h-[90px] w-[90px] mx-auto '>
+                                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(form.image)} />
+                                            <div className=" absolute bottom-0 right-0 ">
+                                                <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                                    <FaPen color='#ffff' />
+                                                </button>
+                                            </div>
+                                        </div>
                                     ) : (
-                                        <div className="images  rounded-md h-[100px] bg-gray-300 p-2">
-                                            <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
-                                                <img className="w-auto h-full mx-auto rounded-md" src={form.image ? form.image : ''} alt='cam' />
-                                            </button>
+                                        <div className='relative h-[90px] w-[90px] mx-auto '>
+                                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={form.image ? form.image : ''} />
+                                            <div className=" absolute bottom-0 right-0 ">
+                                                <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                                    <FaPen color='#ffff' />
+                                                </button>
+                                            </div>
                                         </div>
                                     )}
 
@@ -287,9 +297,6 @@ const page = (props: Props) => {
                                         onChange={(e) => handleImageChange(e, 'add')}
                                     />
 
-                                    <div className="flex justify-center gap-3 mt-3">
-                                        <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
-                                    </div>
                                 </div>
 
                                 <div className="data-input my-3">

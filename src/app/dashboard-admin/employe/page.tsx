@@ -7,28 +7,34 @@ import { deleteUser, getAllUser } from "@/api/user";
 import ButtonDelete from "@/components/elements/buttonDelete";
 import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
+import InputForm from "@/components/elements/input/InputForm";
 import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate } from "@/utils/helper";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import { parseDate } from "@internationalized/date";
+import { DatePicker, Modal, ModalBody, ModalContent, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Page = () => {
+    const dateNow = new Date();
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [disabled, setDisabled] = useState(true)
     const [errorMsg, setErrorMsg] = useState(' ')
+    const [loading, setLoading] = useState(false)
     const [dataUser, setDataUser] = useState([]);
-    const [formData, setFormData] = useState({
-        name: ' ',
-        nik: '',
-        number_phone: '',
+    const [form, setForm] = useState({
+        name: '',
+        position: '',
+        division: '',
+        address: '',
         email: '',
-        unitWork: '',
-        password: '',
-        role: 'admin'
+        phoneNumber: '',
+        image: null as File | null,
+        birthDate: parseDate(formatDate(dateNow)),
+        joinDate: parseDate(formatDate(dateNow)),
     })
     const [dataDelete, setDataDelete] = useState('')
 
@@ -45,72 +51,31 @@ const Page = () => {
         onOpen();
     }
 
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
 
-        const updatedValues = {
-            ...formData,
-            [name]: value,
-        };
 
-        if (updatedValues.email !== "" && updatedValues.password !== "" && (updatedValues.email.includes('@gmail.com') || updatedValues.email.includes('@test.com'))) {
-            setDisabled(false);
+    const handleFileManager = (fileName: string) => {
+        if (fileName === 'add') {
+            const fileInput = document.getElementById("image-input-add") as HTMLInputElement | null;
+            fileInput ? fileInput.click() : null;
         } else {
-            setDisabled(true);
+            console.log('error');
+
         }
-        const nameRegex = /^[A-Za-z\s\-\_\'\.\,\&\(\)]{1,100}$/; //validasi nama
-        const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/ //validasi email
-        const passwordRegex = /^[A-Za-z0-9]+$/ //validasi password
-        if (!nameRegex.test(formData.name)) {
-            setErrorMsg('*Masukan nama yang valid')
-            setDisabled(true);
-        } else if (!emailRegex.test(formData.email)) {
-            setDisabled(true);
-            setErrorMsg('*Masukan email yang valid')
-        } else if (!passwordRegex.test(formData.password) || formData.password.length < 8) {
-            setDisabled(true);
-            setErrorMsg('*Password harus 8 karakter atau lebih')
+    };
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        if (InputSelect === 'add') {
+            const selectedImage = e.target.files?.[0];
+            setForm({ ...form, image: selectedImage || null });
         } else {
-            setDisabled(false);
-            setErrorMsg('')
+            console.log('error');
+
         }
     };
 
-
-    //membuat petugas
-    const createOfficer = async (e: any) => {
-        e.preventDefault();
-        console.log(formData);
-
-        await register(formData, (status: boolean, res: any) => {
-            console.log(register);
-
-            if (status) {
-                console.log(res);
-                setFormData({
-                    name: ' ',
-                    email: '',
-                    unitWork: '',
-                    number_phone: '',
-                    nik: " ",
-                    password: '',
-                    role: 'admin'
-                })
-
-                getAllUser((result: any) => {
-                    const data = result.data ? result.data.filter((role: any) =>
-                        role.role !== 'user') : [];
-                    setDataUser(data)
-                })
-                onClose();
-            } else {
-                console.log(res);
-            }
-        })
-
-
-    }
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
+    };
 
     //hapus petugas
     const handleDeleteModal = (value: any) => {
@@ -183,20 +148,73 @@ const Page = () => {
                 </Table>
             </Card>
 
-            <ModalDefault isOpen={isOpen} onClose={onClose}>
-                <InputReport marginY="my-1" htmlFor="nik" title="NIK  " type="number" onChange={handleChange} value={formData.nik} />
-                <InputReport marginY="my-1" htmlFor="name" title="Nama Petugas  " type="text" onChange={handleChange} value={formData.name} />
-                <div className="flex justify-between">
-                    <InputReport marginY="my-1" htmlFor="email" title="Email  " type="text" onChange={handleChange} value={formData.email} />
-                    <InputReport marginY="my-1" htmlFor="number_phone" title="No HP  " type="number" onChange={handleChange} value={formData.number_phone} />
-                </div>
+            <Modal
+                scrollBehavior='inside'
+                size={'xl'}
+                isOpen={isOpen}
+                onClose={onClose}
+                isDismissable={false} isKeyboardDismissDisabled={true}
+            >
+                <ModalContent>
+                    <>
+                        <ModalBody className={`overflow-x-hidden `}>
+                            <form action="">
+                                <div className="images ">
+
+                                    {form.image && form.image instanceof Blob ? (
+                                        <img className="h-[100px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
+                                    ) : (
+                                        <div className="images  rounded-md h-[100px] bg-gray-300 p-2">
+                                            <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
+                                                <img className="w-auto h-full mx-auto rounded-md" src={form.image ? form.image : ''} alt='cam' />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        id="image-input-add"
+                                        onChange={(e) => handleImageChange(e, 'add')}
+                                    />
+
+                                    <div className="flex justify-center gap-3 mt-3">
+                                        <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
+                                    </div>
+                                </div>
+
+                                <div className="data-input my-3">
+                                    <InputForm title='Nama' className='bg-slate-200' htmlFor="name" type="text" onChange={handleChange} value={form.name} />
+                                    <div className="flex gap-3">
+                                        <InputForm title='Email' className='bg-slate-200' htmlFor="email" type="text" onChange={handleChange} value={form.email} />
+                                        <InputForm title='No HP' className='bg-slate-200' htmlFor="phoneNumber" type="text" onChange={handleChange} value={form.phoneNumber} />
+                                    </div>
+                                    <div className="flex gap-3">
+                                        <InputForm title='Divisi' className='bg-slate-200' htmlFor="divisi" type="text" onChange={handleChange} value={form.division} />
+                                        <InputForm title='Posisi' className='bg-slate-200' htmlFor="position" type="text" onChange={handleChange} value={form.position} />
+                                    </div>
+
+                                    <InputForm title='Alamat' className='bg-slate-200' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
+
+                                    <div className="flex gap-8">
+                                        <DatePicker value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
+                                        <DatePicker value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
+                                    </div>
 
 
-                <InputReport marginY="my-1" htmlFor="password" title="Password " type="text" onChange={handleChange} value={formData.password} />
-                <p className="text-red">{errorMsg}</p>
-                <ButtonPrimary disabled={disabled} className={`rounded-md w-full my-4 py-2 ${disabled ? 'bg-slate-400' : 'bg-primary'}`} onClick={createOfficer} >Buat Petugas</ButtonPrimary>
 
-            </ModalDefault>
+                                    <div className="flex justify-end my-2">
+                                        <ButtonPrimary className='px-4 py-2 rounded-md' typeButon={'submit'}  >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}  </ButtonPrimary>
+                                    </div>
+                                </div>
+
+
+
+                            </form>
+                        </ModalBody>
+                    </>
+                </ModalContent>
+            </Modal>
 
             {/* Warning Modal */}
             <ModalDefault isOpen={isWarningOpen} onClose={onWarningClose}>
