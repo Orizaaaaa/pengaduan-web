@@ -1,7 +1,8 @@
 'use client'
 
 import { register } from "@/api/auth";
-import { deleteEmploye, getAllEmploye } from "@/api/employe";
+import { createEmploye, deleteEmploye, getAllEmploye } from "@/api/employe";
+import { postImage } from "@/api/imagePost";
 import { getAllUnitWork } from "@/api/unitWork";
 import { deleteUser, getAllUser } from "@/api/user";
 import { camera } from "@/app/image";
@@ -13,7 +14,7 @@ import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
 import ModalAlert from "@/components/fragemnts/modal/modalAlert";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
-import { capitalizeWords, formatDate } from "@/utils/helper";
+import { capitalizeWords, formatDate, formatDateStr } from "@/utils/helper";
 import { parseDate } from "@internationalized/date";
 import { DatePicker, Modal, ModalBody, ModalContent, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
@@ -90,13 +91,35 @@ const Page = () => {
     const handleDelete = async () => {
         await deleteEmploye(dataDelete, (result: any) => {
             console.log(result);
-            getAllUser((result: any) => {
-                const data = result.data ? result.data.filter((role: any) =>
-                    role.role !== 'user') : [];
-                setDataUser(data)
+            getAllEmploye((result: any) => {
+                console.log(result);
+                setDataUser(result.data);
             })
         })
         onWarningClose();
+    }
+
+    //create karyawan
+    const handleCreate = async (e: any) => {
+        e.preventDefault()
+        setLoading(true)
+        if (form.image instanceof Blob) {
+            const imageUrl = await postImage({ image: form.image });
+
+            if (imageUrl) {
+                const data: any = { ...form, image: imageUrl, birthDate: formatDateStr(form.birthDate), joinDate: formatDateStr(form.joinDate) };
+                createEmploye(data, (result: any) => {
+                    console.log(result);
+                    setLoading(false)
+                    onClose();
+                    getAllEmploye((result: any) => {
+                        console.log(result);
+                        setDataUser(result.data);
+                    })
+                })
+            }
+
+        }
     }
 
 
@@ -142,7 +165,7 @@ const Page = () => {
                                 <TableCell>{capitalizeWords(user.division)}</TableCell>
                                 <TableCell>{formatDate(user.joinDate)}</TableCell>
                                 <TableCell><ButtonDelete className="bg-red rounded-md w-full py-2"
-                                    onClick={() => handleDeleteModal(user.id)}>Delete</ButtonDelete></TableCell>
+                                    onClick={() => handleDeleteModal(user._id)}>Delete</ButtonDelete></TableCell>
                             </TableRow>
                         ))}
 
@@ -161,7 +184,7 @@ const Page = () => {
                 <ModalContent>
                     <>
                         <ModalBody className={`overflow-x-hidden `}>
-                            <form action="">
+                            <form onSubmit={handleCreate}>
                                 <div className="images my-3">
                                     {form.image && form.image instanceof Blob ? (
                                         <div className='relative h-[90px] w-[90px] mx-auto '>
@@ -196,7 +219,7 @@ const Page = () => {
                                         <InputForm title='No HP' className='bg-slate-200' htmlFor="phoneNumber" type="text" onChange={handleChange} value={form.phoneNumber} />
                                     </div>
                                     <div className="flex gap-3">
-                                        <InputForm title='Divisi' className='bg-slate-200' htmlFor="divisi" type="text" onChange={handleChange} value={form.division} />
+                                        <InputForm title='Divisi' className='bg-slate-200' htmlFor="division" type="text" onChange={handleChange} value={form.division} />
                                         <InputForm title='Posisi' className='bg-slate-200' htmlFor="position" type="text" onChange={handleChange} value={form.position} />
                                     </div>
 

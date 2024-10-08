@@ -38,3 +38,13 @@ export const deleteEmploye = async (id: any, callback: any) => {
             console.log(err);
         });
 }
+
+
+export const createEmploye = async (form: any, callback: any) => {
+    await axiosInterceptor.post('/employee', form)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}
