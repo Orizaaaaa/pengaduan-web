@@ -10,6 +10,7 @@ import Card from "@/components/elements/card/Card";
 import InputForm from "@/components/elements/input/InputForm";
 import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
+import ModalAlert from "@/components/fragemnts/modal/modalAlert";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate } from "@/utils/helper";
 import { parseDate } from "@internationalized/date";
@@ -194,12 +195,14 @@ const Page = () => {
                                         <InputForm title='Posisi' className='bg-slate-200' htmlFor="position" type="text" onChange={handleChange} value={form.position} />
                                     </div>
 
-                                    <InputForm title='Alamat' className='bg-slate-200' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
-
                                     <div className="flex gap-8">
                                         <DatePicker value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
                                         <DatePicker value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
                                     </div>
+
+                                    <InputForm title='Alamat' className='bg-slate-200' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
+
+
 
 
 
@@ -217,14 +220,13 @@ const Page = () => {
             </Modal>
 
             {/* Warning Modal */}
-            <ModalDefault isOpen={isWarningOpen} onClose={onWarningClose}>
-                <h2 className="text-lg font-semibold">Peringatan</h2>
-                <p> apakah Anda yakin ingin menghapus petugas tersebut ?</p>
+            <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
+                <p> Apakah Anda yakin ingin menghapus karyawan tersebut ?</p>
                 <div className="flex justify-end gap-4 mt-4">
                     <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 text-black rounded-md px-3 py-2">Batal</ButtonPrimary>
                     <ButtonPrimary onClick={handleDelete} className="bg-red text-white rounded-md  px-3 py-2">Hapus</ButtonPrimary>
                 </div>
-            </ModalDefault>
+            </ModalAlert>
         </DefaultLayout>
     )
 }
