@@ -1,9 +1,10 @@
 'use client'
 
 import { register } from "@/api/auth";
-import { getAllEmploye } from "@/api/employe";
+import { deleteEmploye, getAllEmploye } from "@/api/employe";
 import { getAllUnitWork } from "@/api/unitWork";
 import { deleteUser, getAllUser } from "@/api/user";
+import { camera } from "@/app/image";
 import ButtonDelete from "@/components/elements/buttonDelete";
 import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
@@ -15,8 +16,10 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate } from "@/utils/helper";
 import { parseDate } from "@internationalized/date";
 import { DatePicker, Modal, ModalBody, ModalContent, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { FaPen } from "react-icons/fa6";
 
 const Page = () => {
     const dateNow = new Date();
@@ -85,7 +88,7 @@ const Page = () => {
         setDataDelete(value);
     };
     const handleDelete = async () => {
-        await deleteUser(dataDelete, (result: any) => {
+        await deleteEmploye(dataDelete, (result: any) => {
             console.log(result);
             getAllUser((result: any) => {
                 const data = result.data ? result.data.filter((role: any) =>
@@ -96,7 +99,6 @@ const Page = () => {
         onWarningClose();
     }
 
-    console.log(dataUser);
 
 
     return (
@@ -160,18 +162,24 @@ const Page = () => {
                     <>
                         <ModalBody className={`overflow-x-hidden `}>
                             <form action="">
-                                <div className="images ">
-
+                                <div className="images my-3">
                                     {form.image && form.image instanceof Blob ? (
-                                        <img className="h-[100px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
+                                        <div className='relative h-[90px] w-[90px] mx-auto '>
+                                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(form.image)} />
+                                            <div className=" absolute bottom-0 right-0 ">
+                                                <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                                    <FaPen color='#ffff' />
+                                                </button>
+                                            </div>
+                                        </div>
+
                                     ) : (
-                                        <div className="images  rounded-md h-[100px] bg-gray-300 p-2">
-                                            <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
-                                                <img className="w-auto h-full mx-auto rounded-md" src={form.image ? form.image : ''} alt='cam' />
+                                        <div className="images mx-auto border-dashed border-2 border-black rounded-full bg-gray-300 h-[80px] w-[80px] flex justify-center items-center relative">
+                                            <button className="flex-col justify-center items-center h-full w-full" type="button" onClick={() => handleFileManager('add')}>
+                                                <Image className="w-10 h-10 mx-auto" src={camera} alt="cam" />
                                             </button>
                                         </div>
                                     )}
-
                                     <input
                                         type="file"
                                         className="hidden"
@@ -179,9 +187,6 @@ const Page = () => {
                                         onChange={(e) => handleImageChange(e, 'add')}
                                     />
 
-                                    <div className="flex justify-center gap-3 mt-3">
-                                        <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
-                                    </div>
                                 </div>
 
                                 <div className="data-input my-3">

@@ -1,15 +1,16 @@
 'use client'
 
-import { getEmployeById, updateEmploye } from '@/api/employe'
+import { deleteEmploye, getEmployeById, updateEmploye } from '@/api/employe'
 import { postImage } from '@/api/imagePost'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import InputForm from '@/components/elements/input/InputForm'
 import ModalDefault from '@/components/fragemnts/modal/modal'
+import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { formatDate, formatDateStr } from '@/utils/helper'
 import { parseDate } from '@internationalized/date'
 import { DatePicker, Modal, ModalBody, ModalContent, Spinner, useDisclosure } from '@nextui-org/react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FaTrashAlt } from 'react-icons/fa'
 import { FaPen } from 'react-icons/fa6'
@@ -34,7 +35,9 @@ interface Employee {
 
 
 const page = (props: Props) => {
+    const router = useRouter()
     const dateNow = new Date();
+    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [loading, setLoading] = useState(false)
     const [rotation, setRotation] = useState({ rotateX: 0, rotateY: 0 });
@@ -176,13 +179,26 @@ const page = (props: Props) => {
     }
 
 
+    // delete action
+    const handleDeleteModal = () => {// Tambahkan log untuk memastikan nilai yang diterima
+        onWarningOpen();
+
+    };
+    const handleDelete = async () => {
+        await deleteEmploye(id, (result: any) => {
+            console.log(result);
+            router.push('/dashboard-admin/report')
+        })
+        onWarningClose();
+    }
+
 
 
     return (
         <DefaultLayout>
             <div className="w-full flex justify-end">
                 <div className="flex w-fit bg-white justify-end gap-3 p-2 rounded-lg ">
-                    <FaTrashAlt className='cursor-pointer' color='red' />
+                    <FaTrashAlt onClick={handleDeleteModal} className='cursor-pointer' color='red' />
                     <FaPen onClick={openModalUpdate} className='cursor-pointer' color='blue' />
                 </div>
             </div>
@@ -256,7 +272,7 @@ const page = (props: Props) => {
             </div>
 
 
-            {/* modal */}
+            {/* modal create */}
             <Modal
                 scrollBehavior='inside'
                 size={'xl'}
@@ -329,6 +345,15 @@ const page = (props: Props) => {
                     </>
                 </ModalContent>
             </Modal>
+
+            {/* Warning Modal */}
+            <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
+                <p> Apakah Anda yakin ingin menghapus karyawan tersebut ?</p>
+                <div className="flex justify-end gap-4 mt-4">
+                    <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 text-black rounded-md px-3 py-2">Batal</ButtonPrimary>
+                    <ButtonPrimary onClick={handleDelete} className="bg-red text-white rounded-md  px-3 py-2">Hapus</ButtonPrimary>
+                </div>
+            </ModalAlert>
 
         </DefaultLayout>
     )

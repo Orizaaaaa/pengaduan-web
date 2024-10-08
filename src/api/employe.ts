@@ -29,3 +29,12 @@ export const updateEmploye = (id: any, form: any, callback: any) => {
             console.log(err);
         });
 }
+
+export const deleteEmploye = async (id: any, callback: any) => {
+    await axiosInterceptor.delete(`/employee/${id}`)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}
