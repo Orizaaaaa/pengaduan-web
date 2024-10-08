@@ -59,3 +59,13 @@ export const deleteReport = async (id: any, callback: any) => {
             console.log(err);
         });
 }
+
+
+export const changeStatusReport = async (id: any, form: any, callback: any) => {
+    await axiosInterceptor.put(`/reports/${id}/status`, form)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}

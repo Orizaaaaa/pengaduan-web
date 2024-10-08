@@ -15,7 +15,7 @@ const DropdownCustom = ({ clearButton, onSelect, defaultItems, children, default
         <Autocomplete
             aria-label='dropdown'
             clearButtonProps={clearButton}
-            onSelect={onSelect}
+            onSelectionChange={onSelect}
             defaultItems={defaultItems}
             defaultSelectedKey={defaultSelectedKey}
             className="max-w-xs border-2 border-primary rounded-lg "

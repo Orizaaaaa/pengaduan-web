@@ -1,7 +1,7 @@
 'use client'
 
 import { coment } from '@/api/coment';
-import { deleteReport, getReportById } from '@/api/report';
+import { changeStatusReport, deleteReport, getReportById } from '@/api/report';
 import ButtonDelete from '@/components/elements/buttonDelete';
 import ButtonPrimary from '@/components/elements/buttonPrimary';
 import DropdownCustom from '@/components/elements/dropdown/Dropdown';
@@ -40,6 +40,7 @@ const Page = () => {
     const name = typeof window !== 'undefined' ? localStorage.getItem("name") : null; // Memastikan localStorage hanya diakses di client side
     const [dataReport, setDataReport] = useState<Report | null>(null);
     const [loadingDelete, setLoadingDelete] = useState(false)
+    const [statusFrom, setStatusForm] = useState('')
     const [formComent, setFormComent] = useState({
         id_report: id,
         message: ''
@@ -48,6 +49,7 @@ const Page = () => {
     useEffect(() => {
         getReportById(id, (result: any) => {
             setDataReport(result.data);
+            setStatusForm(result.data.status);
         });
     }, [id]);
 
@@ -85,17 +87,18 @@ const Page = () => {
         });
     };
 
-    console.log(dataReport);
+    const onSelectionChange = (key: string) => {
+        setStatusForm(key)  // Menyimpan nilai yang dipilih ke dalam state
+    }
 
-    const animals = [
-        { label: "Di Proses", value: "Di Proses", description: "The second most popular pet in the world" },
-        { label: "Menunggu", value: "Menunggu", description: "The second most popular pet in the world" },
-        { label: "Selesai", value: "dog", description: "The most popular pet in the world" },
+    const dataStatus = [
+        { label: "Diproses", value: "Diproses" },
+        { label: "Menunggu", value: "Menunggu" },
+        { label: "Selesai", value: "Selesai" },
     ]
 
-    const onSelectionChange = () => {
-        console.log("test")
-    }
+
+
 
     const handleDeleteReport = () => {
         deleteReport(id, (res: any) => {
@@ -108,6 +111,22 @@ const Page = () => {
         onWarningOpen()
     }
 
+
+    const handleChangeStatus = async () => {
+        const dataStatus = {
+            status: statusFrom
+        }
+
+        await changeStatusReport(id, dataStatus, (res: any) => {
+            if (res) {
+                getReportById(id, (result: any) => {
+                    setDataReport(result.data);
+                    setStatusForm(result.data.status);
+                });
+            }
+
+        })
+    }
     return (
         <DefaultLayout>
             <div className="grid grid-cols-1 lg:grid-cols-2 my-3 gap-8 lg:gap-0">
@@ -173,23 +192,26 @@ const Page = () => {
                     value={formComent.message}
                 />
 
-                <div className="flex justify-between items-center">
-                    <div className="flex justify-center items-center gap-3">
-
-                        <DropdownCustom defaultSelectedKey='Menunggu' clearButton={false} defaultItems={animals} onSelect={onSelectionChange}>
-                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
-                        </DropdownCustom>
-
-                    </div>
-
+                <div className="flex justify-end">
                     <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md mt-4">
                         Kirim pesan
                     </button>
                 </div>
 
-                <ButtonDelete onClick={openModalDelete} className='mt-4 px-4 py-2 rounded-md'>
+                <ButtonDelete onClick={openModalDelete} className=' px-4 py-2 rounded-md'>
                     Hapus Laporan
                 </ButtonDelete>
+
+                <div className="flex justify-end items-center gap-3 mt-3">
+                    <div className="flex w-fit justify-center items-center gap-3">
+                        <DropdownCustom defaultSelectedKey='' clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
+                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                        </DropdownCustom>
+
+                    </div>
+                    <ButtonPrimary className='px-4 py-2 rounded-md' onClick={handleChangeStatus}>Ubah Status</ButtonPrimary>
+                </div>
+
 
             </form>
 
