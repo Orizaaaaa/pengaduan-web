@@ -195,12 +195,12 @@ const Page = () => {
                                         <InputForm title='Posisi' className='bg-slate-200' htmlFor="position" type="text" onChange={handleChange} value={form.position} />
                                     </div>
 
-                                    <div className="flex gap-8">
+                                    <div className="flex gap-8 mb-2">
                                         <DatePicker value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
                                         <DatePicker value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
                                     </div>
 
-                                    <InputForm title='Alamat' className='bg-slate-200' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
+                                    <InputForm title='Alamat' className='bg-slate-200 ' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
 
 
 
