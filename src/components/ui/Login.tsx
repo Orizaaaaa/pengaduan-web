@@ -50,12 +50,14 @@ const Login = () => {
         await loginService(form, (status: boolean, res: any) => {
             setLoading(false);
             if (status) {
+                setErrorLogin('');
                 const tokenCookies = `token=${res.data.token}`;
                 document.cookie = tokenCookies; // Set cookie
                 // Akses localStorage hanya di sisi klien
                 localStorage.setItem('name', res.data.name);
                 localStorage.setItem('role', res.data.role);
                 localStorage.setItem('token', res.data.token)
+                setLoading(false);
 
                 if (res.data.role === 'admin') {
                     router.push('/dashboard-admin');

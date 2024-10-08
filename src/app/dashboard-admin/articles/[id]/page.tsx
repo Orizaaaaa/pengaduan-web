@@ -12,7 +12,6 @@ import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { Spinner, useDisclosure } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
-import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FaTrashAlt } from 'react-icons/fa'

@@ -19,3 +19,13 @@ export const getEmployeById = (id: string, callback: any) => {
             console.log(err);
         });
 }
+
+
+export const updateEmploye = (id: any, form: any, callback: any) => {
+    axiosInterceptor.put(`/employee/${id}`, form)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}
