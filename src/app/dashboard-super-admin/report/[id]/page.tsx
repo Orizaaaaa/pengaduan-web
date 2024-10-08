@@ -102,7 +102,7 @@ const Page = () => {
 
     const handleDeleteReport = () => {
         deleteReport(id, (res: any) => {
-            router.push('/dashboard-admin/report')
+            router.push('/dashboard-super-admin/report')
             console.log(res);
         })
     }

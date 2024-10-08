@@ -159,7 +159,7 @@ const Page = () => {
                         {dataUser?.map((user: any, index: any) => (
                             <TableRow key={index}>
                                 <TableCell>{index + 1}</TableCell>
-                                <TableCell>{<Link href={`/dashboard-admin/employe/${user._id}`}>{capitalizeWords(user.name)}</Link>}</TableCell>
+                                <TableCell>{<Link href={`/dashboard-super-admin/employe/${user._id}`}>{capitalizeWords(user.name)}</Link>}</TableCell>
                                 <TableCell>{(user.email)}</TableCell>
                                 <TableCell>{user.phoneNumber}</TableCell>
                                 <TableCell>{capitalizeWords(user.division)}</TableCell>

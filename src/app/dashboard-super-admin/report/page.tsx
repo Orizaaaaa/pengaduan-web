@@ -78,7 +78,7 @@ const Page = (props: Props) => {
 
                 {filteredData.map((item: any, index: number) => (
                     <CardReport
-                        location={`/dashboard-admin/report/${item.id}`}
+                        location={`/dashboard-super-admin/report/${item.id}`}
                         image={item.imageReport[0]}
                         title={item.title}
                         address={item.address}

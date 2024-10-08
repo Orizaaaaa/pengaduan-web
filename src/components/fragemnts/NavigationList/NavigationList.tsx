@@ -21,10 +21,10 @@ const NavigationList = ({ pathname, title, icon }: Props) => {
         targetPathSegments.length > 1 &&
         currentPathSegments[1] === targetPathSegments[1];
 
-    // Cek apakah path saat ini sama persis dengan "/dashboard-admin"
+    // Cek apakah path saat ini sama persis dengan "/dashboard-super-admin"
     const isExactMatch = pathnames === pathname;
 
-    // Jika pathnya "/dashboard-admin" aktif, atau segmen URL sesuai
+    // Jika pathnya "/dashboard-super-admin" aktif, atau segmen URL sesuai
     const isActive = isExactMatch || isSegmentMatch;
 
     return (

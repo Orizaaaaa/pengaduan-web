@@ -23,7 +23,7 @@ const MainArticle = (props: Props) => {
         if (pathname === '/articles') {
             return ('/articles/' + id)
         } else {
-            return ('/dashboard-admin/articles/' + id)
+            return ('/dashboard-super-admin/articles/' + id)
         }
     }
 

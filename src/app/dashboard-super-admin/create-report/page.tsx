@@ -92,7 +92,7 @@ const Page = (props: Props) => {
 
                 createReport(formUnitWork, (status: boolean, res: any) => {
                     if (status) {
-                        router.push('/dashboard-admin/report')
+                        router.push('/dashboard-super-admin/report')
                         setErrorMsg('')
                         console.log(res);
                     }

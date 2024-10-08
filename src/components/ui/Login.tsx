@@ -59,10 +59,12 @@ const Login = () => {
                 localStorage.setItem('token', res.data.token)
                 setLoading(false);
 
-                if (res.data.role === 'admin') {
-                    router.push('/dashboard-admin');
+                if (res.data.role === 'superadmin') {
+                    router.push('/dashboard-super-admin');
                 } else if (res.data.role === 'user') {
                     router.push('/dashboard-user')
+                } else if (res.data.role === 'admin') {
+                    router.push('/dashboard-')
                 }
             } else {
                 setErrorLogin('*Email atau password salah');

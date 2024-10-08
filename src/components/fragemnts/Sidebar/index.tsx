@@ -97,25 +97,25 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookOpen size={19} />} title="Semua Laporan" pathname="/semua-laporan-user" />
         </>
       );
-    } else if (role === 'officer') {
+    } else if (role === 'admin') {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-officer" />
           <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/laporan-saya-officer" />
         </>
       );
-    } else if (role === 'admin') {
+    } else if (role === 'superadmin') {
       return (
         <>
-          <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-admin" />
-          <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-admin/report" />
-          <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-admin/create-report" />
-          <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-admin/officer" />
-          <NavigationList icon={<FaRegAddressCard size={19} />} title="Karyawan" pathname="/dashboard-admin/employe" />
-          <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-admin/category" />
-          <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-admin/articles" />
-          <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-admin/galery" />
-          <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-admin/shop" />
+          <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-super-admin" />
+          <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-super-admin/report" />
+          <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-super-admin/create-report" />
+          <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-super-admin/officer" />
+          <NavigationList icon={<FaRegAddressCard size={19} />} title="Karyawan" pathname="/dashboard-super-admin/employe" />
+          <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-super-admin/category" />
+          <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-super-admin/articles" />
+          <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-super-admin/galery" />
+          <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-super-admin/shop" />
         </>
       );
     }

@@ -137,7 +137,7 @@ const Page = (props: Props) => {
             console.log(result);
             mutate(`${url}/news/${id}`)
             onWarningClose()
-            router.push('/dashboard-admin/articles')
+            router.push('/dashboard-super-admin/articles')
             setLoadingDelete(false)
         })
     }

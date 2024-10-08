@@ -187,7 +187,7 @@ const page = (props: Props) => {
     const handleDelete = async () => {
         await deleteEmploye(id, (result: any) => {
             console.log(result);
-            router.push('/dashboard-admin/report')
+            router.push('/dashboard-super-admin/report')
         })
         onWarningClose();
     }

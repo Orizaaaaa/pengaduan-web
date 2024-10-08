@@ -10,7 +10,7 @@ const page = (props: Props) => {
     return (
         <DefaultLayout>
             <div className="flex justify-end">
-                <Link href={'/dashboard-admin/articles/create'} className='px-4 py-2 rounded-lg mb-4 bg-primary text-white' >Tambah Artikel</Link >
+                <Link href={'/dashboard-super-admin/articles/create'} className='px-4 py-2 rounded-lg mb-4 bg-primary text-white' >Tambah Artikel</Link >
             </div>
             <MainArticle />
 
