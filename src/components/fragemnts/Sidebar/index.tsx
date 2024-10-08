@@ -114,7 +114,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaRegAddressCard size={19} />} title="Karyawan" pathname="/dashboard-admin/employe" />
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-admin/category" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-admin/articles" />
-          <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-admin/galert" />
+          <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-admin/galery" />
           <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-admin/shop" />
         </>
       );
