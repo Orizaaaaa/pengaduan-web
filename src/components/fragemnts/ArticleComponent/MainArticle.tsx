@@ -22,8 +22,10 @@ const MainArticle = (props: Props) => {
     const location = (id: string) => {
         if (pathname === '/articles') {
             return ('/articles/' + id)
-        } else {
+        } else if (pathname === '/dashboard-super-admin/articles') {
             return ('/dashboard-super-admin/articles/' + id)
+        } else {
+            return '/dashboard-officer/articles/' + id
         }
     }
 

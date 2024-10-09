@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import InputForm from '@/components/elements/input/InputForm';
 import { image, Spinner } from '@nextui-org/react';
 import Image from 'next/image';
@@ -17,6 +17,7 @@ import { postImage } from '@/api/imagePost';
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const TextEditor = ({ desc }: any) => {
+    const pathname = usePathname()
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const [form, setForm] = useState({
@@ -97,6 +98,9 @@ const TextEditor = ({ desc }: any) => {
 
 
     };
+
+    console.log(pathname);
+
 
     return (
         <>

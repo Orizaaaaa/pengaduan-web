@@ -102,7 +102,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-officer" />
-          <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/laporan-saya-officer" />
+          <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/myreport" />
+          <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-officer/articles" />
         </>
       );
     } else if (role === 'superadmin') {
