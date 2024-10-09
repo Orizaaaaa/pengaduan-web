@@ -5,10 +5,12 @@ import CardReport from '@/components/fragemnts/CardReport/CardReport';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react'
+import { IoSearch } from 'react-icons/io5';
 
 type Props = {}
 
-const Page = (props: Props) => {
+const AllReport = (props: Props) => {
+    const [role, setRole] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
     const [dataReport, setDataReport] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -16,6 +18,7 @@ const Page = (props: Props) => {
 
 
     useEffect(() => {
+        setRole(localStorage.getItem("role"));
         setLoading(true)
         getAllReport((result: any) => {
             setDataReport(result.data);
@@ -46,15 +49,14 @@ const Page = (props: Props) => {
         );
     });
 
-    console.log(dataReport);
 
 
     return (
         <DefaultLayout>
-            {/* <div className="w-full mt-4 relative ">
+            <div className="w-full mt-4 relative ">
                 <input onChange={handleSearch} className="w-full rounded-md bg-white outline-none py-2 ps-11" type="text" placeholder="ketik laporan..." name="" id="" />
                 <IoSearch size={20} color="#7C7C7C" className="absolute left-3 top-1/2 -translate-y-1/2" />
-            </div> */}
+            </div>
 
             <div className="flex justify-end">
                 <Dropdown>
@@ -96,4 +98,4 @@ const Page = (props: Props) => {
     )
 }
 
-export default Page
+export default AllReport
