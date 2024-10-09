@@ -17,7 +17,7 @@ const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'),
 
 type Props = {}
 
-const Page = (props: Props) => {
+const CreateReport = (props: Props) => {
 
     const [errorMsg, setErrorMsg] = useState('')
     const [category, setCategory] = useState([])
@@ -167,4 +167,4 @@ const Page = (props: Props) => {
     )
 }
 
-export default Page
+export default CreateReport

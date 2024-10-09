@@ -93,8 +93,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-user" />
-          <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/laporan-saya-user" />
-          <NavigationList icon={<FaBookOpen size={19} />} title="Semua Laporan" pathname="/semua-laporan-user" />
+          <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-user/create-report" />
+          <NavigationList icon={<FaBookOpen size={19} />} title="Semua Laporan" pathname="/dashboard-user/report" />
+          <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-user/shop" />
         </>
       );
     } else if (role === 'admin') {
