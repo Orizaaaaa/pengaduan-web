@@ -133,7 +133,11 @@ const Register = (props: Props) => {
         if (imageUrl) {
             const data = { ...form, image: imageUrl };
             registerUser(data, (status: boolean, res: any) => {
-                setLoading(false);
+                if (status) {
+                    router.push('/login');
+                    setLoading(false);
+                }
+
                 console.log(res);
 
             });
