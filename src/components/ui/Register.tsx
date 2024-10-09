@@ -8,15 +8,16 @@ import ButtonPrimary from '../elements/buttonPrimary';
 import { Spinner } from '@nextui-org/react';
 import { IoEye } from 'react-icons/io5';
 import Link from 'next/link';
-import { loginService } from '@/api/auth';
+import { loginService, registerUser } from '@/api/auth';
 import { useRouter } from 'next/navigation';
+import { postImage } from '@/api/imagePost';
 
 type Props = {}
 
 const Register = (props: Props) => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(true);
-    const [errorLogin, setErrorLogin] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
     const [disabled, setDisabled] = useState(true);
     const [typePassword, setTypePassword] = useState("password");
     const [loading, setLoading] = useState(false);
@@ -44,8 +45,66 @@ const Register = (props: Props) => {
             [name]: value,
         };
 
-        // Update the disabled state based on the form values
-        setDisabled(!(updatedValues.email.includes('@gmail.com') || updatedValues.email.includes('@test.com')) || updatedValues.password === "");
+        // Validasi nama
+        const nameRegex = /^[A-Za-z\s\-\_\'\.\,\&\(\)]{1,100}$/;
+        // Validasi email
+        const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
+        // Validasi password
+        const passwordRegex = /^[A-Za-z0-9]+$/;
+        // Validasi angka (untuk NIK dan No. HP)
+        const numberRegex = /^[0-9]+$/;
+
+        // Cek apakah semua field diisi
+        if (
+            !updatedValues.name ||
+            !updatedValues.email ||
+            !updatedValues.password ||
+            !updatedValues.number_phone ||
+            !updatedValues.nik || !updatedValues.image
+        ) {
+            setDisabled(true);
+            setErrorMsg('*Semua field harus diisi');
+            return;
+        }
+
+        // Validasi NIK harus berupa angka dan 16 karakter
+        if (!numberRegex.test(updatedValues.nik) || updatedValues.nik.length !== 16) {
+            setDisabled(true);
+            setErrorMsg('*NIK harus berupa angka dan terdiri dari 16 karakter');
+            return;
+        }
+
+        // Validasi No. HP harus berupa angka
+        if (!numberRegex.test(updatedValues.number_phone)) {
+            setDisabled(true);
+            setErrorMsg('*Nomor telepon harus berupa angka');
+            return;
+        }
+
+        // Validasi Nama
+        if (!nameRegex.test(updatedValues.name)) {
+            setDisabled(true);
+            setErrorMsg('*Masukkan nama yang valid');
+            return;
+        }
+
+        // Validasi Email
+        if (!emailRegex.test(updatedValues.email)) {
+            setDisabled(true);
+            setErrorMsg('*Masukkan email yang valid');
+            return;
+        }
+
+        // Validasi Password
+        if (!passwordRegex.test(updatedValues.password) || updatedValues.password.length < 8) {
+            setDisabled(true);
+            setErrorMsg('*Password harus 8 karakter atau lebih');
+            return;
+        }
+
+        // Jika semua validasi lolos, hapus pesan error dan enable tombol
+        setErrorMsg('');
+        setDisabled(false);
     };
 
     const handleFileManager = (fileName: string) => {
@@ -67,30 +126,26 @@ const Register = (props: Props) => {
         }
     };
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        const imageUrl = await postImage({ image: form.image });
+        if (imageUrl) {
+            const data = { ...form, image: imageUrl };
+            registerUser(data, (status: boolean, res: any) => {
+                setLoading(false);
+                console.log(res);
 
-        await loginService(form, (status: boolean, res: any) => {
-            setLoading(false);
-            if (status) {
-                const tokenCookies = `token=${res.data.token}`;
-                document.cookie = tokenCookies; // Set cookie
-                // Akses localStorage hanya di sisi klien
-                localStorage.setItem('name', res.data.username);
-                localStorage.setItem('role', res.data.role);
-                localStorage.setItem('token', res.data.token)
-                router.push('/dashboard');
-            } else {
-                setErrorLogin('*Email atau password salah');
-                console.log(res.data);
-            }
-        });
+            });
+        }
     };
+
+    console.log(form);
+
     return (
         <div className="register">
             <div className="container mx-auto flex justify-center items-center w-[100vw] h-[100vh] ">
-                <form className='p-6 bg-[#e9e9e9] rounded-lg  m-3 lg:m-0' onSubmit={handleLogin}>
+                <form className='p-6 bg-[#e9e9e9] rounded-lg  m-3 lg:m-0' onSubmit={handleRegister}>
 
                     <div className="images my-3">
                         {form.image && form.image instanceof Blob ? (
@@ -125,7 +180,7 @@ const Register = (props: Props) => {
 
                     <div className="flex gap-3">
                         <InputForm placeholder='Masukkan Email' type='email' htmlFor={'email'} value={form.email} onChange={handleChange} />
-                        <InputForm placeholder='Masukkan No HP' type='number' htmlFor={'number_phone'} value={form.number_phone} onChange={handleChange} />
+                        <InputForm placeholder='Masukkan No HP' type='text' htmlFor={'number_phone'} value={form.number_phone} onChange={handleChange} />
                     </div>
 
                     <div className="relative">
@@ -134,9 +189,9 @@ const Register = (props: Props) => {
                         </button>
                         <InputForm className='form-input-login' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                     </div>
-                    <p className='text-red my-3 text-sm'>{errorLogin}</p>
-                    <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2`}>
-                        {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Sign In'}
+                    <p className='text-red my-3 text-sm'>{errorMsg}</p>
+                    <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2 ${disabled ? 'bg-slate-400' : 'bg-primary'}`}>
+                        {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Daftar'}
                     </ButtonPrimary>
                     <p className='text-sm'>Sudah punya akun ? <Link className='text-primary font-medium ' href={'/login'} > Masuk</Link></p>
                 </form>

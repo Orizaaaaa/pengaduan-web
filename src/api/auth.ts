@@ -16,8 +16,8 @@ export const loginService = async (form: any, callback: any) => {
         })
 }
 
-export const register = async (formRegister: any, callback: any) => {
-    axiosInterceptor.post('/user/register', formRegister)
+export const registerUser = async (formRegister: any, callback: any) => {
+    await axiosInterceptor.post('/user/register', formRegister)
         .then((res) => {
             callback(true, res.data);
             console.log(res.data);
