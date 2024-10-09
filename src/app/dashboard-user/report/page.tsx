@@ -80,7 +80,7 @@ const AllReport = (props: Props) => {
 
                 {filteredData.map((item: any, index: number) => (
                     <CardReport
-                        location={`/dashboard-super-admin/report/${item.id}`}
+                        location={`/dashboard-user/report/${item.id}`}
                         image={item.imageReport[0]}
                         title={item.title}
                         address={item.address}
