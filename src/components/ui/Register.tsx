@@ -198,6 +198,9 @@ const Register = (props: Props) => {
                         {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Daftar'}
                     </ButtonPrimary>
                     <p className='text-sm'>Sudah punya akun ? <Link className='text-primary font-medium ' href={'/login'} > Masuk</Link></p>
+                    <div className="flex justify-end">
+                        <Link className='text-primary text-small ' href={'/'} > Kembali ke beranda</Link>
+                    </div>
                 </form>
             </div>
         </div>

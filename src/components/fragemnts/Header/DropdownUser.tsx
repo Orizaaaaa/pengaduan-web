@@ -2,18 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { capitalizeWords } from "@/utils/helper";
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [name, setName] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
 
   // Mengambil data dari localStorage setelah komponen dirender di client
   useEffect(() => {
     setName(localStorage.getItem("name"));
     setRole(localStorage.getItem("role"));
+    setImage(localStorage.getItem("image"));
   }, []);
 
   const trigger = useRef<HTMLAnchorElement>(null);
@@ -62,12 +63,10 @@ const DropdownUser = () => {
           </span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <Image
-            width={112}
-            height={112}
-            src="/images/user/user-01.png"
-            style={{ width: "auto", height: "auto" }}
+        <span className="h-12 w-12">
+          <img
+            src={image ? image : "/assets/images/user.png"}
+            className="object-cover rounded-full w-full h-full"
             alt="User"
           />
         </span>

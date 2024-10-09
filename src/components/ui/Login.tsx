@@ -55,6 +55,7 @@ const Login = () => {
                 document.cookie = tokenCookies; // Set cookie
                 // Akses localStorage hanya di sisi klien
                 localStorage.setItem('name', res.data.name);
+                localStorage.setItem('image', res.data.image);
                 localStorage.setItem('role', res.data.role);
                 localStorage.setItem('token', res.data.token)
                 setLoading(false);
@@ -95,6 +96,10 @@ const Login = () => {
                         {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Sign In'}
                     </ButtonPrimary>
                     <p className='text-sm'>Belum punya akun ? <Link className='text-primary font-medium ' href={'/register'} > Daftar</Link></p>
+                    <div className="flex justify-end">
+                        <Link className='text-primary text-small ' href={'/'} > Kembali ke beranda</Link>
+                    </div>
+
                 </form>
             </div>
         </div>
