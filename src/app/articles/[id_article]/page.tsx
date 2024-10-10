@@ -19,7 +19,7 @@ const Page = (props: Props) => {
     return (
         <>
             <Navbar />
-            <div className='p-10 mt-17 bg-white shadow-10 rounded-lg mb-10 ' dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
+            <div className='p-10 mt-17 bg-white  rounded-lg mb-10 ' dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
         </>
 
     )
