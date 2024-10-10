@@ -12,7 +12,7 @@ const Galery = (props: Props) => {
         <section className='container mx-auto py-10'>
             <div className="flex justify-between mb-5">
                 <h2 className=" text-xl md:text-2xl font-bold "> Galeri</h2>
-                <Link href={''} className='text-primary' >Lihat semua galeri</Link>
+                <Link href={'/galery'} className='text-primary' >Lihat semua galeri</Link>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

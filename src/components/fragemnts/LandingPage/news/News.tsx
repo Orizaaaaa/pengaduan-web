@@ -32,7 +32,7 @@ const News = (props: Props) => {
                 <div className="hero-1">
                     <div className="flex justify-between mb-5">
                         <h2 className=" text-xl md:text-2xl font-bold ">Berita</h2>
-                        <Link href={''} className='text-primary' >Lihat semua berita</Link>
+                        <Link href={'/artikel'} className='text-primary' >Lihat semua berita</Link>
                     </div>
                 </div>
 
