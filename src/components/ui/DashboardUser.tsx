@@ -4,9 +4,12 @@ import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { parseCoordinate } from '@/utils/helper';
 import React, { useEffect, useState } from 'react'
 import Card from '../elements/card/Card';
-import MapsAdmin from '../fragemnts/maps/MapsAdmin';
+const MapsAdmin = dynamic(() => import('../fragemnts/maps/MapsAdmin'), {
+    ssr: false
+});
 import Image from 'next/image';
 import { manusiaLaptop } from '@/app/image';
+import dynamic from 'next/dynamic';
 
 
 interface Report {
