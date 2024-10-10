@@ -33,6 +33,8 @@ axiosInterceptor.interceptors.response.use(
             localStorage.clear();
             // Arahkan ke halaman login menggunakan window.location.href
             window.location.href = '/login';
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+            document.cookie = 'role=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
         }
 
         return Promise.reject(error);

@@ -52,7 +52,9 @@ const Login = () => {
             if (status) {
                 setErrorLogin('');
                 const tokenCookies = `token=${res.data.token}`;
+                const roleCookies = `role=${res.data.role}`
                 document.cookie = tokenCookies; // Set cookie
+                document.cookie = roleCookies; // Set cookie
                 // Akses localStorage hanya di sisi klien
                 localStorage.setItem('name', res.data.name);
                 localStorage.setItem('image', res.data.image);
