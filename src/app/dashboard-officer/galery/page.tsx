@@ -1,20 +1,36 @@
 'use client'
+import { url } from '@/api/auth'
+import { fetcher } from '@/api/fetcher'
+import { createGalery, deleteGalery } from '@/api/galery'
+import { postImagesArray } from '@/api/imagePost'
 import { camera } from '@/app/image'
+import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import ButtonSecondary from '@/components/elements/buttonSecondary'
 import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
+import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 import React from 'react'
 import { IoCloseCircleOutline } from 'react-icons/io5'
-import { SwiperSlide } from 'swiper/react'
+import { Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import useSWR, { mutate } from 'swr'
 
 type Props = {}
 
 const page = (props: Props) => {
+    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
+    const [id, setId] = React.useState('')
     const [form, setForm] = React.useState({
         name: [] as File[],
     })
+
+    const { data, error } = useSWR(`${url}/gallery/list`, fetcher, {
+        keepPreviousData: true,
+    });
+    const dataImage = data?.data
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
         if (InputSelect === 'add') {
@@ -37,11 +53,47 @@ const page = (props: Props) => {
         }));
     };
 
-    console.log(form);
+    const handleCreate = async () => {
+        if (!form.name) {
+            console.log('tidak boleh kosong');
+        } else {
+            const urls: string[] = await postImagesArray({ images: form.name })
+            const data = {
+                ...form,
+                name: urls
+            }
+
+            createGalery(data, (status: any, result: any) => {
+                if (status) {
+                    console.log(result);
+                    setForm({
+                        name: [] as File[],
+                    })
+                }
+            })
+
+        }
+    }
+
+    const openModalDelete = (id: any) => {
+        setId(id)
+        onWarningOpen()
+    }
+
+    const handleDelete = async () => {
+        await deleteGalery(id, (status: any, result: any) => {
+            if (status) {
+                mutate(`${url}/gallery/list`)
+                onWarningClose()
+            }
+        })
+    }
+
+
 
     return (
         <DefaultLayout>
-            {/* caraosel */}
+            {/* caraosel image input*/}
             <div>
                 <CaraoselImage>
                     {form.name.length > 0 ? (
@@ -52,7 +104,7 @@ const page = (props: Props) => {
                                         <img
                                             src={URL.createObjectURL(image)}
                                             alt={`preview-${index}`}
-                                            className="w-auto h-[350px] relative"
+                                            className="w-auto h-[200px] relative"
                                         />
                                     </div>
                                     <button onClick={() => deleteArrayImage(index)} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
@@ -75,10 +127,54 @@ const page = (props: Props) => {
                             onChange={(e) => handleImageChange(e, 'add')}
                         />
                     </ButtonPrimary>
-                    <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, images: [] }))} >Hapus Semua</ButtonSecondary>
+                    <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, name: [] }))} >Hapus Semua</ButtonSecondary>
                 </div>
+                <ButtonPrimary className='w-full py-2 rounded-md' onClick={handleCreate} > Kirim  </ButtonPrimary>
 
             </div>
+
+            <section className="image-list mt-4">
+                <div className="grid grid-cols-4 gap-4">
+                    {dataImage?.map((item: any, index: any) => (
+                        <div className="cover" key={index}>
+                            <Swiper
+                                spaceBetween={10}
+                                pagination={{
+                                    clickable: true,
+                                }}
+                                modules={[Pagination]}
+                                className="mySwiper h-full rounded-lg"
+                            >
+                                {item.name?.map((image: any, index: any) => (
+                                    <SwiperSlide key={index}>
+                                        <div className="relative h-50">
+                                            <img
+                                                src={image} // Mengambil URL langsung dari `image`
+                                                alt={`preview-${image}`}
+                                                className="w-full h-full object-cover rounded-md"
+                                            />
+                                            {/* Pastikan pointerEvents dihapus untuk tombol agar bisa diklik */}
+                                            <button onClick={() => openModalDelete(item._id)} className="button-delete array image absolute top-0 right-0 z-10">
+                                                <IoCloseCircleOutline color="red" size={34} />
+                                            </button>
+                                        </div>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
+                    ))}
+                </div>
+
+
+            </section>
+
+            <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
+                Apakah anda yakin akan menghapus data geleri tersebut ?
+                <div className="flex justify-end gap-3">
+                    <ButtonPrimary className='py-2 px-3 rounded-md' onClick={onWarningClose}> Batal</ButtonPrimary>
+                    <ButtonDelete className='py-2 px-3 rounded-md' onClick={handleDelete}>Ya, Hapus</ButtonDelete>
+                </div>
+            </ModalAlert>
 
         </DefaultLayout>
     )
