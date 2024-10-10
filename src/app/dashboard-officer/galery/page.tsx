@@ -206,7 +206,7 @@ const page = (props: Props) => {
 
             {/* list gambar */}
             <section className="image-list mt-4">
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4  gap-4">
                     {dataImage?.map((item: any, index: any) => (
                         <div className="cover group relative" key={index}>
                             <Swiper
