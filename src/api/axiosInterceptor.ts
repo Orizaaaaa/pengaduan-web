@@ -28,9 +28,9 @@ axiosInterceptor.interceptors.response.use(
         const { message, success } = error.response?.data || {};
 
         // Cek apakah message mengandung pesan kadaluarsa
-        if (message === "Your Url is expired please try again letter!" && success === false) {
+        if (message === "Your Url is expired please try again letter!" && success === false && message === "Please login to continue") {
             // Hapus token jika diperlukan
-            localStorage.removeItem('token');
+            localStorage.clear();
             // Arahkan ke halaman login menggunakan window.location.href
             window.location.href = '/login';
         }
