@@ -13,6 +13,7 @@ import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 import React from 'react'
+import { FaPen } from 'react-icons/fa6'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -24,6 +25,10 @@ const page = (props: Props) => {
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [id, setId] = React.useState('')
     const [form, setForm] = React.useState({
+        name: [] as File[],
+    })
+
+    const [formUpdate, setFormUpdate] = React.useState({
         name: [] as File[],
     })
 
@@ -136,7 +141,7 @@ const page = (props: Props) => {
             <section className="image-list mt-4">
                 <div className="grid grid-cols-4 gap-4">
                     {dataImage?.map((item: any, index: any) => (
-                        <div className="cover" key={index}>
+                        <div className="cover group relative" key={index}>
                             <Swiper
                                 spaceBetween={10}
                                 pagination={{
@@ -153,10 +158,19 @@ const page = (props: Props) => {
                                                 alt={`preview-${image}`}
                                                 className="w-full h-full object-cover rounded-md"
                                             />
-                                            {/* Pastikan pointerEvents dihapus untuk tombol agar bisa diklik */}
-                                            <button onClick={() => openModalDelete(item._id)} className="button-delete array image absolute top-0 right-0 z-10">
-                                                <IoCloseCircleOutline color="red" size={34} />
-                                            </button>
+
+                                            {/* Tombol akan disembunyikan, tetapi muncul saat hover */}
+                                            <div className="button-action-hover flex justify-center items-center gap-10">
+                                                <button className='absolute pt-2 top-0 right-10 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300' >
+                                                    <FaPen color='white' />
+                                                </button>
+                                                <button
+                                                    onClick={() => openModalDelete(item._id)}
+                                                    className="absolute top-0 right-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                                >
+                                                    <IoCloseCircleOutline color="red" size={34} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </SwiperSlide>
                                 ))}
@@ -164,9 +178,8 @@ const page = (props: Props) => {
                         </div>
                     ))}
                 </div>
-
-
             </section>
+
 
             <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
                 Apakah anda yakin akan menghapus data geleri tersebut ?
