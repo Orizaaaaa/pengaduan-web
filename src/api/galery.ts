@@ -17,3 +17,13 @@ export const deleteGalery = async (id: any, callback: any) => {
             console.log(err);
         });
 }
+
+
+export const updateGalery = (id: any, form: any, callback: any) => {
+    axiosInterceptor.put(`/gallery/${id}`, form)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}

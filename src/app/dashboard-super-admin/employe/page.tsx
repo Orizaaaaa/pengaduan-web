@@ -1,6 +1,5 @@
 'use client'
-
-import { register } from "@/api/auth";
+    ;
 import { createEmploye, deleteEmploye, getAllEmploye } from "@/api/employe";
 import { postImage } from "@/api/imagePost";
 import { getAllUnitWork } from "@/api/unitWork";

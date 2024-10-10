@@ -1,13 +1,14 @@
 'use client'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
-import { createGalery, deleteGalery } from '@/api/galery'
+import { createGalery, deleteGalery, updateGalery } from '@/api/galery'
 import { postImagesArray } from '@/api/imagePost'
 import { camera } from '@/app/image'
 import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import ButtonSecondary from '@/components/elements/buttonSecondary'
 import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
+import ModalDefault from '@/components/fragemnts/modal/modal'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { useDisclosure } from '@nextui-org/react'
@@ -22,12 +23,12 @@ import useSWR, { mutate } from 'swr'
 type Props = {}
 
 const page = (props: Props) => {
+    const { onOpen, onClose, isOpen } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [id, setId] = React.useState('')
     const [form, setForm] = React.useState({
         name: [] as File[],
     })
-
     const [formUpdate, setFormUpdate] = React.useState({
         name: [] as File[],
     })
@@ -47,15 +48,29 @@ const page = (props: Props) => {
                 }));
             }
         } else {
-            console.log('error');
+            const selectedImage = e.target.files?.[0];
+            if (selectedImage) {
+                setFormUpdate(prevState => ({
+                    ...prevState,
+                    name: [...prevState.name, selectedImage]
+                }));
+            }
         }
     };
 
-    const deleteArrayImage = (index: number) => {
-        setForm(prevState => ({
-            ...prevState,
-            name: prevState.name.filter((_, i) => i !== index)
-        }));
+    const deleteArrayImage = (index: number, type: string) => {
+        if (type === 'add') {
+            setForm(prevState => ({
+                ...prevState,
+                name: prevState.name.filter((_, i) => i !== index)
+            }));
+        } else {
+            setFormUpdate(prevState => ({
+                ...prevState,
+                name: prevState.name.filter((_, i) => i !== index)
+            }));
+        }
+
     };
 
     const handleCreate = async () => {
@@ -80,6 +95,55 @@ const page = (props: Props) => {
         }
     }
 
+
+    // action update
+    const openModalUpdate = (id: any, data: any) => {
+        setId(id);
+        onOpen();
+        setFormUpdate({
+            ...form, name: data.name // Mengambil data.name yang berisi URL gambar
+        });
+    };
+
+
+    const handleUpdate = async () => {
+        if (!formUpdate.name || formUpdate.name.length === 0) {
+            console.log('tidak boleh kosong');
+        } else {
+            // Pisahkan gambar yang berupa URL string dan File
+            const existingUrls = formUpdate.name.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
+            const newFiles = formUpdate.name.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
+
+            // Upload gambar baru ke Cloudinary jika ada
+            let uploadedUrls: string[] = [];
+            if (newFiles.length > 0) {
+                uploadedUrls = await postImagesArray({ images: newFiles });
+            }
+
+            // Gabungkan URL lama dengan URL baru yang di-upload
+            const allUrls = [...existingUrls, ...uploadedUrls];
+
+            // Data untuk dikirim ke update API
+            const data = {
+                ...formUpdate,
+                name: allUrls,
+            };
+
+            // Panggil fungsi updateGalery untuk mengirim data
+            updateGalery(id, data, (result: any) => {
+                console.log(result);
+                setFormUpdate({
+                    name: [], // Reset formUpdate setelah berhasil update
+                });
+            });
+
+            onClose();
+        }
+    };
+
+
+
+    // action delete
     const openModalDelete = (id: any) => {
         setId(id)
         onWarningOpen()
@@ -98,6 +162,7 @@ const page = (props: Props) => {
 
     return (
         <DefaultLayout>
+
             {/* caraosel image input*/}
             <div>
                 <CaraoselImage>
@@ -112,7 +177,7 @@ const page = (props: Props) => {
                                             className="w-auto h-[200px] relative"
                                         />
                                     </div>
-                                    <button onClick={() => deleteArrayImage(index)} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                    <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
                                 </>
                             </SwiperSlide>
                         ))
@@ -138,6 +203,8 @@ const page = (props: Props) => {
 
             </div>
 
+
+            {/* list gambar */}
             <section className="image-list mt-4">
                 <div className="grid grid-cols-4 gap-4">
                     {dataImage?.map((item: any, index: any) => (
@@ -161,7 +228,7 @@ const page = (props: Props) => {
 
                                             {/* Tombol akan disembunyikan, tetapi muncul saat hover */}
                                             <div className="button-action-hover flex justify-center items-center gap-10">
-                                                <button className='absolute pt-2 top-0 right-10 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300' >
+                                                <button onClick={() => openModalUpdate(item._id, item)} className='absolute pt-2 top-0 right-10 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300' >
                                                     <FaPen color='white' />
                                                 </button>
                                                 <button
@@ -179,6 +246,60 @@ const page = (props: Props) => {
                     ))}
                 </div>
             </section>
+
+
+            {/* modal update */}
+            <ModalDefault isOpen={isOpen} onClose={onClose}>
+                <div>
+                    <CaraoselImage>
+                        {formUpdate.name.length > 0 ? (
+                            formUpdate.name.map((image: any, index: number) => (
+                                <SwiperSlide key={index}>
+                                    <>
+                                        <div className="flex justify-center items-center" style={{ pointerEvents: 'none' }}>
+                                            <img
+                                                src={typeof image === 'string' ? image : URL.createObjectURL(image)} // Cek apakah image berupa string atau File
+                                                alt={`preview-${index}`}
+                                                className="w-auto h-[200px] relative"
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={() => deleteArrayImage(index, 'update')}
+                                            className="button-delete array-image absolute top-0 right-0 z-10"
+                                        >
+                                            <IoCloseCircleOutline color="red" size={34} />
+                                        </button>
+                                    </>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            <div className="flex justify-center">
+                                <Image className="w-auto h-[200px] relative" src={camera} alt="image" />
+                            </div>
+                        )}
+                    </CaraoselImage>
+
+
+                    <div className="grid grid-cols-2 justify-between my-5 gap-2">
+                        <ButtonPrimary className='rounded-md relative cursor-pointer py-2 px-1'>
+                            Tambah Image
+                            <input
+                                type="file"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                id="image-input-add"
+                                onChange={(e) => handleImageChange(e, 'update')}
+                            />
+                        </ButtonPrimary>
+                        <ButtonSecondary
+                            className='rounded-md py-2 px-1'
+                            onClick={() => setFormUpdate(prevForm => ({ ...prevForm, name: [] }))}
+                        >
+                            Hapus Semua
+                        </ButtonSecondary>
+                    </div>
+                    <ButtonPrimary className='w-full py-2 rounded-md' onClick={handleUpdate}>Kirim</ButtonPrimary>
+                </div>
+            </ModalDefault>
 
 
             <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
