@@ -1,14 +1,25 @@
 'use client'
 
+import { url } from '@/api/auth'
+import { fetcher } from '@/api/fetcher'
 import { employe, human1 } from '@/app/image'
+import { capitalizeWords } from '@/utils/helper'
 import Image from 'next/image'
 import React from 'react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import useSWR from 'swr'
 
 type Props = {}
 
 const EmployeList = (props: Props) => {
+
+    const { data, error } = useSWR(`${url}/employee/list`, fetcher, {
+        keepPreviousData: true,
+    });
+    const dataEmploye = data?.data
+
+    console.log(data);
 
 
     return (
@@ -45,47 +56,18 @@ const EmployeList = (props: Props) => {
                 modules={[Autoplay]}
                 className="mySwiper"
             >
-                <SwiperSlide >
-                    <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
-                        <Image className="w-auto" src={employe} alt="human" />
-                        <div className="p-4 bg-white w-full text-center">
-                            <p className=' font-bold' >Gabriel yonathan</p>
-                            <p className='text-slate-500 text-sm' >Psikolog Klinis | Spesialis Keluarga</p>
+                {dataEmploye?.map((item: any, index: number) => (
+                    <SwiperSlide key={index} >
+                        <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
+                            <Image className="w-auto" src={employe} alt="human" />
+                            <div className="p-4 bg-white w-full text-center">
+                                <p className=' font-bold' >{capitalizeWords(item.name)}</p>
+                                <p className='text-slate-500 text-sm' > {item.division} | {item.position}</p>
+                            </div>
                         </div>
-                    </div>
 
-                </SwiperSlide>
-                <SwiperSlide >
-                    <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
-                        <Image className="w-auto" src={employe} alt="human" />
-                        <div className="p-4 bg-white w-full text-center">
-                            <p className=' font-bold' >Gabriel kafir</p>
-                            <p className='text-slate-500 text-sm' >Psikolog Klinis | Spesialis Keluarga</p>
-                        </div>
-                    </div>
-
-                </SwiperSlide>
-                <SwiperSlide >
-                    <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
-                        <Image className="w-auto" src={employe} alt="human" />
-                        <div className="p-4 bg-white w-full text-center">
-                            <p className=' font-bold' >Gabriel kafir</p>
-                            <p className='text-slate-500 text-sm' >Psikolog Klinis | Spesialis Keluarga</p>
-                        </div>
-                    </div>
-
-                </SwiperSlide>
-                <SwiperSlide >
-                    <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
-                        <Image className="w-auto" src={employe} alt="human" />
-                        <div className="p-4 bg-white w-full text-center">
-                            <p className=' font-bold' >Gabriel kafir</p>
-                            <p className='text-slate-500 text-sm' >Psikolog Klinis | Spesialis Keluarga</p>
-                        </div>
-                    </div>
-
-                </SwiperSlide>
-
+                    </SwiperSlide>
+                ))}
 
 
 
