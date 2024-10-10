@@ -14,7 +14,6 @@ const Page = (props: Props) => {
         keepPreviousData: true,
     });
     const dataArticle = data?.data
-    console.log(data);
 
     return (
         <>
