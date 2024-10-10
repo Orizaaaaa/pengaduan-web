@@ -79,7 +79,7 @@ const Navbar = (props: Props) => {
 
 
     return (
-        <nav className={`fixed top-0 left-0 py-2.5 w-full z-999999 ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
+        <nav className={`navbar-up fixed top-0 left-0 py-2.5 w-full z-999999 ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
             <div className="container mx-auto flex flex-wrap items-center justify-between">
                 <div className="flex justify-start">
                     <Image className="portfolio-icon w-70 h-12 md:h-10" src={logo2} alt="logo2" />

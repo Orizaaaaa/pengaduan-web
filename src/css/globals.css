@@ -162,7 +162,7 @@ nav .flex ul li a::after {
 }
 
 @media screen and (max-width: 1024px) {
-    nav {
+    .navbar-up {
         background: rgba(211, 202, 202, 0.3);
         backdrop-filter: blur(10px);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
