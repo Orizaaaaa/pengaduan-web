@@ -10,7 +10,6 @@ import { IoSearch } from 'react-icons/io5';
 type Props = {}
 
 const AllReport = (props: Props) => {
-    const [role, setRole] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)
     const [dataReport, setDataReport] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -18,7 +17,6 @@ const AllReport = (props: Props) => {
 
 
     useEffect(() => {
-        setRole(localStorage.getItem("role"));
         setLoading(true)
         getAllReport((result: any) => {
             setDataReport(result.data);

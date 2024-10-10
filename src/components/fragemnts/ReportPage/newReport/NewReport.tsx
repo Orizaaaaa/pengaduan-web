@@ -1,10 +1,20 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import CardReport from '../../CardReport/CardReport'
-import { human1 } from '@/app/image'
+import { getAllReport } from '@/api/report'
 
 type Props = {}
 
 const NewReport = (props: Props) => {
+    const [loading, setLoading] = useState(false)
+    const [dataReport, setDataReport] = useState([]);
+    useEffect(() => {
+        getAllReport((result: any) => {
+            setDataReport(result.data);
+            setLoading(false)
+        });
+
+    }, []);
     return (
         <section className='container mx-auto my-20' >
             <div className="text-start text-2xl">
@@ -13,14 +23,19 @@ const NewReport = (props: Props) => {
             </div>
 
             <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  mt-12 gap-4">
-                <CardReport title='Jalan Rusak' location='Bandung' address='Jl. Moch. Toha No. 77' desc='Jalan Rusak' status='Menunggu'
-                    date='12.12.2022' image={human1} />
-                <CardReport title='Jalan Rusak' location='Bandung' address='Jl. Moch. Toha No. 77' desc='Jalan Rusak' status='Menunggu'
-                    date='12.12.2022' image={human1} />
-                <CardReport title='Jalan Rusak' location='Bandung' address='Jl. Moch. Toha No. 77' desc='Jalan Rusak' status='Menunggu'
-                    date='12.12.2022' image={human1} />
-                <CardReport title='Jalan Rusak' location='Bandung' address='Jl. Moch. Toha No. 77' desc='Jalan Rusak' status='Menunggu'
-                    date='12.12.2022' image={human1} />
+                {dataReport.map((item: any, index: number) => (
+                    <CardReport
+                        location={`/dashboard-user/report/${item.id}`}
+                        image={item.imageReport[0]}
+                        title={item.title}
+                        address={item.address}
+                        status={item.status}
+                        date={item.createdAt}
+                        desc={item.description}
+                        key={index}
+                    />
+                ))}
+
             </section>
         </section>
     )
