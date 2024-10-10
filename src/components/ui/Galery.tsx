@@ -1,35 +1,49 @@
-import { galery1, galery2, galery3, galery4, galery5, galery6 } from '@/app/image'
-import Image from 'next/image'
+'use client'
 import React from 'react'
 import Navbar from '../fragemnts/navbar/Navbar'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
+import { Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import useSWR from 'swr'
+import { fetcher } from '@/api/fetcher'
+import { url } from '@/api/auth'
 
 type Props = {}
 
 const Galery = (props: Props) => {
+    const { data, error } = useSWR(`${url}/gallery/list`, fetcher, {
+        keepPreviousData: true,
+    });
+    const dataImage = data?.data
     return (
         <>
             <Navbar />
-            <section className='container mx-auto my-20'>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="h-80 bg-gray-300"> {/* Gambar 1 */}
-                        <Image src={galery1} alt="Gallery Image" className="w-full h-full object-cover rounded-md" />
-                    </div>
-                    <div className="h-80 bg-gray-300"> {/* Gambar 2 */}
-                        <Image src={galery2} alt="Gallery Image" className="w-full h-full object-cover rounded-md" />
-                    </div>
-                    <div className="h-80 bg-gray-300 "> {/* Gambar 3 */}
-                        <Image src={galery3} alt="Gallery Image" className="w-full h-full object-cover rounded-md" />
-                    </div>
-                    <div className="h-80 bg-gray-300 "> {/* Gambar 4 */}
-                        <Image src={galery4} alt="Gallery Image" className="w-full h-full object-cover rounded-md" />
-                    </div>
-                    <div className="h-80 bg-gray-300 "> {/* Gambar 5 */}
-                        <Image src={galery5} alt="Gallery Image" className="w-full h-full object-cover rounded-md" />
-                    </div>
-                    <div className="h-80 bg-gray-300  "> {/* Gambar 6 */}
-                        <Image src={galery6} alt="Gallery Image" className="w-full h-full object-cover rounded-md" />
-                    </div>
+            <section className="image-list  container mx-auto my-20">
+                <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4  gap-4">
+                    {dataImage?.map((item: any, index: any) => (
+                        <div className="cover group relative" key={index}>
+                            <Swiper
+                                spaceBetween={10}
+                                pagination={{
+                                    clickable: true,
+                                }}
+                                modules={[Pagination]}
+                                className="mySwiper h-full rounded-lg"
+                            >
+                                {item.name?.map((image: any, index: any) => (
+                                    <SwiperSlide key={index}>
+                                        <div className="relative h-50">
+                                            <img
+                                                src={image} // Mengambil URL langsung dari `image`
+                                                alt={`preview-${image}`}
+                                                className="w-full h-full object-cover rounded-md"
+                                            />
+                                        </div>
+                                    </SwiperSlide>
+                                ))}
+                            </Swiper>
+                        </div>
+                    ))}
                 </div>
             </section>
             <Footer />

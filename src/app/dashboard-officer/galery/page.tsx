@@ -22,7 +22,7 @@ import useSWR, { mutate } from 'swr'
 
 type Props = {}
 
-const page = (props: Props) => {
+const GaleryAdmin = (props: Props) => {
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [id, setId] = React.useState('')
@@ -314,4 +314,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default GaleryAdmin
