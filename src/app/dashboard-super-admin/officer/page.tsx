@@ -1,7 +1,6 @@
 'use client'
 
-import { register } from "@/api/auth";
-import { getAllUnitWork } from "@/api/unitWork";
+import { registerUser } from "@/api/auth";;
 import { deleteUser, getAllUser } from "@/api/user";
 import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
@@ -82,8 +81,7 @@ const OfficerList = () => {
         e.preventDefault();
         console.log(formData);
 
-        await register(formData, (status: boolean, res: any) => {
-            console.log(register);
+        await registerUser(formData, (status: boolean, res: any) => {
 
             if (status) {
                 console.log(res);
