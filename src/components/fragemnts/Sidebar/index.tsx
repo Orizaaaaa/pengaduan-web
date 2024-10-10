@@ -102,7 +102,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-officer" />
-          <NavigationList icon={<FaBookReader size={19} />} title="Laporan Saya" pathname="/myreport" />
+          <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-officer/report" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-officer/articles" />
         </>
       );
