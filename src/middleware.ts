@@ -24,21 +24,21 @@ export function middleware(req: NextRequest) {
     // Cek jika role 'officer' mengakses dashboard-officer
     if (urlPath.startsWith('/dashboard-officer') && role !== 'admin') {
         const url = req.nextUrl.clone();
-        url.pathname = '/';
+        url.pathname = '/login';
         return NextResponse.redirect(url);
     }
 
     // Cek jika role 'superadmin' mengakses dashboard-super-admin
     if (urlPath.startsWith('/dashboard-super-admin') && role !== 'superadmin') {
         const url = req.nextUrl.clone();
-        url.pathname = '/';
+        url.pathname = '/login';
         return NextResponse.redirect(url);
     }
 
     // Cek jika role 'user' mengakses dashboard-user
     if (urlPath.startsWith('/dashboard-user') && role !== 'user') {
         const url = req.nextUrl.clone();
-        url.pathname = '/';
+        url.pathname = '/login';
         return NextResponse.redirect(url);
     }
 
