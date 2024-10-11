@@ -64,7 +64,7 @@ const PartnerShip = (props: Props) => {
 
                         <PopoverContent>
                             <div className="px-1 py-2">
-                                <div className="text-small ">waduk</div>
+                                <div className="text-small ">{item.text}</div>
                             </div>
                         </PopoverContent>
                     </Popover>

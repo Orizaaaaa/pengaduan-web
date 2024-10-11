@@ -1,9 +1,20 @@
+'use client'
+import { url } from '@/api/auth'
+import { getCategories } from '@/api/category'
+import { fetcher } from '@/api/fetcher'
 import { categoryData } from '@/utils/dataObject'
 import { Button, Popover, PopoverContent, PopoverTrigger, Tooltip } from '@nextui-org/react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import useSWR from 'swr'
 
 const Category = () => {
+    const { data, error } = useSWR(`${url}/category/list`, fetcher, {
+        keepPreviousData: true,
+    });
+    const dataCategory = data?.data
+    console.log(dataCategory);
+
     return (
 
         <section className='my-15 container mx-auto' id='category'>
@@ -12,12 +23,12 @@ const Category = () => {
                 <h1 className="text-primary font-bold" >Kategori pelaporan </h1>
             </div>
             <div className='grid my-15 grid-cols-3 md:grid-cols-4 lg:grid-cols-8 container mx-auto gap-5'>
-                {categoryData.map((item: any, index) => (
+                {dataCategory?.map((item: any, index: number) => (
 
                     <Popover placement="top" key={index}>
                         <PopoverTrigger>
                             <div className="image flex-col justify-center items-center relative cursor-pointer" >
-                                <Image
+                                <img
                                     width={140}
                                     height={140}
                                     src={item.image}
