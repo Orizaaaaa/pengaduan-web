@@ -15,6 +15,7 @@ import titleGaleri from '../assets/news1.svg'
 import image1 from '../assets/image1.png'
 import image2 from '../assets/image2.png'
 import image3 from '../assets/image3.png'
+import bgLogin from '../assets/bgLogin.png'
 
 import shop1 from '../assets/shop1.svg'
 import shop2 from '../assets/shop2.svg'
@@ -60,5 +61,5 @@ export {
     bgPengaduan, imageLogin, camera,
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
     headerPengaduan, pembangunan, manusiaLaptop,
-    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr
+    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin
 };
