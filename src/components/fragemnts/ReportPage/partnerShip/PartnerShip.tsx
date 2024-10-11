@@ -1,42 +1,78 @@
-import { brand1, brand10, brand2, brand3, brand4, brand5, brand6, brand7, brand8, brand9, logo } from '@/app/image'
+import { basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr } from '@/app/image';
+import { Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react';
 import Image from 'next/image';
 import React from 'react';
 
 type Props = {};
 
 const PartnerShip = (props: Props) => {
-
     const partner = [
-        { image: brand3 },
-        { image: brand2 },
-        { image: brand4 },
-        { image: brand5 },
-        { image: brand6 },
-        { image: brand9 },
-        { image: brand10 },
+        {
+            image: dishub,
+            text: 'Dinas Perhubungan'
+        },
+        {
+            image: kejaksaan,
+            text: 'Kejaksaan'
+        },
+        {
+            image: pertanian,
+            text: 'Dinas Pertanian'
+        },
+        {
+            image: polisi,
+            text: 'Kepolisian'
+        },
+        {
+            image: pupr,
+            text: 'PUPR'
+        },
+        {
+            image: basarnas,
+            text: 'Basarnas'
+        },
+        {
+            image: dinsos,
+            text: 'Dinas Sosial'
+        },
     ];
 
     return (
         <section className="container mx-auto mb-20">
-            <div className="text-start text-2xl">
+            <div className="text-start text-2xl mb-10">
                 <h1 className="text-primary font-medium">Partner</h1>
                 <h1 className="text-primary font-bold">Berikut Yang Kerja Sama Dengan Kami</h1>
             </div>
 
-            <div className=" flex gap-5 mt-10 px-5 md:px-0">
-                {partner.map((item, index) => (
-                    <div className="flex justify-center items-center h-14" key={index}>
-                        <Image
-                            src={item.image}
-                            alt={`Partner ${index + 1}`}
-                            className="object-contain w-full h-full"
-                            width={100}
-                            height={100}
-                        />
-                    </div>
+            <div className='grid my-15 grid-cols-3 md:grid-cols-4 lg:grid-cols-7 container mx-auto gap-5'>
+                {partner.map((item: any, index) => (
+
+                    <Popover placement="top" key={index}>
+                        <PopoverTrigger>
+                            <div className="image flex-col justify-center items-center relative cursor-pointer" >
+                                <Image
+                                    width={140}
+                                    height={140}
+                                    src={item.image}
+                                    className={`mx-auto rounded-full object-cover cursor-pointer w-full h-full shadow-3 p-4`}
+                                    alt='image'
+                                />
+
+
+                            </div>
+                        </PopoverTrigger>
+
+                        <PopoverContent>
+                            <div className="px-1 py-2">
+                                <div className="text-small ">waduk</div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+
+
+
                 ))}
             </div>
-
         </section>
     );
 };
