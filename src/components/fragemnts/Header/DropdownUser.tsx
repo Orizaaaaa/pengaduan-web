@@ -48,11 +48,8 @@ const DropdownUser = () => {
 
   return (
     <div className="relative">
-      <Link
-        ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+      <div
         className="flex items-center gap-4"
-        href="#"
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
@@ -70,46 +67,9 @@ const DropdownUser = () => {
             alt="User"
           />
         </span>
-      </Link>
-
-      {/* Dropdown Start */}
-      <div
-        ref={dropdown}
-        onFocus={() => setDropdownOpen(true)}
-        onBlur={() => setDropdownOpen(false)}
-        className={`absolute right-0 mt-4 w-62.5 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen ? "block" : "hidden"
-          }`}
-      >
-        <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
-          <li>
-            <Link
-              href="/profile"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-            >
-              {/* SVG omitted for brevity */}
-              My Profile
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-            >
-              {/* SVG omitted for brevity */}
-              My Contacts
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/settings"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-            >
-              {/* SVG omitted for brevity */}
-              Settings
-            </Link>
-          </li>
-        </ul>
       </div>
+
+
     </div>
   );
 };
