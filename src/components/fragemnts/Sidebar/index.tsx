@@ -11,7 +11,7 @@ import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaBookReader } from "react-icons/fa";
 import { FaBookOpen, FaRegAddressCard, FaRegNewspaper } from "react-icons/fa6";
 import { IoMdImages, IoMdPricetags } from "react-icons/io";
-import { BsBuildingAdd, BsShop } from "react-icons/bs";
+import { BsBuildingAdd, BsBuildingsFill, BsShop } from "react-icons/bs";
 import { LuBookPlus } from "react-icons/lu";
 
 interface SidebarProps {
@@ -106,6 +106,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-officer/report" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-officer/articles" />
           <NavigationList icon={<IoMdImages size={19} />} title="Geleri" pathname="/dashboard-officer/galery" />
+          <NavigationList icon={<BsBuildingsFill size={19} />} title="Pembangunan" pathname="/dashboard-officer/pembangunan" />
         </>
       );
     } else if (role === 'superadmin') {
@@ -120,6 +121,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-super-admin/articles" />
           <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-super-admin/galery" />
           <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-super-admin/shop" />
+          <NavigationList icon={<BsBuildingsFill size={19} />} title="Pembangunan" pathname="/dashboard-super-admin/pembangunan" />
         </>
       );
     }
