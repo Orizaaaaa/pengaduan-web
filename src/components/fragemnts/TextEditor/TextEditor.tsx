@@ -87,7 +87,11 @@ const TextEditor = ({ desc }: any) => {
             await createArticle(formSubmit, (result: any) => {
                 console.log(result)
                 if (result) {
-                    router.push('/dashboard-super-admin/articles');
+                    if (pathname === '/dashboard-officer/articles/create') {
+                        router.push('/dashboard-officer/articles');
+                    } else {
+                        router.push('/dashboard-super-admin/articles');
+                    }
                     setLoading(false);
                 }
             })
