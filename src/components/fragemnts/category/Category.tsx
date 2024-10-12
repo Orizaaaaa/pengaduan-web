@@ -22,35 +22,32 @@ const Category = () => {
                 <h1 className="text-primary font-medium" >Kategori</h1>
                 <h1 className="text-primary font-bold" >Kategori pelaporan </h1>
             </div>
+
             <div className='grid my-15 grid-cols-3 md:grid-cols-4 lg:grid-cols-8 container mx-auto gap-5'>
                 {dataCategory?.map((item: any, index: number) => (
-
                     <Popover placement="top" key={index}>
                         <PopoverTrigger>
-                            <div className="image flex-col  justify-center items-center relative cursor-pointer" >
-                                <img
-                                    width={140}
-                                    height={140}
-                                    src={item.image}
-                                    className={`mx-auto rounded-full object-cover cursor-pointer w-full h-full shadow-3 p-4`}
-                                    alt='image'
-                                />
-
-                                <div className="absolute inset-0 bg-black opacity-50 rounded-full"></div>
+                            <div className="image flex-col justify-center items-center relative cursor-pointer">
+                                <div className="relative w-25 h-25 md:w-39 md:h-39"> {/* Ukuran tetap untuk membuat gambar bulat */}
+                                    <img
+                                        src={item.image}
+                                        className={`mx-auto rounded-full object-cover w-full h-full shadow-3`} // Hapus padding
+                                        alt='image'
+                                    />
+                                    <div className="absolute inset-0 bg-black opacity-50 rounded-full"></div>
+                                </div>
                             </div>
                         </PopoverTrigger>
 
                         <PopoverContent>
                             <div className="px-1 py-2">
-                                <div className="text-small ">{item.name}</div>
+                                <div className="text-small">{item.name}</div>
                             </div>
                         </PopoverContent>
                     </Popover>
-
-
-
                 ))}
             </div>
+
 
 
 
