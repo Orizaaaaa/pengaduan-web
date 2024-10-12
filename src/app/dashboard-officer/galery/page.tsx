@@ -135,6 +135,7 @@ const GaleryAdmin = (props: Props) => {
                 setFormUpdate({
                     name: [], // Reset formUpdate setelah berhasil update
                 });
+                mutate(`${url}/gallery/list`)
             });
 
             onClose();

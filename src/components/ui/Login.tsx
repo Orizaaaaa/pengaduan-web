@@ -107,7 +107,7 @@ const Login = () => {
                         </div>
                         <p className='text-red my-3 text-sm'>{errorLogin}</p>
                         <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2`}>
-                            {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Sign In'}
+                            {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Masuk'}
                         </ButtonPrimary>
                         <p className='text-sm'>Belum punya akun ? <Link className='text-primary font-medium ' href={'/register'} > Daftar</Link></p>
 
