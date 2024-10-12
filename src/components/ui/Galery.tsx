@@ -18,7 +18,7 @@ const Galery = (props: Props) => {
     return (
         <>
             <Navbar />
-            <section className="image-list  container mx-auto my-20">
+            <section className="image-list  container mx-auto my-20 min-h-[50vh]">
                 <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4  gap-4">
                     {dataImage?.map((item: any, index: any) => (
                         <div className="cover group relative" key={index}>

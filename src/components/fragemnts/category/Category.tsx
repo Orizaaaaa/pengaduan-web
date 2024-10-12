@@ -27,12 +27,12 @@ const Category = () => {
 
                     <Popover placement="top" key={index}>
                         <PopoverTrigger>
-                            <div className="image flex-col justify-center items-center relative cursor-pointer" >
+                            <div className="image flex-col  justify-center items-center relative cursor-pointer" >
                                 <img
                                     width={140}
                                     height={140}
                                     src={item.image}
-                                    className={`mx-auto rounded-full object-cover cursor-pointer`}
+                                    className={`mx-auto rounded-full object-cover cursor-pointer w-full h-full shadow-3 p-4`}
                                     alt='image'
                                 />
 
