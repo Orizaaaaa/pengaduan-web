@@ -13,12 +13,21 @@ import { Autoplay, Pagination } from 'swiper/modules'
 import ButtonSecondary from '../elements/buttonSecondary'
 import ModalDefault from '../fragemnts/modal/modal'
 import { title } from 'process'
+import CardHover from '../elements/card/CardHover'
+import useSWR from 'swr'
+import { url } from '@/api/auth'
+import { fetcher } from '@/api/fetcher'
 
 
 type Props = {}
 
 const Shop = (props: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
+        keepPreviousData: true,
+    });
+
+    const dataShop = data?.data
     const openDetail = () => {
         onOpen()
     }
@@ -149,53 +158,18 @@ const Shop = (props: Props) => {
                     </div>
 
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
 
-                        <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark ">
-                            <Swiper
-                                slidesPerView={1} // Jumlah default slide yang ditampilkan
-                                spaceBetween={30}
-                                pagination={{
-                                    clickable: true, // Pagination akan bisa diklik
-                                }}
-                                modules={[Pagination]}
-                                className="mySwiper"
-                            >
-                                <SwiperSlide >
-                                    <div className="images h-[150px] ">
-                                        <Image className='rounded-t-lg w-full h-full' src={bgPengaduan} alt="jalan rusak" />
-                                    </div>
+                        <CardHover price={1000000} desc='A clean look for a young squad who have their sights set on the very top. Standing out
+                 over those timeless home colours, a simple heat-applied cannon crest is the star of this Arsenal authentic jersey from adidas. 
+                 Stay-cool HEAT.RDY and soft doubleknit fabric combine to keep Gunners players pushing for more on the football pitch. This product
+                  is made with 100% recycled materials. By reusing materials that have already been created, we help to reduce waste and our
+                   reliance on finite resources and reduce the footprint of the products we make.'
+                            title='Arsenal Jersey' image='https://preview.thenewsmarket.com/Previews/ADID/StillAssets/800x600/662664.jpg' />
 
-                                </SwiperSlide>
-                                <SwiperSlide >
-                                    <div className="images h-[150px] ">
-                                        <Image className='rounded-t-lg w-full h-full' src={human1} alt="jalan rusak" />
-                                    </div>
-
-                                </SwiperSlide>
-                            </Swiper>
-
-                            <div className="text px-2 py-1 space-y-1">
-                                <h1 className=' text-sm ' >Domba</h1>
-                                <h1 className='font-semibold'>Rp 1.000.000</h1>
-
-                                <div className="flex  items-center gap-1">
-                                    <IoPersonSharp color='#94a3b8' size={15} />
-                                    <p className='text-sm text-slate-400' >ORIZA SATIVA</p>
-                                </div>
-
-                                <div className="flex  items-center gap-1">
-                                    <HiMapPin color='#94a3b8' size={15} />
-                                    <p className='text-small text-slate-400' >Kp. Tegalkiang No.1 Jawa Barat...</p>
-                                </div>
-
-                            </div>
-                            <div className="flex px-2 justify-end py-2 items-center gap-3 mt-2">
-                                <ButtonPrimary className='py-2 px-4   rounded-md text-sm lg:text-base'>Beli Sekarang</ButtonPrimary>
-                                <ButtonSecondary onClick={openDetail} className='py-2 px-4   rounded-md text-sm lg:text-base' >Detail</ButtonSecondary>
-                            </div>
-                        </div>
-
+                        {dataShop?.map((item: any, index: number) => (
+                            <CardHover key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
+                        ))}
                     </div>
                 </section>
 
