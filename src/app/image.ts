@@ -21,6 +21,7 @@ import shop1 from '../assets/shop1.svg'
 import shop2 from '../assets/shop2.svg'
 import shop3 from '../assets/shop3.svg'
 import shop4 from '../assets/shop4.svg'
+import bannerShop from '../assets/bannerShop.svg'
 import shop5 from '../assets/shop5.jpg'
 import pembangunan from '../assets/pembangunan.jpg'
 import shop6 from '../assets/shop6.png'
@@ -61,5 +62,5 @@ export {
     bgPengaduan, imageLogin, camera,
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
     headerPengaduan, pembangunan, manusiaLaptop,
-    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin
+    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin, bannerShop
 };
