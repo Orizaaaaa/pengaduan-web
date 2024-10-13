@@ -1,4 +1,4 @@
-import { formatNews } from '@/utils/helper'
+import { formatNews, formatRupiah } from '@/utils/helper'
 import React from 'react'
 import { IoStar } from 'react-icons/io5'
 
@@ -8,10 +8,11 @@ type Props = {
     desc: string
     onDetail?: any
     onBuy?: any
+    price: number
 
 }
 
-const CardHover = ({ image, title, desc, onDetail, onBuy }: Props) => {
+const CardHover = ({ image, title, desc, onDetail, onBuy, price }: Props) => {
     return (
         <div className="card group gap-[0.5em] rounded-[1.5em] relative flex justify-end flex-col p-[1.5em] z-[1] overflow-hidden transition-all duration-500 hover:shadow-none border-2 border-white group-hover:border-black">
             {/* gambar 1 */}
@@ -53,7 +54,7 @@ const CardHover = ({ image, title, desc, onDetail, onBuy }: Props) => {
 
                 <div className="flex justify-left items-center h-fit w-full ">
                     <div className="w-fit h-fit text-white font-nunito  font-light group-hover:text-black">
-                        <p className='text-base font-medium' >Rp.1.000.000</p>
+                        <p className='text-base font-medium' > {formatRupiah(price)}</p>
                     </div>
                 </div>
 
