@@ -17,7 +17,7 @@ import useSWR from 'swr'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
     });
@@ -112,4 +112,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
