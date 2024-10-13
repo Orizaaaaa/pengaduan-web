@@ -17,7 +17,7 @@ const page = (props: Props) => {
     const dataShop = data?.data
     return (
         <DefaultLayout>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
 
                 <CardHover price={1000000} desc='A clean look for a young squad who have their sights set on the very top. Standing out
                  over those timeless home colours, a simple heat-applied cannon crest is the star of this Arsenal authentic jersey from adidas. 
