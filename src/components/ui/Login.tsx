@@ -60,6 +60,7 @@ const Login = () => {
                 document.cookie = roleCookies; // Set cookie
                 // Akses localStorage hanya di sisi klien
                 localStorage.setItem('name', res.data.name);
+                localStorage.setItem('id', res.data.id);
                 localStorage.setItem('image', res.data.image);
                 localStorage.setItem('role', res.data.role);
                 localStorage.setItem('token', res.data.token)
