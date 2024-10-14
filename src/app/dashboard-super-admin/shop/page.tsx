@@ -44,7 +44,7 @@ const Page = (props: Props) => {
             <section className='my-10' >
                 <h1 className='text-2xl font-bold my-10'>Kategori</h1>
                 <Swiper
-                    slidesPerView={7} // Jumlah default slide yang ditampilkan
+                    slidesPerView={6} // Jumlah default slide yang ditampilkan
                     spaceBetween={30}
                     autoplay={{
                         delay: 3000,
@@ -54,7 +54,7 @@ const Page = (props: Props) => {
                     breakpoints={{
                         // Saat lebar layar >= 1024px
                         1024: {
-                            slidesPerView: 7, // 6 slide
+                            slidesPerView: 6, // 6 slide
                             spaceBetween: 30,
                         },
                         // Saat lebar layar >= 768px
@@ -64,7 +64,7 @@ const Page = (props: Props) => {
                         },
                         // Untuk layar <= 640px, 1 slide akan ditampilkan
                         0: {
-                            slidesPerView: 1, // 1 slide
+                            slidesPerView: 2, // 1 slide
                             spaceBetween: 10,
                         },
                     }}
@@ -75,7 +75,7 @@ const Page = (props: Props) => {
                     {categoryCaraosel.map((item, index) => (
                         <SwiperSlide key={index}>
                             <div className="flex flex-col justify-center items-center">
-                                <div className="w-40 h-40 rounded-full overflow-hidden">
+                                <div className="w-30 h-30 rounded-full overflow-hidden">
                                     <Image className="w-full h-full object-cover" src={item.image} alt="shop1" />
                                 </div>
                                 <p className='text-center mt-2 text-sm' >{item.title}</p>
@@ -94,7 +94,7 @@ const Page = (props: Props) => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
 
                 <CardHover price={1000000} desc='A clean look for a young squad who have their sights set on the very top. Standing out
                  over those timeless home colours, a simple heat-applied cannon crest is the star of this Arsenal authentic jersey from adidas. 

@@ -41,6 +41,7 @@ import camera from '../assets/camera.png'
 import basarnas from '../assets/basarnas.png'
 import dinsos from '../assets/dinsos.png'
 import dishub from '../assets/dishub.png'
+import allCategori from '../assets/allCategori.png'
 import kejaksaan from '../assets/kejaksaan.png'
 import pertanian from '../assets/pertanian.png'
 import polisi from '../assets/polisi.png'
@@ -62,5 +63,6 @@ export {
     bgPengaduan, imageLogin, camera,
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
     headerPengaduan, pembangunan, manusiaLaptop,
-    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin, bannerShop
+    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin,
+    bannerShop, allCategori
 };
