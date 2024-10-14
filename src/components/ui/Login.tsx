@@ -49,6 +49,8 @@ const Login = () => {
 
         // nanti buat pengkondisian berdasarkan role
         await loginService(form, (status: boolean, res: any) => {
+            console.log(res.data);
+
             setLoading(false);
             if (status) {
                 setErrorLogin('');
@@ -103,7 +105,7 @@ const Login = () => {
                             <button onClick={togglePassword} type='button' className='icon-password h-full  bg-transparent flex absolute right-0 justify-center items-center pe-4'>
                                 {showPassword ? <FaEyeSlash size={20} color='#636363' /> : <IoEye size={20} color='#636363' />}
                             </button>
-                            <InputForm className='form-input-login' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
+                            <InputForm className='form-input-login mb-2' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                         </div>
                         <p className='text-red my-3 text-sm'>{errorLogin}</p>
                         <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2`}>

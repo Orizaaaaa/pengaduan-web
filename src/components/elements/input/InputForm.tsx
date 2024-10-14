@@ -7,11 +7,12 @@ type Props = {
     placeholder?: string,
     className?: string
     styleTitle?: string
+    marginDiown?: string
 }
 
-function InputForm({ htmlFor, title, type, onChange, value, placeholder, className, styleTitle }: Props) {
+function InputForm({ htmlFor, marginDiown = 'mb-2', title, type, onChange, value, placeholder, className, styleTitle }: Props) {
     return (
-        <div  >
+        <div className={marginDiown} >
             <label htmlFor={htmlFor} className={`${styleTitle}`}>
                 {title}
             </label>

@@ -217,7 +217,7 @@ const Page = (props: Props) => {
                     </div>
 
                 </div>
-                <InputForm styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
+                <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
 
                 <div className="flex gap-4 items-center">
                     <div className="dropdown ">
@@ -226,16 +226,16 @@ const Page = (props: Props) => {
                             {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                         </DropdownCustom>
                     </div>
-                    <InputForm styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
+                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
                 </div>
 
                 <div className="flex gap-4 items-center">
-                    <InputForm styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
-                    <InputForm styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
+                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
+                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
                 </div>
 
 
-                <InputForm styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
+                <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
                 <div className="flex justify-end gap-2">
                     <ButtonPrimary className='rounded-md  py-2 px-2' >Simpan</ButtonPrimary>
                     <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
