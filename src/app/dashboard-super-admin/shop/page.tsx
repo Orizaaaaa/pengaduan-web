@@ -1,15 +1,25 @@
 'use client'
+
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
-import { bannerShop } from '@/app/image'
+import { bannerShop, camera } from '@/app/image'
+import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
+import ButtonSecondary from '@/components/elements/buttonSecondary'
 import CardHover from '@/components/elements/card/CardHover'
+import DropdownCustom from '@/components/elements/dropdown/Dropdown'
+import InputForm from '@/components/elements/input/InputForm'
+import InputReport from '@/components/elements/input/InputReport'
+import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
+import ModalDefault from '@/components/fragemnts/modal/modal'
 import Search from '@/components/fragemnts/search/Search'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject'
+import { AutocompleteItem, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 
-import React from 'react'
+import React, { useState } from 'react'
+import { IoCloseCircleOutline } from 'react-icons/io5'
 import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import useSWR from 'swr'
@@ -18,10 +28,71 @@ import useSWR from 'swr'
 type Props = {}
 
 const Page = (props: Props) => {
+    const { onOpen, onClose, isOpen } = useDisclosure();
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
     });
+    const [errorMsg, setErrorMsg] = useState('')
+    const [form, setForm] = useState({
+        name: '',
+        description: '',
+        address: '',
+        price: '',
+        image: [] as File[],
+        category: '',
+        quantity: '',
+        user: ''
+    })
     const dataShop = data?.data
+
+    const openModalCreate = () => {
+        onOpen()
+    }
+
+    const handleChange = (e: any) => {
+        const { name, value } = e.target
+        setForm({ ...form, [name]: value })
+    }
+
+    const dataDropdown = () => {
+        return categoryCaraosel
+            .filter(category => category.title !== 'Semua Kategori') // Menghilangkan 'Semua Kategori'
+            .map((category) => ({
+                label: category.title,
+                value: category.title,
+            }));
+    };
+
+
+    const onSelectionChange = (key: string) => {
+        setForm({ ...form, category: key })  // Menyimpan nilai yang dipilih ke dalam state
+    }
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        if (InputSelect === 'add') {
+            const selectedImage = e.target.files?.[0];
+            if (selectedImage) {
+                setForm(prevState => ({
+                    ...prevState,
+                    image: [...prevState.image, selectedImage]
+                }));
+            }
+        }
+    };
+
+    const deleteArrayImage = (index: number, type: string) => {
+        if (type === 'add') {
+            setForm(prevState => ({
+                ...prevState,
+                image: prevState.image.filter((_, i) => i !== index)
+            }));
+        }
+
+
+    };
+
+    console.log(form);
+
     return (
         <DefaultLayout>
             {/* headershop */}
@@ -31,7 +102,7 @@ const Page = (props: Props) => {
                         <h1 className=' text-xl md:text-2xl lg:text-3xl font-bold'>Gunakan Fitur  <span className='text-primary font-bold' >Toko Online</span>  untuk
                             memudahkan anda menjual sesuatu </h1>
                         <h2 className='text-slate-400 font-light' >Pesanan Online dibuat mudah,dan cepat </h2>
-                        <ButtonPrimary className='py-1 px-2 rounded-md mt-4' >Tambah Produk</ButtonPrimary>
+                        <ButtonPrimary className='py-1 px-2 rounded-md mt-4' onClick={openModalCreate} >Tambah Produk</ButtonPrimary>
                     </div>
                 </div>
                 <div className="image order-first md:order-last">
@@ -108,6 +179,69 @@ const Page = (props: Props) => {
                 ))}
             </div>
 
+            <ModalDefault isOpen={isOpen} onClose={onClose}>
+                <div>
+                    <CaraoselImage>
+                        {form.image.length > 0 ? (
+                            form.image.map((image, index) => (
+                                <SwiperSlide key={index}>
+                                    <>
+                                        <div className="flex justify-center items-center " style={{ pointerEvents: 'none' }}>
+                                            <img
+                                                src={URL.createObjectURL(image)}
+                                                alt={`preview-${index}`}
+                                                className="w-auto h-[100px] relative"
+                                            />
+                                        </div>
+                                        <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                    </>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            <div className='flex justify-center'>
+                                <Image className="w-auto h-[100px] relative " src={camera} alt="image"></Image>
+                            </div>
+                        )}
+                    </CaraoselImage>
+
+                    <div className="grid grid-cols-2 justify-between my-1 gap-2">
+                        <ButtonPrimary className='rounded-md relative cursor-pointer py-1 px-2' >Tambah Image
+                            <input
+                                type="file"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                id="image-input-add"
+                                onChange={(e) => handleImageChange(e, 'add')}
+                            />
+                        </ButtonPrimary>
+                        <ButtonSecondary className='rounded-md  py-1 px-2' onClick={() => setForm(prevForm => ({ ...prevForm, image: [] }))} >Hapus Semua</ButtonSecondary>
+                    </div>
+
+                </div>
+                <InputForm styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
+
+                <div className="flex gap-4 items-center">
+                    <div className="dropdown ">
+                        <h1 className='font-medium' >Kategori</h1>
+                        <DropdownCustom clearButton={false} defaultItems={dataDropdown()} onSelect={(e: any) => onSelectionChange(e)}>
+                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                        </DropdownCustom>
+                    </div>
+                    <InputForm styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
+                </div>
+
+                <div className="flex gap-4 items-center">
+                    <InputForm styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
+                    <InputForm styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
+                </div>
+
+
+                <InputForm styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
+                <div className="flex justify-end gap-2">
+                    <ButtonPrimary className='rounded-md  py-2 px-2' >Simpan</ButtonPrimary>
+                    <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
+                </div>
+                <p>{errorMsg}</p>
+            </ModalDefault>
         </DefaultLayout>
     )
 }
