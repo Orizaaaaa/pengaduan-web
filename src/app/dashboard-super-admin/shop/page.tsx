@@ -2,6 +2,8 @@
 
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
+import { postImage, postImagesArray } from '@/api/imagePost'
+import { createProduct } from '@/api/shop'
 import { bannerShop, camera } from '@/app/image'
 import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
@@ -22,12 +24,14 @@ import React, { useState } from 'react'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 
 
 type Props = {}
 
 const Page = (props: Props) => {
+    const [loading, setLoading] = useState(false)
+    const idUser: string = localStorage.getItem('id') || '';
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
@@ -41,7 +45,7 @@ const Page = (props: Props) => {
         image: [] as File[],
         category: '',
         quantity: '',
-        user: ''
+        user: idUser
     })
     const dataShop = data?.data
 
@@ -50,9 +54,20 @@ const Page = (props: Props) => {
     }
 
     const handleChange = (e: any) => {
-        const { name, value } = e.target
-        setForm({ ...form, [name]: value })
-    }
+        const { name, value } = e.target;
+
+        if (name === 'price' || name === 'quantity') {
+            setForm({
+                ...form,
+                [name]: value === '' ? '' : Number(value) // Konversi ke number jika ada nilai
+            });
+        } else {
+            setForm({
+                ...form,
+                [name]: value // Tetap sebagai string untuk field lainnya
+            });
+        }
+    };
 
     const dataDropdown = () => {
         return categoryCaraosel
@@ -90,6 +105,24 @@ const Page = (props: Props) => {
 
 
     };
+
+    const handleCreate = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+        const imageUrl: string[] = await postImagesArray({ images: form.image })
+        const data = {
+            ...form,
+            image: imageUrl
+        };
+        if (imageUrl) {
+            createProduct(data, (result: any) => {
+                console.log(result);
+                mutate(`${url}/shop/list`)
+                onClose();
+                setLoading(false);
+            })
+        }
+    }
 
     console.log(form);
 
@@ -237,7 +270,7 @@ const Page = (props: Props) => {
 
                 <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
                 <div className="flex justify-end gap-2">
-                    <ButtonPrimary className='rounded-md  py-2 px-2' >Simpan</ButtonPrimary>
+                    <ButtonPrimary className='rounded-md  py-2 px-2' onClick={handleCreate} >Simpan</ButtonPrimary>
                     <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
                 </div>
                 <p>{errorMsg}</p>
