@@ -31,6 +31,7 @@ type Props = {}
 
 const Page = (props: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
+    const [searchData, setSearchData] = useState("");
     const [loading, setLoading] = useState(false)
     const idUser: string = localStorage.getItem('id') || '';
     const { onOpen, onClose, isOpen } = useDisclosure();
@@ -125,7 +126,9 @@ const Page = (props: Props) => {
         }
     }
 
-    console.log(data);
+    const handleSearch = (e: any) => {
+        setSearchData(e.target.value);
+    };
 
 
     // Fungsi untuk menangani klik kategori
@@ -134,9 +137,12 @@ const Page = (props: Props) => {
     };
 
     // Filter data berdasarkan kategori yang dipilih
-    const filteredData = selectedCategory === 'Semua Kategori'
-        ? dataShop
-        : dataShop?.filter((item: any) => item.category === selectedCategory);
+    const filteredData = dataShop?.filter((item: any) => {
+        const isCategoryMatch = selectedCategory === 'Semua Kategori' || item.category === selectedCategory;
+        const isSearchMatch = item.name.toLowerCase().includes(searchData.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchData.toLowerCase());
+        return isCategoryMatch && isSearchMatch;
+    });
 
     return (
         <DefaultLayout>
@@ -205,8 +211,9 @@ const Page = (props: Props) => {
 
             <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
                 <h1 className='text-2xl font-bold my-10'>Produk</h1>
-                <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
-                    <Search className='border-2 border-black' placeholder="Cari Produk" />
+                <div className="w-full md:w-auto">
+                    {/* filter search berada disini  */}
+                    <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Produk" />
                 </div>
             </div>
 
