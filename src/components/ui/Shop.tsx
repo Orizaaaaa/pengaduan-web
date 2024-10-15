@@ -1,18 +1,12 @@
 'use client'
 import Navbar from '../fragemnts/navbar/Navbar'
-import { Autocomplete, AutocompleteItem, useDisclosure } from '@nextui-org/react'
-import { categoryCaraosel, kategoriShop } from '@/utils/dataObject'
+import { categoryCaraosel } from '@/utils/dataObject'
 import Search from '../fragemnts/search/Search'
 import Image from 'next/image'
-import { bgPengaduan, employe, headerShop, human1, shop1, shop2, shop3, shop4 } from '@/app/image'
-import { IoPersonSharp } from 'react-icons/io5'
+import { headerShop } from '@/app/image'
 import ButtonPrimary from '../elements/buttonPrimary'
-import { HiMapPin } from 'react-icons/hi2'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
-import ButtonSecondary from '../elements/buttonSecondary'
-import ModalDefault from '../fragemnts/modal/modal'
-import { title } from 'process'
 import CardHover from '../elements/card/CardHover'
 import useSWR from 'swr'
 import { url } from '@/api/auth'
@@ -26,22 +20,9 @@ const Shop = (props: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
     const [loading, setLoading] = useState(false)
-    const idUser: string = localStorage.getItem('id') || '';
-    const { onOpen, onClose, isOpen } = useDisclosure();
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
     });
-    const [errorMsg, setErrorMsg] = useState('')
-    const [form, setForm] = useState({
-        name: '',
-        description: '',
-        address: '',
-        price: '',
-        image: [] as File[],
-        category: '',
-        quantity: '',
-        user: idUser
-    })
     const dataShop = data?.data
 
 
@@ -197,12 +178,6 @@ const Shop = (props: Props) => {
                 </section>
 
 
-
-
-
-                <ModalDefault onClose={onClose} isOpen={isOpen}>
-                    <h1 className='text-xl font-semibold'>Domba</h1>
-                </ModalDefault>
             </section>
         </>
 
