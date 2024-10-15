@@ -1,10 +1,13 @@
 'use client'
+import { url } from '@/api/auth'
+import { fetcher } from '@/api/fetcher'
 import { deleteProduct } from '@/api/shop'
 import { employe } from '@/app/image'
 import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { capitalizeWords, formatRupiah } from '@/utils/helper'
 import { Spinner, useDisclosure } from '@nextui-org/react'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -14,11 +17,15 @@ import { FaMapMarkerAlt, FaTrashAlt } from 'react-icons/fa'
 import { FaPen } from 'react-icons/fa6'
 import { Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import useSWR from 'swr'
 
 type Props = {}
 
 const page = (props: Props) => {
     const idProduct: any = useParams().id
+    const { data, error } = useSWR(`${url}/shop/${idProduct}`, fetcher, {
+        keepPreviousData: true,
+    });
     const [loadingDelete, setLoadingDelete] = useState(false)
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
@@ -34,7 +41,6 @@ const page = (props: Props) => {
         onWarningOpen()
     }
 
-    console.log(idProduct);
     const router = useRouter()
     const handleDelete = () => {
         setLoadingDelete(true)
@@ -44,6 +50,10 @@ const page = (props: Props) => {
             router.push('/dashboard-super-admin/shop')
         })
     }
+
+    const dataProduct = data?.data
+    console.log(dataProduct);
+
 
     return (
         <DefaultLayout>
@@ -81,7 +91,7 @@ const page = (props: Props) => {
                                 modules={[Thumbs]}
                                 className="swiper-thumbs"
                             >
-                                {images.map((img, index) => (
+                                {dataProduct?.image.map((img: string, index: number) => (
                                     <SwiperSlide key={index}>
                                         <div className="h-30 w-full">
                                             <img src={img} alt={`Thumb ${index}`} className="w-full h-full object-cover cursor-pointer rounded-md" />
@@ -104,32 +114,32 @@ const page = (props: Props) => {
 
                     <div className="text">
                         <div className="title space-y-2">
-                            <h1 className='text-xl font-semibold' >Adidas X Marvel</h1>
-                            <h1 className='text-xl font-semibold' >Rp. 1.000.000</h1>
+                            <h1 className='text-xl font-semibold' >{dataProduct?.name}</h1>
+                            <h1 className='text-xl font-semibold' >{formatRupiah(dataProduct?.price)}</h1>
                         </div>
                         <div className="adress mt-3">
                             <div className="flex items-center gap-3">
                                 <BiCategory size={20} />
-                                <p>Fashion</p>
+                                <p> {dataProduct?.category} </p>
                             </div>
                         </div>
                         <div className="adress mt-3">
                             <div className="flex items-center gap-3">
                                 <FaMapMarkerAlt size={20} />
-                                <p>Bandung amerika</p>
+                                <p> {dataProduct?.address}</p>
                             </div>
                         </div>
                         <div className="adress mt-3">
                             <div className="flex items-center gap-3">
                                 <BsArchive size={20} />
-                                <p>14</p>
+                                <p> {dataProduct?.quantity} </p>
                             </div>
                         </div>
 
 
                         <div className="desc mt-3">
                             <h1 className='text-lg font-semibold' >Deskripsi</h1>
-                            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus, consequatur veniam excepturi iusto beatae ullam nobis sed. Aspernatur reprehenderit architecto non beatae magnam autem iste! Expedita ut ipsa cumque ea?</p>
+                            <p>{dataProduct?.description}</p>
                         </div>
 
                         <div className="user mt-3 border-black border-2 p-2 rounded-md ">
@@ -138,8 +148,8 @@ const page = (props: Props) => {
                                     <img className='rounded-full object-cover w-full h-full' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaNkwLyEyzTkzMxP-UkOMaOArlSmqK6O9GFw&s' alt="user" />
                                 </div>
                                 <div className="text">
-                                    <h1 className='font-medium'>Gabriel Yonathan</h1>
-                                    <p className='text-slate-500'>08968665435567</p>
+                                    <h1 className='font-medium'> {capitalizeWords(dataProduct?.user?.name)} </h1>
+                                    <p className='text-slate-500'> {dataProduct?.user?.number_phone} </p>
                                 </div>
                             </div>
 

@@ -1,4 +1,5 @@
 import { formatNews, formatRupiah } from '@/utils/helper'
+import Link from 'next/link'
 import React from 'react'
 import { IoStar } from 'react-icons/io5'
 
@@ -6,13 +7,13 @@ type Props = {
     image: string
     title: string
     desc: string
-    onDetail?: any
+    location: string
     onBuy?: any
     price: number
 
 }
 
-const CardHover = ({ image, title, desc, onDetail, onBuy, price }: Props) => {
+const CardHover = ({ image, title, desc, location, onBuy, price }: Props) => {
     return (
         <div className="card group gap-[0.5em] rounded-[1.5em] relative flex justify-end flex-col p-[1.5em] z-[1] overflow-hidden transition-all duration-500 hover:shadow-none border-2 border-white group-hover:border-black">
             {/* gambar 1 */}
@@ -62,9 +63,9 @@ const CardHover = ({ image, title, desc, onDetail, onBuy, price }: Props) => {
                     <div onClick={onBuy} className="border-2 border-white rounded-[0.5em] text-white font-nunito text-[1em] font-normal px-[0.5em] py-[0.05em] group-hover:border-black group-hover:text-black duration-300 cursor-pointer">
                         <p >Beli Sekarang</p>
                     </div>
-                    <div onClick={onDetail} className="border-2 border-white rounded-[0.5em] text-white font-nunito text-[1em] font-normal px-[0.5em] py-[0.05em] group-hover:border-black group-hover:text-black duration-300 cursor-pointer">
+                    <Link href={location} className="border-2 border-white rounded-[0.5em] text-white font-nunito text-[1em] font-normal px-[0.5em] py-[0.05em] group-hover:border-black group-hover:text-black duration-300 cursor-pointer">
                         <p>Detail</p>
-                    </div>
+                    </Link>
                 </div>
             </div>
 
