@@ -3,15 +3,22 @@ import { url } from '@/api/auth';
 import { fetcher } from '@/api/fetcher';
 import { postImagesArray } from '@/api/imagePost';
 import { createProduct } from '@/api/shop';
-import { bannerShop } from '@/app/image';
+import { bannerShop, camera } from '@/app/image';
+import ButtonDelete from '@/components/elements/buttonDelete';
 import ButtonPrimary from '@/components/elements/buttonPrimary';
+import ButtonSecondary from '@/components/elements/buttonSecondary';
 import CardHover from '@/components/elements/card/CardHover';
+import DropdownCustom from '@/components/elements/dropdown/Dropdown';
+import InputForm from '@/components/elements/input/InputForm';
+import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct';
+import ModalDefault from '@/components/fragemnts/modal/modal';
 import Search from '@/components/fragemnts/search/Search';
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject';
-import { useDisclosure } from '@nextui-org/react';
+import { AutocompleteItem, useDisclosure } from '@nextui-org/react';
 import Image from 'next/image';
 import React, { useState } from 'react'
+import { IoCloseCircleOutline } from 'react-icons/io5';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR, { mutate } from 'swr';
@@ -143,7 +150,7 @@ const Page = (props: Props) => {
                         <h1 className=' text-xl md:text-2xl lg:text-3xl font-bold'>Gunakan Fitur  <span className='text-primary font-bold' >Toko Online</span>  untuk
                             memudahkan anda menjual sesuatu </h1>
                         <h2 className='text-slate-400 font-light' >Pesanan Online dibuat mudah,dan cepat </h2>
-                        <ButtonPrimary className='py-1 px-2 rounded-md mt-4' >Tambah Produk</ButtonPrimary>
+                        <ButtonPrimary onClick={openModalCreate} className='py-1 px-2 rounded-md mt-4' >Tambah Produk</ButtonPrimary>
                     </div>
                 </div>
                 <div className="image order-first md:order-last">
@@ -201,8 +208,9 @@ const Page = (props: Props) => {
 
             <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
                 <h1 className='text-2xl font-bold my-10'>Produk</h1>
-                <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
-                    <Search className='border-2 border-black' placeholder="Cari Produk" />
+                <div className="w-full md:w-auto">
+                    {/* filter search berada disini  */}
+                    <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Produk" />
                 </div>
             </div>
 
@@ -211,6 +219,70 @@ const Page = (props: Props) => {
                     <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                 ))}
             </div>
+
+            <ModalDefault isOpen={isOpen} onClose={onClose}>
+                <div>
+                    <CaraoselImage>
+                        {form.image.length > 0 ? (
+                            form.image.map((image, index) => (
+                                <SwiperSlide key={index}>
+                                    <>
+                                        <div className="flex justify-center items-center " style={{ pointerEvents: 'none' }}>
+                                            <img
+                                                src={URL.createObjectURL(image)}
+                                                alt={`preview-${index}`}
+                                                className="w-auto h-[100px] relative"
+                                            />
+                                        </div>
+                                        <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                    </>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            <div className='flex justify-center'>
+                                <Image className="w-auto h-[100px] relative " src={camera} alt="image"></Image>
+                            </div>
+                        )}
+                    </CaraoselImage>
+
+                    <div className="grid grid-cols-2 justify-between my-1 gap-2">
+                        <ButtonPrimary className='rounded-md relative cursor-pointer py-1 px-2' >Tambah Image
+                            <input
+                                type="file"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                id="image-input-add"
+                                onChange={(e) => handleImageChange(e, 'add')}
+                            />
+                        </ButtonPrimary>
+                        <ButtonSecondary className='rounded-md  py-1 px-2' onClick={() => setForm(prevForm => ({ ...prevForm, image: [] }))} >Hapus Semua</ButtonSecondary>
+                    </div>
+
+                </div>
+                <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
+
+                <div className="flex gap-4 items-center">
+                    <div className="dropdown ">
+                        <h1 className='font-medium' >Kategori</h1>
+                        <DropdownCustom clearButton={false} defaultItems={dataDropdown()} onSelect={(e: any) => onSelectionChange(e)}>
+                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                        </DropdownCustom>
+                    </div>
+                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
+                </div>
+
+                <div className="flex gap-4 items-center">
+                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
+                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
+                </div>
+
+
+                <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
+                <div className="flex justify-end gap-2">
+                    <ButtonPrimary className='rounded-md  py-2 px-2' onClick={handleCreate} >Simpan</ButtonPrimary>
+                    <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
+                </div>
+                <p>{errorMsg}</p>
+            </ModalDefault>
 
         </DefaultLayout>
     )
