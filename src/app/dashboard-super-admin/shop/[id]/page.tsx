@@ -21,7 +21,7 @@ import useSWR from 'swr'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const idProduct: any = useParams().id
     const { data, error } = useSWR(`${url}/shop/${idProduct}`, fetcher, {
         keepPreviousData: true,
@@ -29,13 +29,6 @@ const page = (props: Props) => {
     const [loadingDelete, setLoadingDelete] = useState(false)
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-    const images = [
-        'https://preview.thenewsmarket.com/Previews/ADID/StillAssets/960x540/651510.jpg',
-        'https://i.ebayimg.com/images/g/BDMAAOSwrR9mprQH/s-l1200.jpg',
-        'https://rukminim2.flixcart.com/image/850/1000/l432ikw0/shoe/v/3/y/-original-imagf255cpm6k7zr.jpeg?q=20&crop=false',
-        'https://i.ebayimg.com/images/g/BDMAAOSwrR9mprQH/s-l1200.jpg',
-        'https://rukminim2.flixcart.com/image/850/1000/l432ikw0/shoe/v/3/y/-original-imagf255cpm6k7zr.jpeg?q=20&crop=false',
-    ];
 
     const openModalDelete = () => {
         onWarningOpen()
@@ -172,4 +165,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
