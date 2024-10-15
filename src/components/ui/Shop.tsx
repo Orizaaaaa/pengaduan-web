@@ -44,63 +44,6 @@ const Shop = (props: Props) => {
     })
     const dataShop = data?.data
 
-    const openModalCreate = () => {
-        onOpen()
-    }
-
-    const handleChange = (e: any) => {
-        const { name, value } = e.target;
-
-        if (name === 'price' || name === 'quantity') {
-            setForm({
-                ...form,
-                [name]: value === '' ? '' : Number(value) // Konversi ke number jika ada nilai
-            });
-        } else {
-            setForm({
-                ...form,
-                [name]: value // Tetap sebagai string untuk field lainnya
-            });
-        }
-    };
-
-    const dataDropdown = () => {
-        return categoryCaraosel
-            .filter(category => category.title !== 'Semua Kategori') // Menghilangkan 'Semua Kategori'
-            .map((category) => ({
-                label: category.title,
-                value: category.title,
-            }));
-    };
-
-
-    const onSelectionChange = (key: string) => {
-        setForm({ ...form, category: key })  // Menyimpan nilai yang dipilih ke dalam state
-    }
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
-        if (InputSelect === 'add') {
-            const selectedImage = e.target.files?.[0];
-            if (selectedImage) {
-                setForm(prevState => ({
-                    ...prevState,
-                    image: [...prevState.image, selectedImage]
-                }));
-            }
-        }
-    };
-
-    const deleteArrayImage = (index: number, type: string) => {
-        if (type === 'add') {
-            setForm(prevState => ({
-                ...prevState,
-                image: prevState.image.filter((_, i) => i !== index)
-            }));
-        }
-
-
-    };
-
 
     const handleSearch = (e: any) => {
         setSearchData(e.target.value);
