@@ -13,7 +13,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const router = useRouter()
     return (
         <DefaultLayout>
@@ -73,4 +73,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
