@@ -29,7 +29,7 @@ import useSWR, { mutate } from 'swr'
 
 type Props = {}
 
-const Page = (props: Props) => {
+const AdminShop = (props: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
     const [loading, setLoading] = useState(false)
@@ -290,4 +290,4 @@ const Page = (props: Props) => {
     )
 }
 
-export default Page
+export default AdminShop
