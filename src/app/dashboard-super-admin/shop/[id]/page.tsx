@@ -52,7 +52,6 @@ const page = (props: Props) => {
     }
 
     const dataProduct = data?.data
-    console.log(dataProduct);
 
 
     return (

@@ -30,6 +30,7 @@ import useSWR, { mutate } from 'swr'
 type Props = {}
 
 const Page = (props: Props) => {
+    const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [loading, setLoading] = useState(false)
     const idUser: string = localStorage.getItem('id') || '';
     const { onOpen, onClose, isOpen } = useDisclosure();
@@ -124,6 +125,18 @@ const Page = (props: Props) => {
         }
     }
 
+    console.log(data);
+
+
+    // Fungsi untuk menangani klik kategori
+    const handleCategoryClick = (category: string) => {
+        setSelectedCategory(category);
+    };
+
+    // Filter data berdasarkan kategori yang dipilih
+    const filteredData = selectedCategory === 'Semua Kategori'
+        ? dataShop
+        : dataShop?.filter((item: any) => item.category === selectedCategory);
 
     return (
         <DefaultLayout>
@@ -179,7 +192,7 @@ const Page = (props: Props) => {
                         <SwiperSlide key={index}>
                             <div className="flex flex-col justify-center items-center">
                                 <div className="w-30 h-30 rounded-full overflow-hidden">
-                                    <Image className="w-full h-full object-cover" src={item.image} alt="shop1" />
+                                    <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
                                 </div>
                                 <p className='text-center mt-2 text-sm' >{item.title}</p>
                             </div>
@@ -198,7 +211,7 @@ const Page = (props: Props) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
-                {dataShop?.map((item: any, index: number) => (
+                {filteredData?.map((item: any, index: number) => (
                     <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                 ))}
             </div>
