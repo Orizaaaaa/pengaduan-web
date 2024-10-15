@@ -17,7 +17,7 @@ import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject';
 import { AutocompleteItem, useDisclosure } from '@nextui-org/react';
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -29,12 +29,18 @@ const Page = (props: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
     const [loading, setLoading] = useState(false)
-    const idUser: string = localStorage.getItem('id') || '';
+    const [idUser, setIdUser] = useState<string>('');
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
     });
     const [errorMsg, setErrorMsg] = useState('')
+    useEffect(() => {
+        const storedId = localStorage.getItem('id');
+        if (storedId) {
+            setIdUser(storedId);
+        }
+    }, []);
     const [form, setForm] = useState({
         name: '',
         description: '',
