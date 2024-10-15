@@ -72,7 +72,7 @@ const page = (props: Props) => {
                                 modules={[Navigation, Thumbs]}
                                 className="mb-4"
                             >
-                                {images.map((img, index) => (
+                                {dataProduct?.image.map((img: string, index: number) => (
                                     <SwiperSlide key={index}>
                                         <div className="w-full h-55">
                                             <img src={img} alt={`Slide ${index}`} className="w-full h-full  object-cover rounded-md" />
