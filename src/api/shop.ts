@@ -8,3 +8,13 @@ export const createProduct = async (form: any, callback: any) => {
             console.log(err);
         });
 }
+
+
+export const deleteProduct = (id: string, callback: any) => {
+    axiosInterceptor.delete(`/shop/${id}`)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}
