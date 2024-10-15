@@ -1,5 +1,6 @@
 'use client'
 import { employe } from '@/app/image'
+import ButtonPrimary from '@/components/elements/buttonPrimary'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import React, { useState } from 'react'
 import { BiCategory } from 'react-icons/bi'
@@ -63,6 +64,11 @@ const page = (props: Props) => {
                             </Swiper>
                         </div>
 
+                        <div className="flex justify-end mt-3 ">
+                            <ButtonPrimary className='py-1 px-2 rounded-md'>
+                                Beli Sekarang
+                            </ButtonPrimary>
+                        </div>
 
 
                     </div>
