@@ -314,7 +314,15 @@ const page = (props: Props) => {
                         <hr className='w-full text-[#eeeeee]' />
                     </div>
                     <div className="location mt-5">
-                        <Map lat={parseCoordinate(dataBuilding?.location?.latitude || "0")} lng={parseCoordinate(dataBuilding?.location?.longitude || "0")} />
+                        <MapChoise
+                            markerPosition={{
+                                lat: parseCoordinate(dataBuilding?.location?.latitude || "0"),
+                                lng: parseCoordinate(dataBuilding?.location?.longitude || "0"),
+                            }}
+                            zoom={10}
+                            text="Lokasi kejadian"
+                            className="h-[300px] rounded-md my-5"
+                        />
                     </div>
                 </section> :
 
