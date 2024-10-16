@@ -57,7 +57,7 @@ const Page = () => {
         { title: "Judul Laporan", text: dataReport?.title },
         { title: "Nomor Laporan", text: dataReport?._id },
         { title: "Tanggal Laporan", text: formatDate(dataReport?.createdAt || "") },
-        { title: "Kategori Laporan", text: dataReport?.category.name || "" },
+        { title: "Kategori Laporan", text: dataReport?.category?.name || "" },
         { title: "Lokasi Kejadian", text: dataReport?.address },
         { title: "Status", text: dataReport?.status },
         { title: "Deskripsi Laporan", text: dataReport?.description },

@@ -32,6 +32,7 @@ const Map = dynamic(() => import('@/components/fragemnts/maps/Map'), {
     ssr: false
 });
 
+
 type Props = {}
 
 const page = (props: Props) => {
@@ -187,6 +188,7 @@ const page = (props: Props) => {
 
 
 
+
     const handleUpdate = async () => {
         const existingUrls = form.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
         const newFiles = form.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
@@ -232,6 +234,11 @@ const page = (props: Props) => {
             setUpdatePage(true)
         })
     }
+
+
+    const latitude = dataBuilding?.location?.latitude
+    const longitude = dataBuilding?.location?.longitude
+
 
 
     return (
