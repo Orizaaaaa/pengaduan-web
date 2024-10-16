@@ -314,16 +314,16 @@ const page = (props: Props) => {
                         <hr className='w-full text-[#eeeeee]' />
                     </div>
                     <div className="location mt-5">
-                        <MapChoise
-                            markerPosition={{
-                                lat: parseCoordinate(dataBuilding?.location?.latitude || "0"),
-                                lng: parseCoordinate(dataBuilding?.location?.longitude || "0"),
-                            }}
-                            zoom={10}
-                            text="Lokasi kejadian"
-                            className="h-[300px] rounded-md my-5"
-                        />
+                        {dataBuilding?.location?.latitude && dataBuilding?.location?.longitude ? (
+                            <Map
+                                lat={parseCoordinate(dataBuilding?.location?.latitude)}
+                                lng={parseCoordinate(dataBuilding?.location?.longitude)}
+                            />
+                        ) : (
+                            <p>Loading map...</p> // Bisa juga berupa loader
+                        )}
                     </div>
+
                 </section> :
 
                 <section className=' bg-white p-4 mx-auto py-10 px-5  rounded-md '>
