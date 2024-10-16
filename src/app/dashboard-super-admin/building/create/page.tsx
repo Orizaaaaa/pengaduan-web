@@ -14,7 +14,7 @@ const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'),
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { formatDate } from '@/utils/helper'
 import { parseDate } from '@internationalized/date'
-import { AutocompleteItem, DatePicker, image } from '@nextui-org/react'
+import { AutocompleteItem, DatePicker, image, Spinner } from '@nextui-org/react'
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -26,6 +26,8 @@ import { useMapEvents } from 'react-leaflet'
 type Props = {}
 const page = (props: Props) => {
     const dateNow = new Date();
+    const [loading, setLoading] = useState(false)
+    const [errorMsg, setErrorMsg] = useState('')
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -120,21 +122,47 @@ const page = (props: Props) => {
 
     const router = useRouter()
     const handleCreate = async () => {
-        const urls: string[] = await postImagesArray({ images: form.image })
-        const data = {
-            ...form,
-            image: urls,
-            date: formatDate(form.date),
-            location: {
-                latitude: String(form.location.latitude),
-                longitude: String(form.location.longitude)
-            }
+        setLoading(true);
+
+        // Validasi untuk memastikan tidak ada field yang kosong
+        if (!form.title || !form.description || !form.address || !form.status || !form.source_of_funds || form.budget <= 0 || form.volume <= 0 || form.image.length === 0) {
+            setErrorMsg('Semua field harus diisi dengan benar.');
+            setLoading(false);
+            return;
         }
-        createBuilding(data, (res: any) => {
-            console.log(res);
-            router.push('/dashboard-super-admin/building')
-        })
-    }
+
+        if (form.location.latitude === 0 || form.location.longitude === 0) {
+            setErrorMsg('Lokasi harus dipilih.');
+            setLoading(false);
+            return;
+        }
+
+        setErrorMsg(''); // Hapus pesan error jika semua validasi lolos
+
+        try {
+            const urls: string[] = await postImagesArray({ images: form.image });
+            const data = {
+                ...form,
+                image: urls,
+                date: formatDate(form.date),
+                location: {
+                    latitude: String(form.location.latitude),
+                    longitude: String(form.location.longitude),
+                },
+            };
+
+            await createBuilding(data, (res: any) => {
+                console.log(res);
+                router.push('/dashboard-super-admin/building');
+            });
+        } catch (error) {
+            setErrorMsg('Gagal mengirim data. Silakan coba lagi.');
+        } finally {
+            setLoading(false); // Pastikan loading false setelah selesai
+        }
+    };
+
+
 
     return (
         <DefaultLayout>
@@ -250,9 +278,10 @@ const page = (props: Props) => {
                         <MapEvents />
                     </MapChoise>
                 </div>
-
+                <p className='text-red text-sm mt-2' >{errorMsg} </p>
                 <div className="flex mt-2 justify-end">
-                    <ButtonPrimary className='py-2 px-4 rounded-md' onClick={handleCreate} >Kirim</ButtonPrimary>
+                    <ButtonPrimary onClick={handleCreate} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
+                    >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim'}</ButtonPrimary>
                 </div>
 
             </div>

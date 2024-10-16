@@ -6,15 +6,15 @@ export function middleware(req: NextRequest) {
     const roleCookie = req.cookies.get('role'); // Ambil role dari cookie
     const role = roleCookie ? roleCookie.value : undefined; // Ambil value dari cookie jika ada
 
-    // Jika user mengakses halaman login, abaikan middleware
-    if (req.nextUrl.pathname === '/') {
+    // Jika user mengakses halaman login atau root ("/"), abaikan middleware
+    if (req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/') {
         return NextResponse.next();
     }
 
     // Jika token tidak ada, redirect ke halaman login
     if (!token) {
         const url = req.nextUrl.clone();
-        url.pathname = '/';
+        url.pathname = '/login';
         return NextResponse.redirect(url);
     }
 

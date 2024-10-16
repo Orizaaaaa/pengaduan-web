@@ -106,7 +106,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-officer/report" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-officer/articles" />
           <NavigationList icon={<IoMdImages size={19} />} title="Geleri" pathname="/dashboard-officer/galery" />
-          <NavigationList icon={<BsBuildingsFill size={19} />} title="Pembangunan" pathname="/dashboard-officer/pembangunan" />
+          <NavigationList icon={<BsBuildingsFill size={19} />} title="Pembangunan" pathname="/dashboard-officer/building" />
         </>
       );
     } else if (role === 'superadmin') {
