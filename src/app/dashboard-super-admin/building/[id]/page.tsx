@@ -19,7 +19,9 @@ import { useMapEvents } from 'react-leaflet'
 import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
+import { parseDate } from '@internationalized/date'
 import ButtonSecondary from '@/components/elements/buttonSecondary'
+import { DatePicker } from '@nextui-org/react'
 const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'), {
     ssr: false
 });
@@ -30,13 +32,13 @@ const Map = dynamic(() => import('@/components/fragemnts/maps/Map'), {
 type Props = {}
 
 const page = (props: Props) => {
-    const [updatePage, setUpdatePage] = useState(false)
+    const dateNow = new Date();
+    const [updatePage, setUpdatePage] = useState(true)
     const idBuilding = useParams().id
     const { data, error } = useSWR(`${url}/infrastucture/${idBuilding}`, fetcher, {
         keepPreviousData: true,
     });
     const dataBuilding = data?.data
-    console.log(dataBuilding);
 
     const dataDetail = [
         {
@@ -77,7 +79,7 @@ const page = (props: Props) => {
         budget: 0,
         volume: 0,
         source_of_funds: '',
-        date: ''
+        date: parseDate(formatDate(dateNow))
     });
 
     useEffect(() => {
@@ -95,13 +97,34 @@ const page = (props: Props) => {
                 budget: dataBuilding.budget || 0,
                 volume: dataBuilding.volume || 0,
                 source_of_funds: dataBuilding.source_of_funds || '',
-                date: dataBuilding.date || ''
+                date: parseDate(formatDate(dataBuilding.date)) || ''
             });
         }
     }, [dataBuilding]);
 
+    // action handle
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        if (InputSelect === 'add') {
+            const selectedImage = e.target.files?.[0];
+            if (selectedImage) {
+                setForm(prevState => ({
+                    ...prevState,
+                    image: [...prevState.image, selectedImage]
+                }));
+            }
+        }
+    };
 
-    console.log('ini adalah form', form);
+    const deleteArrayImage = (index: number, type: string) => {
+        if (type === 'add') {
+            setForm(prevState => ({
+                ...prevState,
+                image: prevState.image.filter((_, i) => i !== index)
+            }));
+        }
+
+    };
+
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -125,6 +148,8 @@ const page = (props: Props) => {
         });
         return null;
     };
+
+
 
     return (
         <DefaultLayout>
@@ -205,11 +230,12 @@ const page = (props: Props) => {
 
                 <section className=' bg-white p-4 mx-auto py-10 px-5  rounded-md '>
                     <div className="flex justify-center items-center w-full">
-                        <InputForm className='bg-slate-300' type='text' placeholder='Nama Pembangunan' value={form.title} htmlFor='title' onChange={handleChange} />
+                        <InputForm className='bg-slate-300 w-full' type='text' placeholder='Nama Pembangunan' value={form.title} htmlFor='title' onChange={handleChange} />
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-10">
-                        <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark">
+                        {/* image changer */}
+                        <div className="rounded-md hover: border-stroke bg-white  p-4 shadow-default  dark:border-strokedark">
                             <div>
                                 <CaraoselImage>
                                     {form.image.length > 0 ? (
@@ -226,7 +252,7 @@ const page = (props: Props) => {
                                                     <button
                                                         className="button-delete array-image absolute top-0 right-0 z-10"
                                                     >
-                                                        <IoCloseCircleOutline color="red" size={34} />
+                                                        <IoCloseCircleOutline onClick={() => deleteArrayImage(index, 'add')} color="red" size={34} />
                                                     </button>
                                                 </>
                                             </SwiperSlide>
@@ -244,9 +270,10 @@ const page = (props: Props) => {
                                             type="file"
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                             id="image-input-add"
+                                            onChange={(e) => handleImageChange(e, 'add')}
                                         />
                                     </ButtonPrimary>
-                                    <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, name: [] }))} >Hapus Semua</ButtonSecondary>
+                                    <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, image: [] }))} >Hapus Semua</ButtonSecondary>
                                 </div>
                             </div>
                         </div>
@@ -327,14 +354,7 @@ const page = (props: Props) => {
                                 <div className="flex  gap-5">
                                     <div className="text">
                                         <h1 className='font-medium' >Tahun</h1>
-                                        <InputForm
-                                            className='bg-slate-300'
-                                            type='text'
-                                            placeholder='Tahun'
-                                            value={form.date}
-                                            htmlFor='date'
-                                            onChange={handleChange}
-                                        />
+                                        <DatePicker value={form.date} variant={'underlined'} onChange={(e) => setForm({ ...form, date: e })} />
                                     </div>
                                 </div>
 
