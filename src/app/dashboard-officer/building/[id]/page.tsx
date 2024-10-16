@@ -536,7 +536,9 @@ const page = (props: Props) => {
 
                 <div className="flex gap-3 justify-end">
                     <ButtonPrimary onClick={onWarningClose} className='px-4 py-2 rounded-md'>Batal</ButtonPrimary>
-                    <ButtonDelete onClick={handleDelete} className='px-4 py-2 rounded-md flex justify-center items-center'>{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
+                    <ButtonDelete onClick={handleDelete} className='px-4 py-2 rounded-md
+                     flex justify-center items-center'
+                    >{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
                 </div>
             </ModalAlert>
 

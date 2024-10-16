@@ -207,7 +207,7 @@ const Register = (props: Props) => {
                             <InputForm className='form-input-login' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                         </div>
                         <p className='text-red my-3 text-sm'>{errorMsg}</p>
-                        <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2 ${disabled ? 'bg-slate-400' : 'bg-primary'}`}>
+                        <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center ${disabled ? 'bg-slate-400' : 'bg-primary'}`}>
                             {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Daftar'}
                         </ButtonPrimary>
                         <p className='text-sm'>Sudah punya akun ? <Link className='text-primary font-medium ' href={'/login'} > Masuk</Link></p>

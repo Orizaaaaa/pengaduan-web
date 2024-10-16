@@ -109,7 +109,7 @@ const Login = () => {
                             <InputForm className='form-input-login mb-2' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                         </div>
                         <p className='text-red my-3 text-sm'>{errorLogin}</p>
-                        <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2`}>
+                        <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center`}>
                             {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Masuk'}
                         </ButtonPrimary>
                         <p className='text-sm'>Belum punya akun ? <Link className='text-primary font-medium ' href={'/register'} > Daftar</Link></p>
