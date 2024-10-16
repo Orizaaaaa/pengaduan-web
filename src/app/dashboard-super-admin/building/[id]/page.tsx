@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import dynamic from 'next/dynamic'
 import { bgPengaduan, camera, pembangunan } from '@/app/image'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import { useParams, usePathname } from 'next/navigation'
@@ -204,11 +204,32 @@ const page = (props: Props) => {
         const data = {
             ...form,
             image: allUrls,
+            date: formatDate(form.date),
+            location: {
+                latitude: String(form.location.latitude),
+                longitude: String(form.location.longitude)
+            }
         };
 
         updateBuilding(idBuilding, data, (result: any) => {
             console.log(result);
-            setUpdatePage(false)
+            mutate(`${url}/infrastucture/${idBuilding}`)
+            setForm({
+                title: dataBuilding.title || '',
+                description: dataBuilding.description || '',
+                address: dataBuilding.address || '',
+                location: {
+                    latitude: dataBuilding.location?.latitude || 0,
+                    longitude: dataBuilding.location?.longitude || 0,
+                },
+                status: dataBuilding.status || '',
+                image: dataBuilding.image,
+                budget: dataBuilding.budget || 0,
+                volume: dataBuilding.volume || 0,
+                source_of_funds: dataBuilding.source_of_funds || '',
+                date: parseDate(formatDate(dataBuilding.date)) || ''
+            });
+            setUpdatePage(true)
         })
     }
 
@@ -448,7 +469,7 @@ const page = (props: Props) => {
                     </div>
 
                     <div className="flex justify-end mt-4 ">
-                        <ButtonPrimary className='py-2 px-4 rounded-md' >
+                        <ButtonPrimary onClick={handleUpdate} className='py-2 px-4 rounded-md' >
                             Perbarui sekarang
                         </ButtonPrimary>
                     </div>
