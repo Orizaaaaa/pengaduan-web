@@ -26,7 +26,7 @@ const Page = (props: Props) => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-7">
                 {dataPembanguan?.map((item: any, index: number) => (
-                    <CardBuilding key={index} title={item.name} imageUrl={item.image}
+                    <CardBuilding key={index} title={item.title} imageUrl={item.image}
                         date={formatDate(item.date)} location={item.address}
                         link={`/dashboard-super-admin/building/${item._id}`} />
                 ))}
