@@ -21,7 +21,10 @@ import { IoCloseCircleOutline } from 'react-icons/io5'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import { parseDate } from '@internationalized/date'
 import ButtonSecondary from '@/components/elements/buttonSecondary'
-import { DatePicker } from '@nextui-org/react'
+import { AutocompleteItem, DatePicker, image } from '@nextui-org/react'
+import DropdownCustom from '@/components/elements/dropdown/Dropdown'
+import { postImagesArray } from '@/api/imagePost'
+import { updateBuilding } from '@/api/building'
 const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'), {
     ssr: false
 });
@@ -102,6 +105,7 @@ const page = (props: Props) => {
         }
     }, [dataBuilding]);
 
+
     // action handle
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
         if (InputSelect === 'add') {
@@ -128,8 +132,24 @@ const page = (props: Props) => {
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
+
+        // Cek apakah field adalah 'budget' atau 'volume' untuk memvalidasi sebagai angka
+        if (name === 'budget' || name === 'volume') {
+            // Jika value kosong (misalnya setelah Ctrl+A dan delete), set nilai menjadi 0
+            if (value === "") {
+                setForm({ ...form, [name]: 0 });
+            } else {
+                // Hanya set value jika input berupa angka
+                const numericValue = parseFloat(value);
+                if (!isNaN(numericValue)) {
+                    setForm({ ...form, [name]: numericValue });
+                }
+            }
+        } else {
+            setForm({ ...form, [name]: value });
+        }
     };
+
 
     // Komponen untuk menangani event klik pada peta
     const MapEvents = () => {
@@ -149,6 +169,48 @@ const page = (props: Props) => {
         return null;
     };
 
+
+    console.log(form);
+
+    const dataStatus = [
+        { label: "Sedang Berjalan", value: "Sedang Berjalan" },
+        { label: "Berhenti Sementara", value: "Berhenti Sementara" },
+        { label: "Selesai", value: "Selesai" },
+    ]
+
+    const onSelectionChange = (key: string) => {
+        setForm({
+            ...form,         // Salin semua properti dari objek `form`
+            status: key      // Ganti nilai `status` dengan `key`
+        });
+    };
+
+
+
+    const handleUpdate = async () => {
+        const existingUrls = form.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
+        const newFiles = form.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
+
+        // Upload gambar baru ke Cloudinary jika ada
+        let uploadedUrls: string[] = [];
+        if (newFiles.length > 0) {
+            uploadedUrls = await postImagesArray({ images: newFiles });
+        }
+
+        // Gabungkan URL lama dengan URL baru yang di-upload
+        const allUrls = [...existingUrls, ...uploadedUrls];
+
+        // Data untuk dikirim ke update API
+        const data = {
+            ...form,
+            image: allUrls,
+        };
+
+        updateBuilding(idBuilding, data, (result: any) => {
+            console.log(result);
+            setUpdatePage(false)
+        })
+    }
 
 
     return (
@@ -203,7 +265,7 @@ const page = (props: Props) => {
                             <hr className='w-full text-[#eeeeee]' />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-5 mt-10">
+                        <div className="grid md:grid-cols-2 gap-5 mt-10">
                             {dataDetail.map((item, index) => (
                                 <div className="flex  gap-5" key={index}>
 
@@ -292,7 +354,7 @@ const page = (props: Props) => {
                             <hr className='w-full text-[#eeeeee]' />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-5 mt-10">
+                        <div className="grid md:grid-cols-2 gap-5 mt-10">
 
                             <div className="grid grid-cols-2 gap-5 mt-10">
                                 <div className="flex  gap-5">
@@ -340,21 +402,16 @@ const page = (props: Props) => {
                                 <div className="flex  gap-5">
                                     <div className="text">
                                         <h1 className='font-medium' >Status</h1>
-                                        <InputForm
-                                            className='bg-slate-300'
-                                            type='text'
-                                            placeholder='Status'
-                                            value={form.status}
-                                            htmlFor='status'
-                                            onChange={handleChange}
-                                        />
+                                        <DropdownCustom defaultSelectedKey={dataBuilding?.status} clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
+                                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                                        </DropdownCustom>
                                     </div>
                                 </div>
 
                                 <div className="flex  gap-5">
                                     <div className="text">
                                         <h1 className='font-medium' >Tahun</h1>
-                                        <DatePicker value={form.date} variant={'underlined'} onChange={(e) => setForm({ ...form, date: e })} />
+                                        <DatePicker aria-label='date' value={form.date} variant={'underlined'} onChange={(e) => setForm({ ...form, date: e })} />
                                     </div>
                                 </div>
 
@@ -388,6 +445,12 @@ const page = (props: Props) => {
                         <MapChoise markerPosition={{ lat: form.location.latitude, lng: form.location.longitude }} zoom={13} text="Lokasi kejadian" className="h-[370px]  rounded-md mt-4" >
                             <MapEvents />
                         </MapChoise>
+                    </div>
+
+                    <div className="flex justify-end mt-4 ">
+                        <ButtonPrimary className='py-2 px-4 rounded-md' >
+                            Perbarui sekarang
+                        </ButtonPrimary>
                     </div>
                 </section>}
 
