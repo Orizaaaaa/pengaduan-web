@@ -39,6 +39,8 @@ type Props = {}
 
 const page = (props: Props) => {
     const dateNow = new Date();
+    const [errorMsg, setErrorMsg] = useState('')
+    const [loading, setLoading] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [updatePage, setUpdatePage] = useState(true)
     const idBuilding = useParams().id
@@ -193,6 +195,23 @@ const page = (props: Props) => {
 
 
     const handleUpdate = async () => {
+        setLoading(true);
+
+        // Validasi untuk memastikan tidak ada field yang kosong
+        if (!form.title || !form.description || !form.address || !form.status || !form.source_of_funds || form.budget <= 0 || form.volume <= 0 || form.image.length === 0) {
+            setErrorMsg('Semua field harus diisi dengan benar.');
+            setLoading(false);
+            return;
+        }
+
+        if (form.location.latitude === 0 || form.location.longitude === 0) {
+            setErrorMsg('Lokasi harus dipilih.');
+            setLoading(false);
+            return;
+        }
+
+        setErrorMsg(''); // Hapus pesan error jika semua validasi lolos
+
         const existingUrls = form.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
         const newFiles = form.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
 
@@ -216,27 +235,34 @@ const page = (props: Props) => {
             }
         };
 
-        updateBuilding(idBuilding, data, (result: any) => {
-            console.log(result);
-            mutate(`${url}/infrastucture/${idBuilding}`)
-            setForm({
-                title: dataBuilding.title || '',
-                description: dataBuilding.description || '',
-                address: dataBuilding.address || '',
-                location: {
-                    latitude: dataBuilding.location?.latitude || 0,
-                    longitude: dataBuilding.location?.longitude || 0,
-                },
-                status: dataBuilding.status || '',
-                image: dataBuilding.image,
-                budget: dataBuilding.budget || 0,
-                volume: dataBuilding.volume || 0,
-                source_of_funds: dataBuilding.source_of_funds || '',
-                date: parseDate(formatDate(dataBuilding.date)) || ''
+        try {
+            await updateBuilding(idBuilding, data, (result: any) => {
+                console.log(result);
+                mutate(`${url}/infrastucture/${idBuilding}`);
+                setForm({
+                    title: dataBuilding.title || '',
+                    description: dataBuilding.description || '',
+                    address: dataBuilding.address || '',
+                    location: {
+                        latitude: dataBuilding.location?.latitude || 0,
+                        longitude: dataBuilding.location?.longitude || 0,
+                    },
+                    status: dataBuilding.status || '',
+                    image: dataBuilding.image,
+                    budget: dataBuilding.budget || 0,
+                    volume: dataBuilding.volume || 0,
+                    source_of_funds: dataBuilding.source_of_funds || '',
+                    date: parseDate(formatDate(dataBuilding.date)) || ''
+                });
+                setUpdatePage(true);
             });
-            setUpdatePage(true)
-        })
-    }
+        } catch (error) {
+            setErrorMsg('Gagal mengirim data. Silakan coba lagi.');
+        } finally {
+            setLoading(false); // Pastikan loading false setelah selesai
+        }
+    };
+
 
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const openModalDelete = () => {
@@ -498,10 +524,10 @@ const page = (props: Props) => {
                         </MapChoise>
                     </div>
 
-                    <div className="flex justify-end mt-4 ">
-                        <ButtonPrimary onClick={handleUpdate} className='py-2 px-4 rounded-md' >
-                            Perbarui sekarang
-                        </ButtonPrimary>
+                    <p className='text-red text-sm mt-2' >{errorMsg} </p>
+                    <div className="flex mt-2 justify-end">
+                        <ButtonPrimary onClick={handleUpdate} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim'}</ButtonPrimary>
                     </div>
                 </section>}
 
