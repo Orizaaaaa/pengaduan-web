@@ -8,3 +8,13 @@ export const updateBuilding = (id: any, form: any, callback: any) => {
             console.log(err);
         });
 }
+
+
+export const deleteBuilding = (id: any, callback: any) => {
+    axiosInterceptor.delete(`/infrastucture/${id}`)
+        .then((result) => {
+            callback(result.data)
+        }).catch((err) => {
+            console.log(err);
+        });
+}

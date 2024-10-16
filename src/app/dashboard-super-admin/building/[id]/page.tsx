@@ -11,7 +11,7 @@ import DefaultLayout from '@/components/layouts/DefaultLayout'
 import useSWR, { mutate } from 'swr'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
-import { useParams, usePathname } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { formatDate, formatRupiah, parseCoordinate } from '@/utils/helper'
 import { FaPen, FaTrashAlt } from 'react-icons/fa'
 import InputForm from '@/components/elements/input/InputForm'
@@ -21,10 +21,12 @@ import { IoCloseCircleOutline } from 'react-icons/io5'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import { parseDate } from '@internationalized/date'
 import ButtonSecondary from '@/components/elements/buttonSecondary'
-import { AutocompleteItem, DatePicker, image } from '@nextui-org/react'
+import { AutocompleteItem, DatePicker, image, Spinner, useDisclosure } from '@nextui-org/react'
 import DropdownCustom from '@/components/elements/dropdown/Dropdown'
 import { postImagesArray } from '@/api/imagePost'
-import { updateBuilding } from '@/api/building'
+import { deleteBuilding, updateBuilding } from '@/api/building'
+import ModalAlert from '@/components/fragemnts/modal/modalAlert'
+import ButtonDelete from '@/components/elements/buttonDelete'
 const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'), {
     ssr: false
 });
@@ -37,6 +39,7 @@ type Props = {}
 
 const page = (props: Props) => {
     const dateNow = new Date();
+    const [loadingDelete, setLoadingDelete] = useState(false)
     const [updatePage, setUpdatePage] = useState(true)
     const idBuilding = useParams().id
     const { data, error } = useSWR(`${url}/infrastucture/${idBuilding}`, fetcher, {
@@ -235,9 +238,21 @@ const page = (props: Props) => {
         })
     }
 
+    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
+    const openModalDelete = () => {
+        onWarningOpen()
+    }
 
-    const latitude = dataBuilding?.location?.latitude
-    const longitude = dataBuilding?.location?.longitude
+    const router = useRouter()
+    const handleDelete = () => {
+        setLoadingDelete(true)
+        deleteBuilding(idBuilding, (result: any) => {
+            console.log(result);
+            onWarningClose()
+            router.push('/dashboard-super-admin/building    ')
+            setLoadingDelete(false)
+        })
+    }
 
 
 
@@ -245,7 +260,7 @@ const page = (props: Props) => {
         <DefaultLayout>
             <div className=" button-action flex justify-end mb-2 gap-3 ">
                 <div className="flex bg-white justify-end gap-3 p-2 rounded-lg ">
-                    <FaTrashAlt className='cursor-pointer' color='red' />
+                    <FaTrashAlt onClick={openModalDelete} className='cursor-pointer' color='red' />
                     <FaPen onClick={() => setUpdatePage(prev => !prev)} className='cursor-pointer' color='blue' />
                 </div>
 
@@ -489,6 +504,15 @@ const page = (props: Props) => {
                         </ButtonPrimary>
                     </div>
                 </section>}
+
+            <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
+                <h1>Apakah anda yakin ingin menghapus data pembangunan ini yang berjudul <br /> <span className='font-medium' > " {dataBuilding?.title} "</span> </h1>
+
+                <div className="flex gap-3 justify-end">
+                    <ButtonPrimary onClick={onWarningClose} className='px-4 py-2 rounded-md'>Batal</ButtonPrimary>
+                    <ButtonDelete onClick={handleDelete} className='px-4 py-2 rounded-md flex justify-center items-center'>{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
+                </div>
+            </ModalAlert>
 
         </DefaultLayout>
 
