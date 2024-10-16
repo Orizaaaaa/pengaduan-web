@@ -8,6 +8,11 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import dynamic from 'next/dynamic'
 import { bgPengaduan, pembangunan } from '@/app/image'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import useSWR from 'swr'
+import { url } from '@/api/auth'
+import { fetcher } from '@/api/fetcher'
+import { useParams, usePathname } from 'next/navigation'
+import { formatDate, formatRupiah, parseCoordinate } from '@/utils/helper'
 const Map = dynamic(() => import('@/components/fragemnts/maps/Map'), {
     ssr: false
 });
@@ -15,37 +20,44 @@ const Map = dynamic(() => import('@/components/fragemnts/maps/Map'), {
 type Props = {}
 
 const page = (props: Props) => {
+    const idBuilding = useParams().id
+    const { data, error } = useSWR(`${url}/infrastucture/${idBuilding}`, fetcher, {
+        keepPreviousData: true,
+    });
+    const dataBuilding = data?.data
+    console.log(dataBuilding);
+
     const dataDetail = [
         {
             title: 'Anggaran',
-            value: 'Rp 10.000.00'
+            value: formatRupiah(dataBuilding?.budget)
         },
         {
             title: 'Sumber Dana',
-            value: 'Alokasi Anggaran Pendapatan dan Belanja Negara (Dana Desa)'
+            value: dataBuilding?.source_of_funds
         },
         {
             title: 'Volume',
-            value: '500'
+            value: `${dataBuilding?.volume} m³`
         },
         {
-            title: 'Pelaksana',
-            value: 'Rehab Desa'
+            title: 'Status',
+            value: dataBuilding?.status
         },
         {
             title: 'Tahun',
-            value: '12/30/2024'
+            value: formatDate(dataBuilding?.date)
         },
         {
             title: 'Alamat',
-            value: 'RT - / RW LEMBANG'
+            value: dataBuilding?.address
         },
     ]
     return (
         <DefaultLayout>
             <section className=' bg-white p-4 mx-auto py-10 px-5  rounded-md '>
 
-                <h1 className='text-2xl font-bold text-center'>Pembangunan aula kantor</h1>
+                <h1 className='text-2xl font-bold text-center'> {dataBuilding?.title}</h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-10">
                     <div className="rounded-md hover: border-stroke bg-white  shadow-default  dark:border-strokedark">
@@ -59,25 +71,23 @@ const page = (props: Props) => {
                             className="mySwiper"
                         >
 
-                            <SwiperSlide >
-                                <div className="images h-[300px]  ">
-                                    <Image className='rounded-lg w-full h-full' src={pembangunan} alt="jalan rusak" />
-                                </div>
+                            {dataBuilding?.image.map((item: any, index: number) => (
+                                <SwiperSlide key={index} >
+                                    <div className="images h-[300px]  ">
+                                        <img className='rounded-lg w-full h-full' src={item} alt={item} />
+                                    </div>
 
-                            </SwiperSlide>
+                                </SwiperSlide>
+                            ))}
 
-                            <SwiperSlide >
-                                <div className="images h-[300px] ">
-                                    <Image className='rounded-lg w-full h-full' src={bgPengaduan} alt="jalan rusak" />
-                                </div>
-                            </SwiperSlide>
+
 
                         </Swiper>
                     </div>
 
                     <div className="text">
                         <h1 className='text-lg font-medium'>Deskripsi</h1>
-                        <p className='text-sm' >Lorem ipsum dolor sit amet consectetur, adipisicing elit. Vitae ut voluptas sequi iste mollitia alias quidem reiciendis laborum, labore quos, impedit enim est. Cumque recusandae est qui soluta tempora expedita.</p>
+                        <p className='text-sm' > {dataBuilding?.description}</p>
                     </div>
 
                 </div>
@@ -93,8 +103,8 @@ const page = (props: Props) => {
                             <div className="flex  gap-5" key={index}>
 
                                 <div className="text">
-                                    <h1 className='font-medium' >{item.title}</h1>
-                                    <h1>{item.value}</h1>
+                                    <h1 className='font-medium' >{item?.title}</h1>
+                                    <h1>{item?.value}</h1>
                                 </div>
                             </div>
                         ))}
@@ -109,7 +119,7 @@ const page = (props: Props) => {
                     <hr className='w-full text-[#eeeeee]' />
                 </div>
                 <div className="location mt-5">
-                    <Map lat={-6.937998511449565} lng={107.60711431503297} />
+                    <Map lat={parseCoordinate(dataBuilding?.location?.latitude || "0")} lng={parseCoordinate(dataBuilding?.location?.longitude || "0")} />
                 </div>
             </section>
         </DefaultLayout>
