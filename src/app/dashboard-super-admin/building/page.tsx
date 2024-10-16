@@ -5,6 +5,8 @@ import ButtonPrimary from '@/components/elements/buttonPrimary'
 import CardBuilding from '@/components/elements/card/CardBuilding'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { formatDate } from '@/utils/helper'
+import { useRouter } from 'next/navigation'
+
 import React from 'react'
 import useSWR from 'swr'
 
@@ -16,12 +18,12 @@ const Page = (props: Props) => {
     });
     const dataPembanguan = data?.data
     console.log(dataPembanguan);
-
+    const router = useRouter()
 
     return (
         <DefaultLayout>
             <div className="flex justify-end">
-                <ButtonPrimary className='py-2 px-4 rounded-md' >Tambah Pembangunan</ButtonPrimary>
+                <ButtonPrimary onClick={() => router.push('/dashboard-super-admin/building/create')} className='py-2 px-4 rounded-md' >Tambah Pembangunan</ButtonPrimary>
 
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-7">

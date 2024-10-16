@@ -45,7 +45,7 @@ const page = (props: Props) => {
             value: dataBuilding?.address
         },
     ]
-    console.log(data);
+
 
     return (
         <>
