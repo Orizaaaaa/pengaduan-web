@@ -2,20 +2,30 @@
 
 import { registerUser } from "@/api/auth";;
 import { deleteUser, getAllUser } from "@/api/user";
+import ButtonDelete from "@/components/elements/buttonDelete";
 import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
+import InputForm from "@/components/elements/input/InputForm";
 import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords } from "@/utils/helper";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import { Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 const OfficerList = () => {
     const { onOpen, onClose, isOpen } = useDisclosure();
+    const [loadingDelete, setLoadingDelete] = useState(false)
+    const [loading, setLoading] = useState(false)
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
-    const [disabled, setDisabled] = useState(true)
-    const [errorMsg, setErrorMsg] = useState(' ')
+    const [errorMsg, setErrorMsg] = useState({
+        name: '',
+        nik: '',
+        number_phone: '',
+        email: '',
+        unitWork: '',
+        password: '',
+    })
     const [dataUser, setDataUser] = useState([]);
     const [formData, setFormData] = useState({
         name: ' ',
@@ -43,71 +53,153 @@ const OfficerList = () => {
         onOpen();
     }
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+
+        // Khusus validasi untuk nomor telepon
+        if (name === 'number_phone') {
+            let numericValue = value.replace(/\D/g, '');
+
+            if (numericValue.startsWith('08')) {
+                numericValue = '628' + numericValue.slice(2);
+            }
+
+            if (numericValue.length > 15) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    number_phone: '*Nomor tidak boleh lebih dari 15 angka',
+                }));
+                return;
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    number_phone: '',
+                }));
+            }
+
+            setFormData({ ...formData, [name]: numericValue });
+            return;
+        }
+
+        // Khusus untuk validasi NIK
+        if (name === 'nik') {
+            const numericValue = value.replace(/\D/g, '');
+
+            if (numericValue.length > 16) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    nik: '*NIK tidak boleh lebih dari 16 digit',
+                }));
+                return;
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    nik: '',
+                }));
+            }
+
+            setFormData({ ...formData, [name]: numericValue });
+            return;
+        }
+
+        // Validasi agar name tidak boleh berisi angka
+        if (name === 'name') {
+            const nameValue = value;
+            const hasNumber = /\d/.test(nameValue);
+
+            if (hasNumber) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '*Nama tidak boleh mengandung angka',
+                }));
+                return;
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '',
+                }));
+            }
+        }
+
+        // Update state untuk input lainnya
         setFormData({ ...formData, [name]: value });
-
-        const updatedValues = {
-            ...formData,
-            [name]: value,
-        };
-
-        if (updatedValues.email !== "" && updatedValues.password !== "" && (updatedValues.email.includes('@gmail.com') || updatedValues.email.includes('@test.com'))) {
-            setDisabled(false);
-        } else {
-            setDisabled(true);
-        }
-        const nameRegex = /^[A-Za-z\s\-\_\'\.\,\&\(\)]{1,100}$/; //validasi nama
-        const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/ //validasi email
-        const passwordRegex = /^[A-Za-z0-9]+$/ //validasi password
-        if (!nameRegex.test(formData.name)) {
-            setErrorMsg('*Masukan nama yang valid')
-            setDisabled(true);
-        } else if (!emailRegex.test(formData.email)) {
-            setDisabled(true);
-            setErrorMsg('*Masukan email yang valid')
-        } else if (!passwordRegex.test(formData.password) || formData.password.length < 8) {
-            setDisabled(true);
-            setErrorMsg('*Password harus 8 karakter atau lebih')
-        } else {
-            setDisabled(false);
-            setErrorMsg('')
-        }
     };
+
 
 
     //membuat petugas
     const createOfficer = async (e: any) => {
         e.preventDefault();
-        console.log(formData);
+        setLoading(true); // Mulai loading
+
+        setErrorMsg({
+            name: '',
+            email: '',
+            unitWork: '',
+            number_phone: '',
+            nik: '',
+            password: ''
+        });
+
+        let hasError = false;
+        if (formData.name.trim() === '') {
+            setErrorMsg((prev) => ({ ...prev, name: '*Nama tidak boleh kosong' }));
+            hasError = true;
+        }
+        if (formData.email.trim() === '') {
+            setErrorMsg((prev) => ({ ...prev, email: '*Email tidak boleh kosong' }));
+            hasError = true;
+        }
+        if (formData.number_phone.trim() === '') {
+            setErrorMsg((prev) => ({ ...prev, number_phone: '*Nomor telepon tidak boleh kosong' }));
+            hasError = true;
+        }
+        if (formData.nik.trim() === '') {
+            setErrorMsg((prev) => ({ ...prev, nik: '*NIK tidak boleh kosong' }));
+            hasError = true;
+        }
+        if (formData.password.trim() === '') {
+            setErrorMsg((prev) => ({ ...prev, password: '*Password tidak boleh kosong' }));
+            hasError = true;
+        }
+
+        if (hasError) {
+            setLoading(false); // Selesai loading jika ada error
+            return;
+        }
 
         await registerUser(formData, (status: boolean, res: any) => {
-
             if (status) {
-                console.log(res);
                 setFormData({
                     name: ' ',
                     email: '',
                     unitWork: '',
                     number_phone: '',
-                    nik: " ",
+                    nik: ' ',
                     password: '',
                     role: 'admin'
-                })
-
+                });
                 getAllUser((result: any) => {
+                    console.log(result);
                     const data = result.data ? result.data.filter((role: any) =>
-                        role.role !== 'user') : [];
+                        role.role === 'admin') : [];
                     setDataUser(data)
                 })
                 onClose();
             } else {
-                console.log(res);
+                if (res?.data?.message) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        ...res.data.message
+                    }));
+                } else {
+                    console.log('Error occurred:', res);
+                }
             }
-        })
+            setLoading(false); // Selesai loading setelah create selesai
+        });
+    };
 
-
-    }
 
     //hapus petugas
     const handleDeleteModal = (value: any) => {
@@ -115,17 +207,21 @@ const OfficerList = () => {
         onWarningOpen();
         setDataDelete(value);
     };
+
     const handleDelete = async () => {
+        setLoadingDelete(true); // Mulai loading delete
+
         await deleteUser(dataDelete, (result: any) => {
-            console.log(result);
             getAllUser((result: any) => {
+                console.log(result);
                 const data = result.data ? result.data.filter((role: any) =>
-                    role.role !== 'user') : [];
+                    role.role === 'admin') : [];
                 setDataUser(data)
             })
-        })
-        onWarningClose();
-    }
+            setLoadingDelete(false); // Selesai loading delete
+            onWarningClose();
+        });
+    };
 
     return (
         <DefaultLayout>
@@ -178,17 +274,19 @@ const OfficerList = () => {
             </Card>
 
             <ModalDefault isOpen={isOpen} onClose={onClose}>
-                <InputReport marginY="my-1" htmlFor="nik" title="NIK  " type="number" onChange={handleChange} value={formData.nik} />
-                <InputReport marginY="my-1" htmlFor="name" title="Nama Petugas  " type="text" onChange={handleChange} value={formData.name} />
+                <InputForm errorMsg={errorMsg.nik} className="bg-slate-300" type="text" htmlFor="nik" title="NIK  " onChange={handleChange} value={formData.nik} />
+                <InputForm errorMsg={errorMsg.name} className="bg-slate-300" htmlFor="name" title="Nama Petugas  " type="text" onChange={handleChange} value={formData.name} />
                 <div className="flex justify-between">
-                    <InputReport marginY="my-1" htmlFor="email" title="Email  " type="text" onChange={handleChange} value={formData.email} />
-                    <InputReport marginY="my-1" htmlFor="number_phone" title="No HP  " type="number" onChange={handleChange} value={formData.number_phone} />
+                    <InputForm errorMsg={errorMsg.email} className="bg-slate-300" htmlFor="email" title="Email  " type="text" onChange={handleChange} value={formData.email} />
+                    <InputForm errorMsg={errorMsg.number_phone} className="bg-slate-300" htmlFor="number_phone" title="No HP  " type="text" onChange={handleChange} value={formData.number_phone} />
                 </div>
 
 
-                <InputReport marginY="my-1" htmlFor="password" title="Password " type="text" onChange={handleChange} value={formData.password} />
-                <p className="text-red">{errorMsg}</p>
-                <ButtonPrimary disabled={disabled} className={`rounded-md w-full my-4 py-2 ${disabled ? 'bg-slate-400' : 'bg-primary'}`} onClick={createOfficer} >Buat Petugas</ButtonPrimary>
+                <InputForm errorMsg={errorMsg.password} className="bg-slate-300" htmlFor="password" title="Password " type="text" onChange={handleChange} value={formData.password} />
+                <ButtonPrimary onClick={createOfficer} className='px-4 py-2
+                 rounded-md flex justify-center items-center'> {loading ? <Spinner
+                        className={`w-5 h-5 mx-8`} size="sm" color="white" />
+                        : 'Buat Petugas'}  </ButtonPrimary>
 
             </ModalDefault>
 
@@ -198,7 +296,8 @@ const OfficerList = () => {
                 <p> apakah Anda yakin ingin menghapus petugas tersebut ?</p>
                 <div className="flex justify-end gap-4 mt-4">
                     <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 text-black rounded-md px-3 py-2">Batal</ButtonPrimary>
-                    <ButtonPrimary onClick={handleDelete} className="bg-red text-white rounded-md  px-3 py-2">Hapus</ButtonPrimary>
+                    <ButtonDelete onClick={handleDelete}
+                        className='px-4 py-2 rounded-md flex justify-center items-center'>{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
                 </div>
             </ModalDefault>
         </DefaultLayout>

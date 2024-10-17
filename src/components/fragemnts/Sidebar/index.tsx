@@ -115,7 +115,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-super-admin" />
           <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-super-admin/report" />
           <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-super-admin/create-report" />
-          <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Petugas" pathname="/dashboard-super-admin/officer" />
+          <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Admin" pathname="/dashboard-super-admin/officer" />
           <NavigationList icon={<FaRegAddressCard size={19} />} title="Karyawan" pathname="/dashboard-super-admin/employe" />
           <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-super-admin/category" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-super-admin/articles" />
