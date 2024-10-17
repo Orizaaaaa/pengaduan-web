@@ -6,11 +6,12 @@ import useSWR from 'swr'
 import { fetcher } from '@/api/fetcher'
 import { url } from '@/api/auth'
 import { formatNews } from '@/utils/helper'
+import { useState } from 'react'
 
 type Props = {}
 
 const MainArticle = (props: Props) => {
-
+    const [searchData, setSearchData] = useState("");
     const pathname = usePathname()
 
     const { data, error } = useSWR(`${url}/news/list`, fetcher, {
@@ -29,16 +30,26 @@ const MainArticle = (props: Props) => {
         }
     }
 
+    const handleSearch = (e: any) => {
+        setSearchData(e.target.value);
+    };
+
+    const filteredData = dataNews?.filter((item: any) => {
+        return (
+            item.title && item.title.toLowerCase().includes(searchData.toLowerCase())
+        );
+    });
+
     return (
         <section>
             <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10 ">
                 <h1 className='text-2xl font-bold'>Artikel</h1>
                 <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
-                    <Search className='border-2 border-black' placeholder="Cari artikel..." />
+                    <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari artikel..." />
                 </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-7">
-                {dataNews?.map((item: any, index: number) => (
+                {filteredData?.map((item: any, index: number) => (
                     <CardLink key={index} href={location(item._id)}>
                         <div className="images h-[150px] ">
                             <img className='rounded-t-lg w-full h-full' src={item.image} alt="jalan rusak" />
