@@ -231,8 +231,6 @@ const Page = () => {
                     >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ubah Status'}</ButtonPrimary>
 
                 </div>
-
-
             </form>
 
             <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
@@ -242,7 +240,6 @@ const Page = () => {
                     <ButtonDelete onClick={handleDeleteReport} className='px-4 py-2 rounded-md flex justify-center items-center'>{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
                 </div>
             </ModalAlert>
-
         </DefaultLayout>
     );
 };
