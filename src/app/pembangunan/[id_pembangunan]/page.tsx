@@ -13,7 +13,7 @@ import useSWR from 'swr'
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const idBuilding = useParams().id_pembangunan
     const { data, error } = useSWR(`${url}/infrastucture/${idBuilding}`, fetcher, {
         keepPreviousData: true,
@@ -127,4 +127,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
