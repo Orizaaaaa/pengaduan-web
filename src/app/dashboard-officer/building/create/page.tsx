@@ -24,7 +24,7 @@ import { SwiperSlide } from 'swiper/react'
 import { useMapEvents } from 'react-leaflet'
 
 type Props = {}
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const dateNow = new Date();
     const [loading, setLoading] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
@@ -289,4 +289,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
