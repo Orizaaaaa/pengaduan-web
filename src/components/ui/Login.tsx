@@ -17,7 +17,6 @@ const Login = () => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(true);
     const [errorLogin, setErrorLogin] = useState('');
-    const [disabled, setDisabled] = useState(true);
     const [typePassword, setTypePassword] = useState("password");
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
@@ -34,13 +33,6 @@ const Login = () => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
 
-        const updatedValues = {
-            ...form,
-            [name]: value,
-        };
-
-        // Update the disabled state based on the form values
-        setDisabled(!(updatedValues.email.includes('@gmail.com') || updatedValues.email.includes('@test.com')) || updatedValues.password === "");
     };
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -49,9 +41,27 @@ const Login = () => {
 
         // nanti buat pengkondisian berdasarkan role
         await loginService(form, (status: boolean, res: any) => {
-            console.log(res.data);
+            // Validasi email
+            if (!form.email.includes('@gmail.com') && !form.email.includes('@test.com')) {
+                setErrorLogin('*Email harus di isi dengan benar');
+                setLoading(false);
+                return;
+            }
 
-            setLoading(false);
+            // Validasi password tidak boleh kosong dan harus lebih dari 8 karakter
+            if (form.password === "") {
+                setErrorLogin('*Password tidak boleh kosong');
+                setLoading(false);
+                return;
+            }
+
+            if (form.password.length < 8) {
+                setErrorLogin('*Password harus lebih dari 8 karakter');
+                setLoading(false);
+                return;
+            }
+
+
             if (status) {
                 setErrorLogin('');
                 const tokenCookies = `token=${res.data.token}`;
@@ -73,10 +83,12 @@ const Login = () => {
                 } else if (res.data.role === 'admin') {
                     router.push('/dashboard-officer')
                 }
+
             } else {
                 setErrorLogin('*Email atau password salah');
                 console.log(res.data);
             }
+
 
         });
     };
@@ -109,7 +121,7 @@ const Login = () => {
                             <InputForm className='form-input-login mb-2' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                         </div>
                         <p className='text-red my-3 text-sm'>{errorLogin}</p>
-                        <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center`}>
+                        <ButtonPrimary typeButon={"submit"} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center`}>
                             {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Masuk'}
                         </ButtonPrimary>
                         <p className='text-sm'>Belum punya akun ? <Link className='text-primary font-medium ' href={'/register'} > Daftar</Link></p>
