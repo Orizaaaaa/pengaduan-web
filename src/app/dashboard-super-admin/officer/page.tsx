@@ -263,8 +263,8 @@ const OfficerList = () => {
                                 <TableCell>{capitalizeWords(user.number_phone)}</TableCell>
                                 <TableCell>{capitalizeWords(user.role)}</TableCell>
                                 <TableCell>{user.unitWork ? capitalizeWords(user.unitWork.name) : '-'}</TableCell>
-                                <TableCell><ButtonPrimary className="bg-red-700 rounded-md w-full py-2"
-                                    onClick={() => handleDeleteModal(user.id)}>Delete</ButtonPrimary></TableCell>
+                                <TableCell><ButtonDelete className=" rounded-md w-full py-2"
+                                    onClick={() => handleDeleteModal(user.id)}>Delete</ButtonDelete></TableCell>
                             </TableRow>
                         ))}
 
