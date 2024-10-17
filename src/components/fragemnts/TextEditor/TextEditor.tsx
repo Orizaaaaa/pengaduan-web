@@ -2,7 +2,6 @@
 'use client'
 import React, { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 
 import { usePathname, useRouter } from 'next/navigation';
 import InputForm from '@/components/elements/input/InputForm';
@@ -17,6 +16,7 @@ import { postImage } from '@/api/imagePost';
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const TextEditor = ({ desc }: any) => {
+    const [errorMsg, setErrorMsg] = useState('');
     const pathname = usePathname()
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -76,16 +76,39 @@ const TextEditor = ({ desc }: any) => {
 
     // handle submit article
     const handleCreateArticle = async () => {
+        // Reset error message
+        setErrorMsg('');
+
+        // Validasi form
+        if (!form.title) {
+            setErrorMsg('Judul tidak boleh kosong');
+            setLoading(false);
+            return;
+        }
+
+        if (!form.image) {
+            setErrorMsg('Gambar tidak boleh kosong');
+            setLoading(false);
+            return;
+        }
+
+        if (!form.description || form.description === '<p></p>') {
+            setErrorMsg('Deskripsi tidak boleh kosong');
+            setLoading(false);
+            return;
+        }
+
+        // Jika validasi lolos, lanjutkan ke upload gambar dan pembuatan artikel
         setLoading(true);
         const imageUrl = await postImage({ image: form.image });
+
         if (imageUrl) {
             const formSubmit: any = {
                 ...form,
-                image: imageUrl
-            }
+                image: imageUrl,
+            };
 
             await createArticle(formSubmit, (result: any) => {
-                console.log(result)
                 if (result) {
                     if (pathname === '/dashboard-officer/articles/create') {
                         router.push('/dashboard-officer/articles');
@@ -94,14 +117,13 @@ const TextEditor = ({ desc }: any) => {
                     }
                     setLoading(false);
                 }
-            })
-
+            });
         } else {
-            console.log('error');
+            setErrorMsg('Terjadi kesalahan saat mengunggah gambar');
+            setLoading(false);
         }
-
-
     };
+
 
     console.log(pathname);
 
@@ -110,7 +132,7 @@ const TextEditor = ({ desc }: any) => {
         <>
             {/* Below is a basic html page and we use Tailwind css to style */}
             <main>
-                <div className="h-screen flex items-center flex-col">
+                <div >
                     <div >
                         <div className="images ">
 
@@ -149,15 +171,13 @@ const TextEditor = ({ desc }: any) => {
                         </style>
                     </div>
 
+                    <p className='text-red text-sm mt-2' >{errorMsg}</p>
+
                     <div className="flex justify-end w-full my-4">
-                        <ButtonPrimary onClick={handleCreateArticle} className='px-4 py-2 rounded-md'>{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Buat Artikel'} </ButtonPrimary>
+                        <ButtonPrimary onClick={handleCreateArticle}
+                            className='px-4 py-2 rounded-md flex justify-center items-center'>{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Buat Artikel'} </ButtonPrimary>
                     </div>
 
-
-                    <div className="my-10 h-full w-full">
-                        Hasil
-                        <div className='p-3 bg-white shadow-10 rounded-lg mb-10' dangerouslySetInnerHTML={{ __html: form.description }}></div>
-                    </div>
                 </div>
 
             </main>
