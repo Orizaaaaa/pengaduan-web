@@ -18,8 +18,15 @@ type Props = {}
 const Register = (props: Props) => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(true);
-    const [errorMsg, setErrorMsg] = useState('');
-    const [disabled, setDisabled] = useState(true);
+    const [errorMsg, setErrorMsg] = useState({
+        name: '',
+        email: '',
+        password: '',
+        image: '',
+        role: '',
+        number_phone: '',
+        nik: ''
+    });
     const [typePassword, setTypePassword] = useState("password");
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
@@ -39,12 +46,72 @@ const Register = (props: Props) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
 
-        const updatedValues = {
-            ...form,
-            [name]: value,
-        };
+        // Khusus validasi untuk nomor telepon
+        if (name === 'number_phone') {
+            // Hapus semua karakter selain angka
+            let numericValue = value.replace(/\D/g, '');
+
+            // Jika nomor dimulai dengan '08', ubah menjadi '628'
+            if (numericValue.startsWith('08')) {
+                numericValue = '628' + numericValue.slice(2);
+            }
+
+            // Jika lebih dari 15 angka, berikan pesan error
+            if (numericValue.length > 15) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    number_phone: '*Nomor tidak boleh lebih dari 15 angka',
+                }));
+                return; // Tidak update state jika lebih dari 15 digit
+            } else {
+                // Hapus pesan error jika panjang nomor valid
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    number_phone: '',
+                }));
+            }
+
+            // Update state dengan hanya angka
+            setForm({ ...form, [name]: numericValue });
+            return; // Menghentikan eksekusi lebih lanjut karena 'number_phone' sudah di-handle
+        }
+
+        // Khusus untuk validasi NIK
+        if (name === 'nik') {
+            // Hapus semua karakter selain angka
+            const numericValue = value.replace(/\D/g, '');
+
+            if (numericValue.length > 16) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    nik: '*NIK tidak boleh lebih dari 16 digit',
+                }));
+                return; // Tidak update state jika lebih dari 16 digit
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    nik: '',
+                }));
+            }
+
+            // Update state dengan hanya angka
+            setForm({ ...form, [name]: numericValue });
+            return; // Menghentikan eksekusi lebih lanjut karena 'nik' sudah di-handle
+        }
+
+        // Update state untuk input lainnya
+        setForm({ ...form, [name]: value });
+    };
+
+
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+
+        // Reset error messages
+        const newErrorMsg = { name: '', email: '', password: '', image: '', role: '', number_phone: '', nik: '' };
+        setErrorMsg(newErrorMsg);
 
         // Validasi nama
         const nameRegex = /^[A-Za-z\s\-\_\'\.\,\&\(\)]{1,100}$/;
@@ -55,57 +122,82 @@ const Register = (props: Props) => {
         // Validasi angka (untuk NIK dan No. HP)
         const numberRegex = /^[0-9]+$/;
 
+        let valid = true;
+
         // Cek apakah semua field diisi
-        if (
-            !updatedValues.name ||
-            !updatedValues.email ||
-            !updatedValues.password ||
-            !updatedValues.number_phone ||
-            !updatedValues.nik || !updatedValues.image
-        ) {
-            setDisabled(true);
-            setErrorMsg('*Semua field harus diisi');
+        if (!form.name) {
+            newErrorMsg.name = '*Nama harus diisi';
+            valid = false;
+        }
+        if (!form.email) {
+            newErrorMsg.email = '*Email harus diisi';
+            valid = false;
+        }
+        if (!form.password) {
+            newErrorMsg.password = '*Password harus diisi';
+            valid = false;
+        }
+        if (!form.number_phone) {
+            newErrorMsg.number_phone = '*No HP harus diisi';
+            valid = false;
+
+        } else if (!/^08[0-9]{8,}$/.test(form.number_phone)) {
+            newErrorMsg.number_phone = '*No HP harus dimulai dengan 628 dan berisi minimal 10 digit angka';
+            valid = false;
+        }
+        if (!form.nik) {
+            newErrorMsg.nik = '*NIK harus diisi';
+            valid = false;
+        }
+        if (!form.image) {
+            newErrorMsg.image = '*Foto profil harus diunggah';
+            valid = false;
+        }
+
+        // Validasi tambahan
+        if (form.nik && (!numberRegex.test(form.nik) || form.nik.length !== 16)) {
+            newErrorMsg.nik = '*NIK harus berupa angka dan terdiri dari 16 karakter';
+            valid = false;
+        }
+
+        if (form.number_phone && !numberRegex.test(form.number_phone)) {
+            newErrorMsg.number_phone = '*Nomor telepon harus berupa angka';
+            valid = false;
+        }
+
+        if (form.name && !nameRegex.test(form.name)) {
+            newErrorMsg.name = '*Masukkan nama yang valid';
+            valid = false;
+        }
+
+        if (form.email && !emailRegex.test(form.email)) {
+            newErrorMsg.email = '*Masukkan email yang valid';
+            valid = false;
+        }
+
+        if (form.password && (!passwordRegex.test(form.password) || form.password.length < 8)) {
+            newErrorMsg.password = '*Password harus 8 karakter atau lebih';
+            valid = false;
+        }
+
+        setErrorMsg(newErrorMsg);
+
+        if (!valid) {
+            setLoading(false);
             return;
         }
 
-        // Validasi NIK harus berupa angka dan 16 karakter
-        if (!numberRegex.test(updatedValues.nik) || updatedValues.nik.length !== 16) {
-            setDisabled(true);
-            setErrorMsg('*NIK harus berupa angka dan terdiri dari 16 karakter');
-            return;
+        // Jika lolos validasi
+        const imageUrl = await postImage({ image: form.image });
+        if (imageUrl) {
+            const data = { ...form, image: imageUrl };
+            registerUser(data, (status: boolean) => {
+                if (status) {
+                    router.push('/login');
+                }
+                setLoading(false);
+            });
         }
-
-        // Validasi No. HP harus berupa angka
-        if (!numberRegex.test(updatedValues.number_phone)) {
-            setDisabled(true);
-            setErrorMsg('*Nomor telepon harus berupa angka');
-            return;
-        }
-
-        // Validasi Nama
-        if (!nameRegex.test(updatedValues.name)) {
-            setDisabled(true);
-            setErrorMsg('*Masukkan nama yang valid');
-            return;
-        }
-
-        // Validasi Email
-        if (!emailRegex.test(updatedValues.email)) {
-            setDisabled(true);
-            setErrorMsg('*Masukkan email yang valid');
-            return;
-        }
-
-        // Validasi Password
-        if (!passwordRegex.test(updatedValues.password) || updatedValues.password.length < 8) {
-            setDisabled(true);
-            setErrorMsg('*Password harus 8 karakter atau lebih');
-            return;
-        }
-
-        // Jika semua validasi lolos, hapus pesan error dan enable tombol
-        setErrorMsg('');
-        setDisabled(false);
     };
 
     const handleFileManager = (fileName: string) => {
@@ -114,36 +206,50 @@ const Register = (props: Props) => {
             fileInput ? fileInput.click() : null;
         } else {
             console.log('error');
-
         }
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
         if (InputSelect === 'add') {
             const selectedImage = e.target.files?.[0];
-            setForm({ ...form, image: selectedImage || null });
-        } else {
-            console.log('error');
 
-        }
-    };
-
-    const handleRegister = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        const imageUrl = await postImage({ image: form.image });
-        if (imageUrl) {
-            const data = { ...form, image: imageUrl };
-            registerUser(data, (status: boolean, res: any) => {
-                if (status) {
-                    router.push('/login');
-                    setLoading(false);
+            if (selectedImage) {
+                // Validasi tipe file
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(selectedImage.type)) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                    }));
+                    return; // Tidak update state jika tipe file tidak valid
                 }
 
-                console.log(res);
+                // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+                const maxSize = 5 * 1024 * 1024;
+                if (selectedImage.size > maxSize) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Ukuran file maksimal 5 MB',
+                    }));
+                    return; // Tidak update state jika ukuran file lebih dari 5MB
+                }
 
-            });
+                // Hapus pesan error jika file valid
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '',
+                }));
+
+                // Update state dengan file yang valid
+                setForm({ ...form, image: selectedImage });
+            } else {
+                console.log('error');
+            }
         }
     };
+
+
+
+
 
     console.log(form);
 
@@ -176,11 +282,14 @@ const Register = (props: Props) => {
                                 </div>
 
                             ) : (
-                                <div className="images mx-auto border-dashed border-2 border-black rounded-full bg-gray-300 h-[80px] w-[80px] flex justify-center items-center relative">
-                                    <button className="flex-col justify-center items-center h-full w-full" type="button" onClick={() => handleFileManager('add')}>
-                                        <Image className="w-10 h-10 mx-auto" src={camera} alt="cam" />
-                                    </button>
-                                </div>
+                                <>
+                                    <div className="images mx-auto border-dashed border-2 border-black rounded-full bg-gray-300 h-[80px] w-[80px] flex justify-center items-center relative">
+                                        <button className="flex-col justify-center items-center h-full w-full" type="button" onClick={() => handleFileManager('add')}>
+                                            <Image className="w-10 h-10 mx-auto" src={camera} alt="cam" />
+                                        </button>
+                                    </div>
+                                    <p className='text-center mt-2 text-small text-red' >{errorMsg.image}</p>
+                                </>
                             )}
                             <input
                                 type="file"
@@ -192,22 +301,23 @@ const Register = (props: Props) => {
                         </div>
 
 
-                        <InputForm placeholder='Masukkan Nama' type='text' htmlFor={'name'} value={form.name} onChange={handleChange} />
-                        <InputForm placeholder='Masukkan NIK' type='text' htmlFor={'nik'} value={form.nik} onChange={handleChange} />
+                        <InputForm errorMsg={errorMsg.name} placeholder='Masukkan Nama' type='text' htmlFor={'name'} value={form.name} onChange={handleChange} />
+                        <InputForm errorMsg={errorMsg.nik} placeholder='Masukkan NIK' type='text' htmlFor={'nik'} value={form.nik} onChange={handleChange} />
 
                         <div className="flex gap-3">
-                            <InputForm placeholder='Masukkan Email' type='email' htmlFor={'email'} value={form.email} onChange={handleChange} />
-                            <InputForm placeholder='Masukkan No HP' type='text' htmlFor={'number_phone'} value={form.number_phone} onChange={handleChange} />
+                            <InputForm errorMsg={errorMsg.email} placeholder='Masukkan Email' type='email' htmlFor={'email'} value={form.email} onChange={handleChange} />
+                            <InputForm errorMsg={errorMsg.number_phone} placeholder='Masukkan No HP' type='text' htmlFor={'number_phone'} value={form.number_phone} onChange={handleChange} />
                         </div>
 
                         <div className="relative">
-                            <button onClick={togglePassword} type='button' className='icon-password h-full  bg-transparent flex absolute right-0 justify-center items-center pe-4'>
-                                {showPassword ? <FaEyeSlash size={20} color='#636363' /> : <IoEye size={20} color='#636363' />}
+                            <button onClick={togglePassword} type='button' className={`icon-password h-full  bg-transparent
+                                 flex absolute right-0 justify-center items-center pe-4  ${errorMsg.password ? 'pb-5' : ''}`}>
+                                {showPassword ? <FaEyeSlash size={20} color='#636363' />
+                                    : <IoEye size={20} color='#636363' />}
                             </button>
-                            <InputForm className='form-input-login' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
+                            <InputForm errorMsg={errorMsg.password} className='form-input-login' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                         </div>
-                        <p className='text-red my-3 text-sm'>{errorMsg}</p>
-                        <ButtonPrimary typeButon={"submit"} disabled={disabled} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center ${disabled ? 'bg-slate-400' : 'bg-primary'}`}>
+                        <ButtonPrimary typeButon={"submit"} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center  bg-primary`}>
                             {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Daftar'}
                         </ButtonPrimary>
                         <p className='text-sm'>Sudah punya akun ? <Link className='text-primary font-medium ' href={'/login'} > Masuk</Link></p>
