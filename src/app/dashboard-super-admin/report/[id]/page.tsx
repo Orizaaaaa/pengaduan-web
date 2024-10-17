@@ -1,6 +1,8 @@
 'use client'
 
+import { url } from '@/api/auth';
 import { coment } from '@/api/coment';
+import { fetcher } from '@/api/fetcher';
 import { changeStatusReport, deleteReport, getReportById } from '@/api/report';
 import ButtonDelete from '@/components/elements/buttonDelete';
 import ButtonPrimary from '@/components/elements/buttonPrimary';
@@ -12,6 +14,7 @@ import { capitalizeWords, formatDate, parseCoordinate } from '@/utils/helper';
 import { AutocompleteItem, Spinner, useDisclosure } from '@nextui-org/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 
 interface Report {
     address: string;
@@ -38,20 +41,37 @@ const Page = () => {
     const router = useRouter()
     const { id }: any = useParams(); // Menggunakan id dari useParams
     const name = typeof window !== 'undefined' ? localStorage.getItem("name") : null; // Memastikan localStorage hanya diakses di client side
-    const [dataReport, setDataReport] = useState<Report | null>(null);
     const [loadingDelete, setLoadingDelete] = useState(false)
+    const [loading, setLodaing] = useState(false)
     const [statusFrom, setStatusForm] = useState('')
     const [formComent, setFormComent] = useState({
         id_report: id,
         message: ''
     });
 
+    const { data, error } = useSWR(`${url}/reports/${id}`, fetcher, {
+        keepPreviousData: true,
+    });
+
+    const dataReport = data?.data
+
     useEffect(() => {
-        getReportById(id, (result: any) => {
-            setDataReport(result.data);
-            setStatusForm(result.data.status);
-        });
-    }, [id]);
+        if (dataReport) {
+            setStatusForm(dataReport.status);
+        }
+    }, [dataReport]);
+
+
+    const dataStatus = [
+        { label: "Menunggu", value: "Menunggu" },
+        { label: "Diproses", value: "Diproses" },
+        { label: "Selesai", value: "Selesai" },
+    ]
+
+    const onSelectionChange = (key: string) => {
+        setStatusForm(key)  // Menyimpan nilai yang dipilih ke dalam state
+    }
+
 
     const dataDetailLaporan = [
         { title: "Judul Laporan", text: dataReport?.title },
@@ -73,7 +93,7 @@ const Page = () => {
         e.preventDefault();
         await coment(formComent, (res: any) => {
             getReportById(id, (result: any) => {
-                setDataReport(result.data);
+                mutate(`${url}/reports/${id}`);
                 setTimeout(() => {
                     if (textRef.current) {
                         textRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -87,23 +107,18 @@ const Page = () => {
         });
     };
 
-    const onSelectionChange = (key: string) => {
-        setStatusForm(key)  // Menyimpan nilai yang dipilih ke dalam state
-    }
 
-    const dataStatus = [
-        { label: "Diproses", value: "Diproses" },
-        { label: "Menunggu", value: "Menunggu" },
-        { label: "Selesai", value: "Selesai" },
-    ]
+
 
 
 
 
     const handleDeleteReport = () => {
+        setLoadingDelete(true)
         deleteReport(id, (res: any) => {
             router.push('/dashboard-super-admin/report')
             console.log(res);
+            setLoadingDelete(false)
         })
     }
 
@@ -113,20 +128,22 @@ const Page = () => {
 
 
     const handleChangeStatus = async () => {
+        setLodaing(true)
         const dataStatus = {
             status: statusFrom
         }
 
         await changeStatusReport(id, dataStatus, (res: any) => {
             if (res) {
-                getReportById(id, (result: any) => {
-                    setDataReport(result.data);
-                    setStatusForm(result.data.status);
-                });
+                mutate(`${url}/reports/${id}`);
+                setLodaing(false)
             }
 
         })
     }
+
+    console.log(dataReport?.status);
+
     return (
         <DefaultLayout>
             <div className="grid grid-cols-1 lg:grid-cols-2 my-3 gap-8 lg:gap-0">
@@ -153,7 +170,7 @@ const Page = () => {
                     lng: parseCoordinate(dataReport?.longitude || "0"),
                 }}
                 zoom={10}
-                text="Lokasi kejadian"
+                text={dataReport?.address || ''}
                 className="h-[370px] rounded-md my-5"
             />
 
@@ -164,7 +181,7 @@ const Page = () => {
                         <p className="text-gray-400">Belum ada komentar</p>
                     )}
 
-                    {dataReport?.comment.map((item, index) => (
+                    {dataReport?.comment.map((item: any, index: number) => (
                         <div key={index}>
                             {item.name !== name ? (
                                 <div className="comment my-3 p-2 bg-gray-500 w-fit rounded-tl-2xl rounded-r-xl">
@@ -204,12 +221,15 @@ const Page = () => {
 
                 <div className="flex justify-end items-center gap-3 mt-3">
                     <div className="flex w-fit justify-center items-center gap-3">
-                        <DropdownCustom defaultSelectedKey='' clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
+                        <DropdownCustom defaultSelectedKey={statusFrom} clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
                             {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                         </DropdownCustom>
 
                     </div>
-                    <ButtonPrimary className='px-4 py-2 rounded-md' onClick={handleChangeStatus}>Ubah Status</ButtonPrimary>
+
+                    <ButtonPrimary onClick={handleChangeStatus} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
+                    >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ubah Status'}</ButtonPrimary>
+
                 </div>
 
 
