@@ -37,7 +37,7 @@ const Map = dynamic(() => import('@/components/fragemnts/maps/Map'), {
 
 type Props = {}
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
     const dateNow = new Date();
     const [errorMsg, setErrorMsg] = useState('')
     const [loading, setLoading] = useState(false)
@@ -545,4 +545,4 @@ const page = (props: Props) => {
     )
 }
 
-export default page
+export default Page
