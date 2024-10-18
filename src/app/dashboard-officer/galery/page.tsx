@@ -11,7 +11,7 @@ import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduc
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { useDisclosure } from '@nextui-org/react'
+import { Spinner, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 import React from 'react'
 import { FaPen } from 'react-icons/fa6'
@@ -24,6 +24,12 @@ type Props = {}
 
 const GaleryAdmin = (props: Props) => {
     const { onOpen, onClose, isOpen } = useDisclosure();
+    const [loading, setLoading] = React.useState(false)
+    const [loadingDelete, setLoadingDelete] = React.useState(false)
+    const [errorMsg, setErrorMsg] = React.useState({
+        image: '',
+        imageUpdate: ''
+    })
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [id, setId] = React.useState('')
     const [form, setForm] = React.useState({
@@ -39,24 +45,82 @@ const GaleryAdmin = (props: Props) => {
     const dataImage = data?.data
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        const selectedImage = e.target.files?.[0];
+
+        if (!selectedImage) {
+            console.log('No file selected');
+            return;
+        }
+
         if (InputSelect === 'add') {
-            const selectedImage = e.target.files?.[0];
-            if (selectedImage) {
-                setForm(prevState => ({
-                    ...prevState,
-                    name: [...prevState.name, selectedImage]
+            // Validasi tipe file
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (!allowedTypes.includes(selectedImage.type)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Hanya file PNG dan JPG yang diperbolehkan',
                 }));
+                return;
             }
+
+            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+            const maxSize = 5 * 1024 * 1024;
+            if (selectedImage.size > maxSize) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Ukuran file maksimal 5 MB',
+                }));
+                return;
+            }
+
+            // Hapus pesan error jika file valid
+            setErrorMsg((prev) => ({
+                ...prev,
+                image: '',
+            }));
+
+            // Update state form dengan file yang valid
+            setForm((prevState) => ({
+                ...prevState,
+                name: [...prevState.name, selectedImage],
+            }));
         } else {
-            const selectedImage = e.target.files?.[0];
-            if (selectedImage) {
-                setFormUpdate(prevState => ({
-                    ...prevState,
-                    name: [...prevState.name, selectedImage]
+
+            // Validasi tipe file
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (!allowedTypes.includes(selectedImage.type)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    imageUpdate: '*Hanya file PNG dan JPG yang diperbolehkan',
                 }));
+                return;
             }
+
+            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+            const maxSize = 5 * 1024 * 1024;
+            if (selectedImage.size > maxSize) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    imageUpdate: '*Ukuran file maksimal 5 MB',
+                }));
+                return;
+            }
+
+            // Hapus pesan error jika file valid
+            setErrorMsg((prev) => ({
+                ...prev,
+                imageUpdate: '',
+            }));
+
+
+            // Update state formUpdate tanpa validasi
+            setFormUpdate((prevState) => ({
+                ...prevState,
+                name: [...prevState.name, selectedImage],
+            }));
         }
     };
+
 
     const deleteArrayImage = (index: number, type: string) => {
         if (type === 'add') {
@@ -74,26 +138,41 @@ const GaleryAdmin = (props: Props) => {
     };
 
     const handleCreate = async () => {
-        if (!form.name) {
-            console.log('tidak boleh kosong');
+        setLoading(true);
+        // Cek apakah array `form.name` kosong
+        if (form.name.length === 0) {
+            setErrorMsg((prev) => ({
+                ...prev,
+                image: '*Gambar tidak boleh kosong',
+            }));
+            setLoading(false);
         } else {
-            const urls: string[] = await postImagesArray({ images: form.name })
-            const data = {
-                ...form,
-                name: urls
+            try {
+                // Kirim gambar dan dapatkan URL-nya
+                const urls: string[] = await postImagesArray({ images: form.name });
+
+                // Buat data baru dengan URL gambar yang telah diunggah
+                const data = {
+                    ...form,
+                    name: urls,
+                };
+
+                // Buat galeri dengan data yang telah diperbarui
+                createGalery(data, (status: any, result: any) => {
+                    if (status) {
+                        console.log(result);
+                        mutate(`${url}/gallery/list`)
+                        setLoading(false);
+                        setForm({
+                            name: [] as File[],
+                        });
+                    }
+                });
+            } catch (error) {
+                console.error("Error creating gallery:", error);
             }
-
-            createGalery(data, (status: any, result: any) => {
-                if (status) {
-                    console.log(result);
-                    setForm({
-                        name: [] as File[],
-                    })
-                }
-            })
-
         }
-    }
+    };
 
 
     // action update
@@ -107,8 +186,12 @@ const GaleryAdmin = (props: Props) => {
 
 
     const handleUpdate = async () => {
-        if (!formUpdate.name || formUpdate.name.length === 0) {
-            console.log('tidak boleh kosong');
+        if (formUpdate.name.length === 0) {
+            setErrorMsg((prev) => ({
+                ...prev,
+                imageUpdate: '*Gambar tidak boleh kosong',
+            }));
+            setLoading(false);
         } else {
             // Pisahkan gambar yang berupa URL string dan File
             const existingUrls = formUpdate.name.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
@@ -151,9 +234,11 @@ const GaleryAdmin = (props: Props) => {
     }
 
     const handleDelete = async () => {
+        setLoadingDelete(true)
         await deleteGalery(id, (status: any, result: any) => {
             if (status) {
                 mutate(`${url}/gallery/list`)
+                setLoadingDelete(false)
                 onWarningClose()
             }
         })
@@ -189,7 +274,7 @@ const GaleryAdmin = (props: Props) => {
                     )}
                 </CaraoselImage>
 
-                <div className="grid grid-cols-2 justify-between my-5 gap-2">
+                <div className="grid grid-cols-2 justify-between mt-5 gap-2">
                     <ButtonPrimary className='rounded-md relative cursor-pointer py-2 px-1' >Tambah Image
                         <input
                             type="file"
@@ -200,8 +285,10 @@ const GaleryAdmin = (props: Props) => {
                     </ButtonPrimary>
                     <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, name: [] }))} >Hapus Semua</ButtonSecondary>
                 </div>
-                <ButtonPrimary className='w-full py-2 rounded-md' onClick={handleCreate} > Kirim  </ButtonPrimary>
-
+                <p className='text-red text-sm my-2' >{errorMsg.image}</p>
+                <ButtonPrimary onClick={handleCreate}
+                    className='px-4 py-2 rounded-md flex justify-center items-center w-full'
+                >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
             </div>
 
 
@@ -281,7 +368,7 @@ const GaleryAdmin = (props: Props) => {
                     </CaraoselImage>
 
 
-                    <div className="grid grid-cols-2 justify-between my-5 gap-2">
+                    <div className="grid grid-cols-2 justify-between gap-2 mt-5">
                         <ButtonPrimary className='rounded-md relative cursor-pointer py-2 px-1'>
                             Tambah Image
                             <input
@@ -298,6 +385,9 @@ const GaleryAdmin = (props: Props) => {
                             Hapus Semua
                         </ButtonSecondary>
                     </div>
+
+                    <p className='text-red text-sm my-2' >{errorMsg.imageUpdate}</p>
+
                     <ButtonPrimary className='w-full py-2 rounded-md' onClick={handleUpdate}>Kirim</ButtonPrimary>
                 </div>
             </ModalDefault>
@@ -307,7 +397,9 @@ const GaleryAdmin = (props: Props) => {
                 Apakah anda yakin akan menghapus data geleri tersebut ?
                 <div className="flex justify-end gap-3">
                     <ButtonPrimary className='py-2 px-3 rounded-md' onClick={onWarningClose}> Batal</ButtonPrimary>
-                    <ButtonDelete className='py-2 px-3 rounded-md' onClick={handleDelete}>Ya, Hapus</ButtonDelete>
+                    <ButtonDelete onClick={handleDelete}
+                        className='px-4 py-2 rounded-md flex justify-center items-center'
+                    >{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
                 </div>
             </ModalAlert>
 

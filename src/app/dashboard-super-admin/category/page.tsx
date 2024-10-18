@@ -241,7 +241,7 @@ const Page = (props: Props) => {
                                 <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${formData.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
                             </div>
                         </div>
-                        <ButtonPrimary typeButon={'submit'} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
+                        <ButtonPrimary typeButon={'submit'} className='px-4 py-2 rounded-md flex justify-center items-center'
                         >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
                     </form>
                 </ModalDefault>
