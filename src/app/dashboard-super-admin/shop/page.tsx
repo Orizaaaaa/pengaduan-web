@@ -17,7 +17,7 @@ import ModalDefault from '@/components/fragemnts/modal/modal'
 import Search from '@/components/fragemnts/search/Search'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject'
-import { AutocompleteItem, useDisclosure } from '@nextui-org/react'
+import { AutocompleteItem, Spinner, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 
 import React, { useEffect, useState } from 'react'
@@ -33,16 +33,23 @@ const Page = (props: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
     const [loading, setLoading] = useState(false)
-    const [idUser, setIdUser] = useState<string>('');
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
     });
-    const [errorMsg, setErrorMsg] = useState('')
+    const [errorMsg, setErrorMsg] = useState({
+        name: '',
+        description: '',
+        address: '',
+        price: '',
+        image: '',
+        category: '',
+        quantity: '',
+    })
     useEffect(() => {
         const storedId = localStorage.getItem('id');
         if (storedId) {
-            setIdUser(storedId);
+            setForm({ ...form, user: storedId })
         }
     }, []);
     const [form, setForm] = useState({
@@ -53,29 +60,51 @@ const Page = (props: Props) => {
         image: [] as File[],
         category: '',
         quantity: '',
-        user: idUser
+        user: '',
     })
     const dataShop = data?.data
 
     const openModalCreate = () => {
         onOpen()
     }
+    console.log(form);
+
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
 
-        if (name === 'price' || name === 'quantity') {
-            setForm({
-                ...form,
-                [name]: value === '' ? '' : Number(value) // Konversi ke number jika ada nilai
-            });
-        } else {
-            setForm({
-                ...form,
-                [name]: value // Tetap sebagai string untuk field lainnya
-            });
+        if (name === 'quantity') {
+            // Hapus semua karakter selain angka
+            let numericValue = value.replace(/\D/g, '');
+
+            setErrorMsg((prev) => ({
+                ...prev,
+                quantity: '',
+            }));
+
+            // Update state dengan angka (konversi ke number)
+            setForm((prevForm) => ({ ...prevForm, [name]: numericValue ? Number(numericValue) : '' }));
+            return; // Menghentikan eksekusi lebih lanjut karena 'quantity' sudah di-handle
         }
+
+        if (name === 'price') {
+            // Hapus semua karakter selain angka
+            let numericValue = value.replace(/\D/g, '');
+
+            setErrorMsg((prev) => ({
+                ...prev,
+                price: '',
+            }));
+
+            // Update state dengan angka (konversi ke number)
+            setForm((prevForm) => ({ ...prevForm, [name]: numericValue ? Number(numericValue) : '' }));
+            return; // Menghentikan eksekusi lebih lanjut karena 'price' sudah di-handle
+        }
+
+        // Update state untuk input lainnya
+        setForm((prevForm) => ({ ...prevForm, [name]: value }));
     };
+
 
     const dataDropdown = () => {
         return categoryCaraosel
@@ -91,16 +120,49 @@ const Page = (props: Props) => {
         setForm({ ...form, category: key })  // Menyimpan nilai yang dipilih ke dalam state
     }
 
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
-        if (InputSelect === 'add') {
-            const selectedImage = e.target.files?.[0];
-            if (selectedImage) {
-                setForm(prevState => ({
-                    ...prevState,
-                    image: [...prevState.image, selectedImage]
-                }));
-            }
+        const selectedImage = e.target.files?.[0];
+
+        if (!selectedImage) {
+            console.log('No file selected');
+            return;
         }
+
+        if (InputSelect === 'add') {
+            // Validasi tipe file
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (!allowedTypes.includes(selectedImage.type)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                }));
+                return;
+            }
+
+            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+            const maxSize = 5 * 1024 * 1024;
+            if (selectedImage.size > maxSize) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Ukuran file maksimal 5 MB',
+                }));
+                return;
+            }
+
+            // Hapus pesan error jika file valid
+            setErrorMsg((prev) => ({
+                ...prev,
+                image: '',
+            }));
+
+            // Update state form dengan file yang valid
+            setForm((prevState) => ({
+                ...prevState,
+                image: [...prevState.image, selectedImage],
+            }));
+        }
+
     };
 
     const deleteArrayImage = (index: number, type: string) => {
@@ -117,20 +179,48 @@ const Page = (props: Props) => {
     const handleCreate = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        const imageUrl: string[] = await postImagesArray({ images: form.image })
+
+        // Validasi form tidak boleh kosong
+        const newErrorMsg = {
+            name: form.name === '' ? '*Nama tidak boleh kosong' : '',
+            description: form.description === '' ? '*Deskripsi tidak boleh kosong' : '',
+            address: form.address === '' ? '*Alamat tidak boleh kosong' : '',
+            price: form.price === '' ? '*Harga tidak boleh kosong' : '',
+            image: form.image.length === 0 ? '*Gambar tidak boleh kosong' : '',
+            category: form.category === '' ? '*Kategori tidak boleh kosong' : '',
+            quantity: form.quantity === '' ? '*Jumlah tidak boleh kosong' : '',
+        };
+
+        // Set error message jika ada field yang kosong
+        setErrorMsg(newErrorMsg);
+
+        // Cek apakah ada field yang kosong
+        const isFormInvalid = Object.values(newErrorMsg).some((msg) => msg !== '');
+
+        // Jika form tidak valid, hentikan proses
+        if (isFormInvalid) {
+            setLoading(false);
+            return;
+        }
+
+        // Upload gambar jika form valid
+        const imageUrl: string[] = await postImagesArray({ images: form.image });
+
         const data = {
             ...form,
-            image: imageUrl
+            image: imageUrl,
         };
+
         if (imageUrl) {
             createProduct(data, (result: any) => {
                 console.log(result);
-                mutate(`${url}/shop/list`)
+                mutate(`${url}/shop/list`);
                 onClose();
                 setLoading(false);
-            })
+            });
         }
-    }
+    };
+
 
     const handleSearch = (e: any) => {
         setSearchData(e.target.value);
@@ -244,12 +334,14 @@ const Page = (props: Props) => {
                                             />
                                         </div>
                                         <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                        <p className='text-red text-center text-sm ' >{errorMsg.image}</p>
                                     </>
                                 </SwiperSlide>
                             ))
                         ) : (
-                            <div className='flex justify-center'>
+                            <div className='flex flex-col items-center'>
                                 <Image className="w-auto h-[100px] relative " src={camera} alt="image"></Image>
+                                <p className='text-red text-center text-sm ' >{errorMsg.image}</p>
                             </div>
                         )}
                     </CaraoselImage>
@@ -267,7 +359,7 @@ const Page = (props: Props) => {
                     </div>
 
                 </div>
-                <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
+                <InputForm errorMsg={errorMsg.name} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
 
                 <div className="flex gap-4 items-center">
                     <div className="dropdown ">
@@ -275,22 +367,24 @@ const Page = (props: Props) => {
                         <DropdownCustom clearButton={false} defaultItems={dataDropdown()} onSelect={(e: any) => onSelectionChange(e)}>
                             {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                         </DropdownCustom>
+                        <p className='text-red text-sm ' >{errorMsg.category}</p>
                     </div>
-                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
+                    <InputForm errorMsg={errorMsg.quantity} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
                 </div>
 
                 <div className="flex gap-4 items-center">
-                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
-                    <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
+                    <InputForm errorMsg={errorMsg.address} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
+                    <InputForm errorMsg={errorMsg.description} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
                 </div>
 
 
-                <InputForm marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
+                <InputForm errorMsg={errorMsg.price} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
                 <div className="flex justify-end gap-2">
-                    <ButtonPrimary className='rounded-md  py-2 px-2' onClick={handleCreate} >Simpan</ButtonPrimary>
                     <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
+                    <ButtonPrimary onClick={handleCreate}
+                        className='px-4 py-2 rounded-md flex justify-center items-center'
+                    >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
                 </div>
-                <p>{errorMsg}</p>
             </ModalDefault>
         </DefaultLayout>
     )

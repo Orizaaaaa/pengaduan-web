@@ -218,7 +218,7 @@ const Register = (props: Props) => {
                 if (!allowedTypes.includes(selectedImage.type)) {
                     setErrorMsg((prev) => ({
                         ...prev,
-                        image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                        image: '*',
                     }));
                     return; // Tidak update state jika tipe file tidak valid
                 }
