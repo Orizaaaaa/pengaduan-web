@@ -32,7 +32,7 @@ const Page = () => {
         address: '',
         email: '',
         phoneNumber: '',
-        image: null as File | null,
+        image: '',
     })
 
     const [loading, setLoading] = useState(false)
@@ -301,11 +301,15 @@ const Page = () => {
                                         </div>
 
                                     ) : (
-                                        <div className="images mx-auto border-dashed border-2 border-black rounded-full bg-gray-300 h-[80px] w-[80px] flex justify-center items-center relative">
-                                            <button className="flex-col justify-center items-center h-full w-full" type="button" onClick={() => handleFileManager('add')}>
-                                                <Image className="w-10 h-10 mx-auto" src={camera} alt="cam" />
-                                            </button>
-                                        </div>
+                                        <>
+
+                                            <div className="images mx-auto border-dashed border-2 border-black rounded-full bg-gray-300 h-[80px] w-[80px] flex justify-center items-center relative">
+                                                <button className="flex-col justify-center items-center h-full w-full" type="button" onClick={() => handleFileManager('add')}>
+                                                    <Image className="w-10 h-10 mx-auto" src={camera} alt="cam" />
+                                                </button>
+                                            </div>
+                                            <p className="text-center text-red mt-2" >{errorMsg.image}</p>
+                                        </>
                                     )}
                                     <input
                                         type="file"
