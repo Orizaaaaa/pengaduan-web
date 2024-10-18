@@ -16,7 +16,12 @@ import { postImage } from '@/api/imagePost';
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const TextEditor = ({ desc }: any) => {
-    const [errorMsg, setErrorMsg] = useState('');
+    const [errorMsg, setErrorMsg] = useState({
+        title: '',
+        description: '',
+        image: '',
+    });
+
     const pathname = usePathname()
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -73,59 +78,76 @@ const TextEditor = ({ desc }: any) => {
 
     console.log(form);
 
+    // menghilangkan html deskrisi
+    const isDescriptionEmpty = (description: string) => {
+        // Buat DOMParser untuk parsing string HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(description, 'text/html');
+
+        // Hapus semua tag <br> dan lihat apakah tag <p> atau lainnya kosong
+        const content = doc.body.textContent?.trim();
+
+        // Jika setelah membersihkan masih kosong, berarti deskripsi kosong
+        return !content;
+    };
+
 
     // handle submit article
     const handleCreateArticle = async () => {
-        // Reset error message
-        setErrorMsg('');
-
-        // Validasi form
-        if (!form.title) {
-            setErrorMsg('Judul tidak boleh kosong');
-            setLoading(false);
-            return;
-        }
-
-        if (!form.image) {
-            setErrorMsg('Gambar tidak boleh kosong');
-            setLoading(false);
-            return;
-        }
-
-        if (!form.description || form.description === '<p></p>') {
-            setErrorMsg('Deskripsi tidak boleh kosong');
-            setLoading(false);
-            return;
-        }
-
-        // Jika validasi lolos, lanjutkan ke upload gambar dan pembuatan artikel
         setLoading(true);
-        const imageUrl = await postImage({ image: form.image });
 
-        if (imageUrl) {
-            const formSubmit: any = {
-                ...form,
-                image: imageUrl,
-            };
+        // Gunakan isDescriptionEmpty untuk mengecek apakah deskripsi kosong
+        const errors = {
+            title: form.title.trim() ? '' : '*Judul artikel tidak boleh kosong',
+            description: !isDescriptionEmpty(form.description) ? '' : '*Deskripsi tidak boleh kosong',
+            image: form.image ? '' : '*Gambar tidak boleh kosong',
+        };
 
-            await createArticle(formSubmit, (result: any) => {
-                if (result) {
-                    if (pathname === '/dashboard-officer/articles/create') {
-                        router.push('/dashboard-officer/articles');
-                    } else {
-                        router.push('/dashboard-super-admin/articles');
+        setErrorMsg(errors);
+
+        // Cek apakah ada error
+        const hasError = Object.values(errors).some((errorMsg) => errorMsg !== '');
+        if (hasError) {
+            setLoading(false);
+            return; // Hentikan proses jika ada error
+        }
+
+        try {
+            // Upload image dan dapatkan URL
+            const imageUrl = await postImage({ image: form.image });
+
+            if (imageUrl) {
+                // Buat form yang akan dikirim
+                const formSubmit = {
+                    ...form,
+                    image: imageUrl,
+                };
+
+                // Kirim data ke server
+                await createArticle(formSubmit, (result: any) => {
+                    if (result) {
+                        if (pathname === '/dashboard-officer/articles/create') {
+                            router.push('/dashboard-officer/articles');
+                        } else {
+                            router.push('/dashboard-super-admin/articles');
+                        }
                     }
                     setLoading(false);
-                }
-            });
-        } else {
-            setErrorMsg('Terjadi kesalahan saat mengunggah gambar');
+                });
+            } else {
+                // Gagal mengunggah gambar
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error("Error creating article:", error);
             setLoading(false);
         }
     };
 
 
-    console.log(pathname);
+
+    console.log(form);
+    console.log(errorMsg);
 
 
     return (
@@ -139,12 +161,16 @@ const TextEditor = ({ desc }: any) => {
                             {form.image && form.image instanceof Blob ? (
                                 <img className="h-[170px] md:h-[300px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
                             ) : (
-                                <div className="images border-dashed border-2 border-black rounded-md h-[200px] bg-gray-300">
-                                    <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
-                                        <Image alt='image' className="w-20 h-20 mx-auto" src={camera} />
-                                        <p>*Masukan gambar sebagai thumbail artikel</p>
-                                    </button>
-                                </div>
+                                <>
+                                    <div className="images border-dashed border-2 border-black rounded-md h-[200px] bg-gray-300">
+                                        <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
+                                            <Image alt='image' className="w-20 h-20 mx-auto" src={camera} />
+                                            <p>*Masukan gambar sebagai thumbail artikel</p>
+                                        </button>
+                                    </div>
+                                    <p className='text-red text-sm mt-1'>{errorMsg.image}</p>
+                                </>
+
                             )}
 
                             <input
@@ -154,12 +180,12 @@ const TextEditor = ({ desc }: any) => {
                                 onChange={(e) => handleImageChange(e, 'add')}
                             />
 
-                            <div className="flex justify-center gap-3 mt-3">
+                            <div className="flex justify-center items-center my-3">
                                 <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
                             </div>
                         </div>
                         {/* This is the main initialization of the Jodit editor */}
-                        <InputForm htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.title} />
+                        <InputForm errorMsg={errorMsg.title} htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.title} />
                         <JoditEditor
                             value={form.description}         // This is important
                             config={config}         // Only use when you declare some custom configs
@@ -167,11 +193,12 @@ const TextEditor = ({ desc }: any) => {
                             className="w-full h-[70%] text-black bg-white"
                         />
                         <style>
-                            {`.jodit-wysiwyg{height:300px !important}`}
+                            {`.jodit-wysiwyg{min-height: 300px !important;}`}
                         </style>
-                    </div>
 
-                    <p className='text-red text-sm mt-2' >{errorMsg}</p>
+                    </div>
+                    <p className='text-red text-sm'>{errorMsg.description}</p>
+
 
                     <div className="flex justify-end w-full my-4">
                         <ButtonPrimary onClick={handleCreateArticle}

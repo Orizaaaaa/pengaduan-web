@@ -142,6 +142,9 @@ const Page = (props: Props) => {
         })
     }
 
+    console.log(dataArticle);
+
+
     return (
         <DefaultLayout>
             <div className=" button-action flex justify-end m-3 gap-3 ">
@@ -176,7 +179,7 @@ const Page = (props: Props) => {
                                     onChange={(e) => handleImageChange(e, 'add')}
                                 />
 
-                                <div className="flex justify-center gap-3 mt-3">
+                                <div className="flex justify-center  items-center gap-3 my-3">
                                     <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
                                 </div>
                             </div>
@@ -199,6 +202,7 @@ const Page = (props: Props) => {
 
                 :
                 <>
+                    <img className='h-60 rounded-md mb-3' src={dataArticle.image} alt="" />
                     <div className=" p-1 md:p-4  bg-white shadow-10 rounded-lg mb-10">
                         <h1 className='h1 text-lg font-medium my-3' >{dataArticle?.title}</h1>
                         <div dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
