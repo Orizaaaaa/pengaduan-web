@@ -27,7 +27,17 @@ type Props = {}
 const Page = (props: Props) => {
     const dateNow = new Date();
     const [loading, setLoading] = useState(false)
-    const [errorMsg, setErrorMsg] = useState('')
+    const [errorMsg, setErrorMsg] = useState({
+        title: '',
+        description: '',
+        address: '',
+        location: '',
+        status: '',
+        image: '',
+        budget: '',
+        volume: '',
+        source_of_funds: '',
+    })
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -45,15 +55,47 @@ const Page = (props: Props) => {
     });
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
-        if (InputSelect === 'add') {
-            const selectedImage = e.target.files?.[0];
-            if (selectedImage) {
-                setForm(prevState => ({
-                    ...prevState,
-                    image: [...prevState.image, selectedImage]
-                }));
-            }
+        const selectedImage = e.target.files?.[0];
+
+        if (!selectedImage) {
+            console.log('No file selected');
+            return;
         }
+
+        if (InputSelect === 'add') {
+            // Validasi tipe file
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (!allowedTypes.includes(selectedImage.type)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                }));
+                return;
+            }
+
+            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+            const maxSize = 5 * 1024 * 1024;
+            if (selectedImage.size > maxSize) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Ukuran file maksimal 5 MB',
+                }));
+                return;
+            }
+
+            // Hapus pesan error jika file valid
+            setErrorMsg((prev) => ({
+                ...prev,
+                image: '',
+            }));
+
+            // Update state form dengan file yang valid
+            setForm((prevState) => ({
+                ...prevState,
+                image: [...prevState.image, selectedImage],
+            }));
+        }
+
     };
 
     const deleteArrayImage = (index: number, type: string) => {
@@ -124,22 +166,79 @@ const Page = (props: Props) => {
     const handleCreate = async () => {
         setLoading(true);
 
-        // Validasi untuk memastikan tidak ada field yang kosong
-        if (!form.title || !form.description || !form.address || !form.status || !form.source_of_funds || form.budget <= 0 || form.volume <= 0 || form.image.length === 0) {
-            setErrorMsg('Semua field harus diisi dengan benar.');
-            setLoading(false);
-            return;
-        }
+        // Validasi untuk memastikan semua field tidak kosong
+        let isValid = true;
+        const newErrorMsg = {
+            title: '',
+            description: '',
+            address: '',
+            location: '',
+            status: '',
+            image: '',
+            budget: '',
+            volume: '',
+            source_of_funds: '',
+        };
 
+        if (!form.title) {
+            newErrorMsg.title = 'Judul harus diisi';
+            isValid = false;
+        }
+        if (!form.description) {
+            newErrorMsg.description = 'Deskripsi harus diisi';
+            isValid = false;
+        }
+        if (!form.address) {
+            newErrorMsg.address = 'Alamat harus diisi';
+            isValid = false;
+        }
+        if (!form.status) {
+            newErrorMsg.status = 'Status harus diisi';
+            isValid = false;
+        }
+        if (!form.source_of_funds) {
+            newErrorMsg.source_of_funds = 'Sumber dana harus diisi';
+            isValid = false;
+        }
+        if (form.budget <= 0) {
+            newErrorMsg.budget = 'Anggaran harus lebih besar dari 0';
+            isValid = false;
+        }
+        if (form.volume <= 0) {
+            newErrorMsg.volume = 'Volume harus lebih besar dari 0';
+            isValid = false;
+        }
+        if (form.image.length === 0) {
+            newErrorMsg.image = 'Gambar harus diunggah';
+            isValid = false;
+        }
         if (form.location.latitude === 0 || form.location.longitude === 0) {
-            setErrorMsg('Lokasi harus dipilih.');
+            newErrorMsg.location = 'Lokasi harus dipilih';
+            isValid = false;
+        }
+
+        // Jika ada error, set pesan error dan hentikan proses
+        if (!isValid) {
+            setErrorMsg(newErrorMsg);
             setLoading(false);
             return;
         }
 
-        setErrorMsg(''); // Hapus pesan error jika semua validasi lolos
+        // Reset errorMsg jika semua validasi lolos
+        setErrorMsg({
+            title: '',
+            description: '',
+            address: '',
+            location: '',
+            status: '',
+            image: '',
+            budget: '',
+            volume: '',
+            source_of_funds: '',
+        });
 
         try {
+            // Upload gambar dan proses data
             const urls: string[] = await postImagesArray({ images: form.image });
             const data = {
                 ...form,
@@ -151,16 +250,21 @@ const Page = (props: Props) => {
                 },
             };
 
+            // Kirim data ke backend
             await createBuilding(data, (res: any) => {
                 console.log(res);
                 router.push('/dashboard-super-admin/building');
             });
         } catch (error) {
-            setErrorMsg('Gagal mengirim data. Silakan coba lagi.');
+            setErrorMsg((prev) => ({
+                ...prev,
+                general: 'Gagal mengirim data. Silakan coba lagi.',
+            }));
         } finally {
             setLoading(false); // Pastikan loading false setelah selesai
         }
     };
+
 
 
 
@@ -182,13 +286,18 @@ const Page = (props: Props) => {
                                                 />
                                             </div>
                                             <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                            <p className='text-red text-sm mt-2' >{errorMsg.image} </p>
                                         </>
                                     </SwiperSlide>
                                 ))
                             ) : (
-                                <div className='flex justify-center'>
-                                    <Image className="w-auto h-[200px] relative " src={camera} alt="image"></Image>
-                                </div>
+                                <>
+                                    <div className='flex justify-center'>
+                                        <Image className="w-auto h-[200px] relative " src={camera} alt="image"></Image>
+                                    </div>
+                                    <p className='text-red text-sm mt-2' >{errorMsg.image} </p>
+                                </>
+
                             )}
                         </CaraoselImage>
 
@@ -207,10 +316,10 @@ const Page = (props: Props) => {
                     </div>
                 </div>
 
-                <InputForm className='bg-slate-300 w-full' type='text' title='Nama Pembangunan'
+                <InputForm errorMsg={errorMsg.title} className='bg-slate-300 w-full' type='text' title='Nama Pembangunan'
                     value={form.title} htmlFor='title' onChange={handleChange} />
 
-                <InputForm
+                <InputForm errorMsg={errorMsg.source_of_funds}
                     className='bg-slate-300'
                     type='text'
                     value={form.source_of_funds}
@@ -219,7 +328,7 @@ const Page = (props: Props) => {
                     title='Sumber Dana'
                 />
                 <div className="flex gap-4">
-                    <InputForm
+                    <InputForm errorMsg={errorMsg.volume}
                         className='bg-slate-300'
                         type='text'
                         placeholder='Volume'
@@ -229,7 +338,7 @@ const Page = (props: Props) => {
                         onChange={handleChange}
                     />
 
-                    <InputForm
+                    <InputForm errorMsg={errorMsg.budget}
                         className='bg-slate-300'
                         type='text'
                         placeholder='Anggaran'
@@ -240,7 +349,7 @@ const Page = (props: Props) => {
                     />
                 </div>
 
-                <InputForm
+                <InputForm errorMsg={errorMsg.address}
                     className='bg-slate-300'
                     type='text'
                     title='Alamat'
@@ -255,11 +364,12 @@ const Page = (props: Props) => {
                         <DropdownCustom defaultSelectedKey={''} clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
                             {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                         </DropdownCustom>
-
+                        <p className='text-red text-sm mt-2' >{errorMsg.status} </p>
                     </div>
                     <div className="date w-full">
                         <h1>Tanggal</h1>
                         <DatePicker showMonthAndYearPickers aria-label='date' value={form.date} variant={'bordered'} onChange={(e) => setForm({ ...form, date: e })} />
+
                     </div>
 
                 </div>
@@ -271,6 +381,7 @@ const Page = (props: Props) => {
                     <h1>Deskripsi</h1>
                     <textarea onChange={handleChange} name="description" id="description" cols={30} value={form.description} rows={4}
                         className="block p-2.5 w-full bg-slate-300 rounded-md outline-none mt-2" ></textarea>
+                    <p className='text-red text-sm mt-2' >{errorMsg.description} </p>
                 </div>
 
                 <div className="location mt-5">
@@ -278,7 +389,6 @@ const Page = (props: Props) => {
                         <MapEvents />
                     </MapChoise>
                 </div>
-                <p className='text-red text-sm mt-2' >{errorMsg} </p>
                 <div className="flex mt-2 justify-end">
                     <ButtonPrimary onClick={handleCreate} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
                     >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim'}</ButtonPrimary>

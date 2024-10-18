@@ -39,7 +39,6 @@ type Props = {}
 
 const Page = (props: Props) => {
     const dateNow = new Date();
-    const [errorMsg, setErrorMsg] = useState('')
     const [loading, setLoading] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [updatePage, setUpdatePage] = useState(true)
@@ -48,6 +47,18 @@ const Page = (props: Props) => {
         keepPreviousData: true,
     });
     const dataBuilding = data?.data
+
+    const [errorMsg, setErrorMsg] = useState({
+        title: '',
+        description: '',
+        address: '',
+        location: '',
+        status: '',
+        image: '',
+        budget: '',
+        volume: '',
+        source_of_funds: '',
+    })
 
     const dataDetail = [
         {
@@ -197,48 +208,107 @@ const Page = (props: Props) => {
     const handleUpdate = async () => {
         setLoading(true);
 
-        // Validasi untuk memastikan tidak ada field yang kosong
-        if (!form.title || !form.description || !form.address || !form.status || !form.source_of_funds || form.budget <= 0 || form.volume <= 0 || form.image.length === 0) {
-            setErrorMsg('Semua field harus diisi dengan benar.');
-            setLoading(false);
-            return;
-        }
+        // Validasi untuk memastikan semua field tidak kosong
+        let isValid = true;
+        const newErrorMsg = {
+            title: '',
+            description: '',
+            address: '',
+            location: '',
+            status: '',
+            image: '',
+            budget: '',
+            volume: '',
+            source_of_funds: '',
+        };
 
+        // Validasi masing-masing field
+        if (!form.title) {
+            newErrorMsg.title = 'Judul harus diisi';
+            isValid = false;
+        }
+        if (!form.description) {
+            newErrorMsg.description = 'Deskripsi harus diisi';
+            isValid = false;
+        }
+        if (!form.address) {
+            newErrorMsg.address = 'Alamat harus diisi';
+            isValid = false;
+        }
+        if (!form.status) {
+            newErrorMsg.status = 'Status harus diisi';
+            isValid = false;
+        }
+        if (!form.source_of_funds) {
+            newErrorMsg.source_of_funds = 'Sumber dana harus diisi';
+            isValid = false;
+        }
+        if (form.budget <= 0) {
+            newErrorMsg.budget = 'Anggaran harus lebih besar dari 0';
+            isValid = false;
+        }
+        if (form.volume <= 0) {
+            newErrorMsg.volume = 'Volume harus lebih besar dari 0';
+            isValid = false;
+        }
+        if (form.image.length === 0) {
+            newErrorMsg.image = 'Gambar harus diunggah';
+            isValid = false;
+        }
         if (form.location.latitude === 0 || form.location.longitude === 0) {
-            setErrorMsg('Lokasi harus dipilih.');
+            newErrorMsg.location = 'Lokasi harus dipilih';
+            isValid = false;
+        }
+
+        // Jika ada error, set pesan error dan hentikan proses
+        if (!isValid) {
+            setErrorMsg(newErrorMsg);
             setLoading(false);
             return;
         }
 
-        setErrorMsg(''); // Hapus pesan error jika semua validasi lolos
+        // Reset errorMsg jika semua validasi lolos
+        setErrorMsg({
+            title: '',
+            description: '',
+            address: '',
+            location: '',
+            status: '',
+            image: '',
+            budget: '',
+            volume: '',
+            source_of_funds: '',
+        });
 
+        // Pisahkan gambar lama (URL) dan gambar baru (File)
         const existingUrls = form.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
         const newFiles = form.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
 
-        // Upload gambar baru ke Cloudinary jika ada
+        // Upload gambar baru jika ada
         let uploadedUrls: string[] = [];
         if (newFiles.length > 0) {
             uploadedUrls = await postImagesArray({ images: newFiles });
         }
 
-        // Gabungkan URL lama dengan URL baru yang di-upload
+        // Gabungkan URL lama dan URL baru yang di-upload
         const allUrls = [...existingUrls, ...uploadedUrls];
 
-        // Data untuk dikirim ke update API
+        // Data untuk dikirim ke API update
         const data = {
             ...form,
             image: allUrls,
             date: formatDate(form.date),
             location: {
                 latitude: String(form.location.latitude),
-                longitude: String(form.location.longitude)
-            }
+                longitude: String(form.location.longitude),
+            },
         };
 
         try {
             await updateBuilding(idBuilding, data, (result: any) => {
                 console.log(result);
-                mutate(`${url}/infrastucture/${idBuilding}`);
+                // Mutate data setelah berhasil update
+                mutate(`${url}/infrastructure/${idBuilding}`);
                 setForm({
                     title: dataBuilding.title || '',
                     description: dataBuilding.description || '',
@@ -252,16 +322,18 @@ const Page = (props: Props) => {
                     budget: dataBuilding.budget || 0,
                     volume: dataBuilding.volume || 0,
                     source_of_funds: dataBuilding.source_of_funds || '',
-                    date: parseDate(formatDate(dataBuilding.date)) || ''
+                    date: parseDate(formatDate(dataBuilding.date)) || '',
                 });
                 setUpdatePage(true);
+                setLoading(false);
             });
         } catch (error) {
-            setErrorMsg('Gagal mengirim data. Silakan coba lagi.');
+            console.log(error);
         } finally {
             setLoading(false); // Pastikan loading false setelah selesai
         }
     };
+
 
 
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
@@ -393,13 +465,19 @@ const Page = (props: Props) => {
                                                     >
                                                         <IoCloseCircleOutline onClick={() => deleteArrayImage(index, 'add')} color="red" size={34} />
                                                     </button>
+
+                                                    <p className='text-red text-sm mt-2' >{errorMsg.image} </p>
                                                 </>
                                             </SwiperSlide>
                                         ))
                                     ) : (
-                                        <div className="flex justify-center">
-                                            <Image className="w-auto h-[200px] relative" src={camera} alt="image" />
-                                        </div>
+                                        <>
+                                            <div className="flex justify-center">
+                                                <Image className="w-auto h-[200px] relative" src={camera} alt="image" />
+                                            </div>
+                                            <p className='text-red text-sm mt-2' >{errorMsg.image} </p>
+                                        </>
+
                                     )}
                                 </CaraoselImage>
 
@@ -421,6 +499,7 @@ const Page = (props: Props) => {
                             <h1 className='text-lg font-medium'>Deskripsi</h1>
                             <textarea onChange={handleChange} name="description" id="description" cols={30} value={form.description} rows={4}
                                 className="block p-2.5 w-full bg-slate-300 rounded-md outline-none mt-2" ></textarea>
+                            <p className='text-red text-sm mt-2' >{errorMsg.description}</p>
                         </div>
 
                     </div>
@@ -438,6 +517,7 @@ const Page = (props: Props) => {
                                     <div className="text">
                                         <h1 className='font-medium' >Anggaran</h1>
                                         <InputForm
+                                            errorMsg={errorMsg.budget}
                                             className='bg-slate-300'
                                             type='text'
                                             placeholder='Anggaran'
@@ -452,6 +532,7 @@ const Page = (props: Props) => {
                                     <div className="text">
                                         <h1 className='font-medium' >Sumber Dana</h1>
                                         <InputForm
+                                            errorMsg={errorMsg.source_of_funds}
                                             className='bg-slate-300'
                                             type='text'
                                             placeholder='Sumber Dana'
@@ -466,6 +547,7 @@ const Page = (props: Props) => {
                                     <div className="text">
                                         <h1 className='font-medium' >Volume</h1>
                                         <InputForm
+                                            errorMsg={errorMsg.volume}
                                             className='bg-slate-300'
                                             type='text'
                                             placeholder='Volume'
@@ -482,6 +564,7 @@ const Page = (props: Props) => {
                                         <DropdownCustom defaultSelectedKey={dataBuilding?.status} clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
                                             {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
                                         </DropdownCustom>
+                                        <p className='text-red text-sm mt-2' >{errorMsg.status} </p>
                                     </div>
                                 </div>
 
@@ -496,6 +579,7 @@ const Page = (props: Props) => {
                                     <div className="text">
                                         <h1 className='font-medium' >Alamat</h1>
                                         <InputForm
+                                            errorMsg={errorMsg.address}
                                             className='bg-slate-300'
                                             type='text'
                                             placeholder='Alamat'
@@ -524,10 +608,9 @@ const Page = (props: Props) => {
                         </MapChoise>
                     </div>
 
-                    <p className='text-red text-sm mt-2' >{errorMsg} </p>
                     <div className="flex mt-2 justify-end">
-                        <ButtonPrimary onClick={handleUpdate} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
-                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim'}</ButtonPrimary>
+                        <ButtonPrimary onClick={handleUpdate} className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim kontol'}</ButtonPrimary>
                     </div>
                 </section>}
 
