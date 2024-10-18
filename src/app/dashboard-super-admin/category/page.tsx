@@ -2,12 +2,14 @@
 import { createCategory, deleteCategory, getCategories } from '@/api/category'
 import { postImage } from '@/api/imagePost'
 import { camera } from '@/app/image'
+import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import Card from '@/components/elements/card/Card'
+import InputForm from '@/components/elements/input/InputForm'
 import InputReport from '@/components/elements/input/InputReport'
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { useDisclosure } from '@nextui-org/react'
+import { Spinner, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
@@ -16,9 +18,16 @@ import { IoCloseCircleOutline } from 'react-icons/io5'
 type Props = {}
 
 const Page = (props: Props) => {
+    const [loading, setLoading] = useState(false)
+    const [loadingDelete, setLoadingDelete] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const [category, setCategory] = useState([]);
+
+    const [errorMsg, setErrorMsg] = useState({
+        name: '',
+        image: ''
+    })
 
     const [formData, setFormData] = useState({
         name: '',
@@ -29,6 +38,26 @@ const Page = (props: Props) => {
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
+
+        if (name === 'name') {
+            const filteredValue = value.replace(/[^a-zA-Z\s]/g, ''); // Hanya huruf dan spasi yang diizinkan
+            const hasNumber = /\d/.test(value);
+
+            if (hasNumber) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '*Nama tidak boleh mengandung angka',
+                }));
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '',
+                }));
+            }
+
+            setFormData((prevForm) => ({ ...prevForm, [name]: filteredValue })); // Update state dengan nilai yang difilter
+            return;
+        }
         setFormData({ ...formData, [name]: value });
     };
 
@@ -44,9 +73,39 @@ const Page = (props: Props) => {
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
         if (InputSelect === 'add') {
             const selectedImage = e.target.files?.[0];
-            setFormData({ ...formData, image: selectedImage || null });
-        } else {
-            console.log('error');
+
+            if (selectedImage) {
+                // Validasi tipe file
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(selectedImage.type)) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                    }));
+                    return; // Tidak update state jika tipe file tidak valid
+                }
+
+                // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+                const maxSize = 5 * 1024 * 1024;
+                if (selectedImage.size > maxSize) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Ukuran file maksimal 5 MB',
+                    }));
+                    return; // Tidak update state jika ukuran file lebih dari 5MB
+                }
+
+                // Hapus pesan error jika file valid
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '',
+                }));
+
+                // Update state dengan file yang valid
+                setFormData({ ...formData, image: selectedImage });
+            } else {
+                console.log('error');
+            }
         }
     };
 
@@ -57,7 +116,20 @@ const Page = (props: Props) => {
     }, []);
 
     const handlecreateCategory = async (e: any) => {
+        setLoading(true)
         e.preventDefault();
+        const newErrorMsg: any = {
+            name: formData.name ? '' : '*Nama tidak boleh kosong',
+            image: formData.image ? '' : '*Gambar tidak boleh kosong',
+        };
+
+        setErrorMsg(newErrorMsg);
+        const hasError = Object.values(newErrorMsg).some((msg) => msg !== '');
+        if (hasError) {
+            setLoading(false);
+            return;
+        }
+
         setDataDelete('');
         const imageUrl = await postImage({ image: formData.image });
         if (imageUrl) {
@@ -72,6 +144,8 @@ const Page = (props: Props) => {
                     name: '',
                     image: null as File | null
                 });
+
+                setLoading(false)
             });
         }
     };
@@ -89,6 +163,7 @@ const Page = (props: Props) => {
     };
 
     const confirmDelete = () => {
+        setLoadingDelete(true);
         if (dataDelete) {
             deleteCategory(dataDelete, (result: any) => {
                 console.log(result);
@@ -96,6 +171,7 @@ const Page = (props: Props) => {
                     setCategory(result.data);
                 });
                 setDataDelete('');
+                setLoadingDelete(false);
                 onWarningClose();
             });
         }
@@ -138,19 +214,22 @@ const Page = (props: Props) => {
                 {/* modal */}
                 <ModalDefault isOpen={isOpen} onClose={onClose}>
                     <form onSubmit={handlecreateCategory}>
-                        <InputReport htmlFor="name" title="Nama Kategori : " type="text" onChange={handleChange} value={formData.name} />
+                        <InputForm errorMsg={errorMsg.name} className='bg-slate-300' htmlFor="name" title="Nama Kategori  " type="text" onChange={handleChange} value={formData.name} />
 
-                        <h1 className=" font-medium" >Logo Kategori :  </h1>
+                        <h1 className=" font-medium" >Logo Kategori   </h1>
                         <div className="images ">
                             {formData.image && formData.image instanceof Blob ? (
                                 <img className="h-[170px] md:h-[300px] w-auto mx-auto rounded-md" src={URL.createObjectURL(formData.image)} />
                             ) : (
-                                <div className="images border-dashed border-2 border-black rounded-md h-[200px] bg-gray-300">
-                                    <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
-                                        <Image src={camera} alt='kategori' className="w-20 h-20 mx-auto" />
-                                        <p>*Masukan logo dari kategori tersebut</p>
-                                    </button>
-                                </div>
+                                <>
+                                    <div className="images border-dashed border-2 border-black rounded-md h-[200px] bg-gray-300">
+                                        <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
+                                            <Image src={camera} alt='kategori' className="w-20 h-20 mx-auto" />
+                                            <p>*Masukan logo dari kategori tersebut</p>
+                                        </button>
+                                    </div>
+                                    <p className='text-red text-sm' >{errorMsg.image}</p>
+                                </>
                             )}
                             <input
                                 type="file"
@@ -162,7 +241,8 @@ const Page = (props: Props) => {
                                 <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${formData.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
                             </div>
                         </div>
-                        <ButtonPrimary typeButon="submit" className="w-full mt-5 rounded-md"  >Simpan</ButtonPrimary>
+                        <ButtonPrimary typeButon={'submit'} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
                     </form>
                 </ModalDefault>
 
@@ -173,7 +253,9 @@ const Page = (props: Props) => {
                     <p> apakah Anda yakin ingin menghapus kategori ini?</p>
                     <div className="flex justify-end gap-4 mt-4">
                         <ButtonPrimary onClick={onWarningClose} className="bg-gray-300 py-2 px-4 text-black rounded-md">Batal</ButtonPrimary>
-                        <ButtonPrimary onClick={confirmDelete} className="bg-red-500 py-2 px-4 text-white rounded-md">Hapus</ButtonPrimary>
+                        <ButtonDelete onClick={confirmDelete}
+                            className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loadingDelete ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ya, Hapus'}</ButtonDelete>
                     </div>
                 </ModalDefault>
             </div>
