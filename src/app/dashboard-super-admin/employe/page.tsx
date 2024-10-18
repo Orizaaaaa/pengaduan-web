@@ -25,8 +25,16 @@ const Page = () => {
     const dateNow = new Date();
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
-    const [disabled, setDisabled] = useState(true)
-    const [errorMsg, setErrorMsg] = useState(' ')
+    const [errorMsg, setErrorMsg] = useState({
+        name: '',
+        position: '',
+        division: '',
+        address: '',
+        email: '',
+        phoneNumber: '',
+        image: null as File | null,
+    })
+
     const [loading, setLoading] = useState(false)
     const [dataUser, setDataUser] = useState([]);
     const [form, setForm] = useState({
@@ -76,10 +84,77 @@ const Page = () => {
         }
     };
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
+
+        // Update state terlebih dahulu
+        setForm((prevForm) => ({ ...prevForm, [name]: value }));
+
+        // Validasi khusus email
+        if (name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex untuk format email
+
+            if (!emailRegex.test(value)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    email: '*Format email tidak valid',
+                }));
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    email: '',
+                }));
+            }
+            return; // Hentikan setelah memproses email
+        }
+
+        // Validasi khusus nomor telepon
+        if (name === 'phoneNumber') {
+            let numericValue = value.replace(/\D/g, '');
+
+            if (numericValue.startsWith('08')) {
+                numericValue = '628' + numericValue.slice(2);
+            }
+
+            if (numericValue.length > 15) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    phoneNumber: '*Nomor tidak boleh lebih dari 15 angka',
+                }));
+                return;
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    phoneNumber: '',
+                }));
+            }
+
+            setForm({ ...form, [name]: numericValue });
+            return;
+        }
+
+        // Validasi agar `name` hanya mengandung huruf
+        if (name === 'name') {
+            const filteredValue = value.replace(/[^a-zA-Z\s]/g, ''); // Hanya huruf dan spasi yang diizinkan
+            const hasNumber = /\d/.test(value);
+
+            if (hasNumber) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '*Nama tidak boleh mengandung angka',
+                }));
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '',
+                }));
+            }
+
+            setForm((prevForm) => ({ ...prevForm, [name]: filteredValue })); // Update state dengan nilai yang difilter
+            return;
+        }
     };
+
 
     //hapus petugas
     const handleDeleteModal = (value: any) => {
@@ -100,26 +175,56 @@ const Page = () => {
 
     //create karyawan
     const handleCreate = async (e: any) => {
-        e.preventDefault()
-        setLoading(true)
+        e.preventDefault();
+        setLoading(true);
+
+        // Cek apakah ada field yang kosong
+        const newErrorMsg: any = {
+            name: form.name ? '' : '*Nama tidak boleh kosong',
+            position: form.position ? '' : '*Posisi tidak boleh kosong',
+            division: form.division ? '' : '*Divisi tidak boleh kosong',
+            address: form.address ? '' : '*Alamat tidak boleh kosong',
+            email: form.email ? '' : '*Email tidak boleh kosong',
+            phoneNumber: form.phoneNumber ? '' : '*Nomor telepon tidak boleh kosong',
+            image: form.image ? '' : '*Gambar tidak boleh kosong',
+        };
+
+        setErrorMsg(newErrorMsg);
+
+        // Jika ada error, hentikan proses
+        const hasError = Object.values(newErrorMsg).some((msg) => msg !== '');
+        if (hasError) {
+            setLoading(false);
+            return;
+        }
+
+        // Jika tidak ada error, lanjutkan proses upload gambar dan pembuatan user
         if (form.image instanceof Blob) {
             const imageUrl = await postImage({ image: form.image });
 
             if (imageUrl) {
-                const data: any = { ...form, image: imageUrl, birthDate: formatDateStr(form.birthDate), joinDate: formatDateStr(form.joinDate) };
+                const data: any = {
+                    ...form,
+                    image: imageUrl,
+                    birthDate: formatDateStr(form.birthDate),
+                    joinDate: formatDateStr(form.joinDate)
+                };
+
                 createEmploye(data, (result: any) => {
                     console.log(result);
-                    setLoading(false)
+                    setLoading(false);
                     onClose();
+
+                    // Ambil data pengguna terbaru setelah ditambahkan
                     getAllEmploye((result: any) => {
                         console.log(result);
                         setDataUser(result.data);
-                    })
-                })
+                    });
+                });
             }
-
         }
-    }
+    };
+
 
 
 
@@ -212,14 +317,14 @@ const Page = () => {
                                 </div>
 
                                 <div className="data-input my-3">
-                                    <InputForm title='Nama' className='bg-slate-200' htmlFor="name" type="text" onChange={handleChange} value={form.name} />
+                                    <InputForm errorMsg={errorMsg.name} title='Nama' className='bg-slate-200' htmlFor="name" type="text" onChange={handleChange} value={form.name} />
                                     <div className="flex gap-3">
-                                        <InputForm title='Email' className='bg-slate-200' htmlFor="email" type="text" onChange={handleChange} value={form.email} />
-                                        <InputForm title='No HP' className='bg-slate-200' htmlFor="phoneNumber" type="text" onChange={handleChange} value={form.phoneNumber} />
+                                        <InputForm errorMsg={errorMsg.email} title='Email' className='bg-slate-200' htmlFor="email" type="text" onChange={handleChange} value={form.email} />
+                                        <InputForm errorMsg={errorMsg.phoneNumber} title='No HP' className='bg-slate-200' htmlFor="phoneNumber" type="text" onChange={handleChange} value={form.phoneNumber} />
                                     </div>
                                     <div className="flex gap-3">
-                                        <InputForm title='Divisi' className='bg-slate-200' htmlFor="division" type="text" onChange={handleChange} value={form.division} />
-                                        <InputForm title='Posisi' className='bg-slate-200' htmlFor="position" type="text" onChange={handleChange} value={form.position} />
+                                        <InputForm errorMsg={errorMsg.division} title='Divisi' className='bg-slate-200' htmlFor="division" type="text" onChange={handleChange} value={form.division} />
+                                        <InputForm errorMsg={errorMsg.position} title='Posisi' className='bg-slate-200' htmlFor="position" type="text" onChange={handleChange} value={form.position} />
                                     </div>
 
                                     <div className="flex gap-8 mb-2">
@@ -227,7 +332,7 @@ const Page = () => {
                                         <DatePicker value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
                                     </div>
 
-                                    <InputForm title='Alamat' className='bg-slate-200 ' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
+                                    <InputForm errorMsg={errorMsg.address} title='Alamat' className='bg-slate-200 ' htmlFor="address" type="text" onChange={handleChange} value={form.address} />
 
 
 
