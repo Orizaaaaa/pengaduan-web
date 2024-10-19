@@ -19,6 +19,10 @@ const Login = () => {
     const [errorLogin, setErrorLogin] = useState('');
     const [typePassword, setTypePassword] = useState("password");
     const [loading, setLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState({
+        email: '',
+        password: ''
+    })
     const [form, setForm] = useState({
         email: '',
         password: ''
@@ -39,49 +43,60 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
 
-        // nanti buat pengkondisian berdasarkan role
+        let isValid = true;
+        let errors = { email: '', password: '' };
+
+        // Validasi email tidak boleh kosong dan harus sesuai format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!form.email) {
+            errors.email = '*Email tidak boleh kosong';
+            isValid = false;
+        } else if (!emailRegex.test(form.email)) {
+            errors.email = '*Email tidak sesuai format';
+            isValid = false;
+        }
+
+        // Validasi password tidak boleh kosong dan harus lebih dari 8 karakter
+        if (!form.password) {
+            errors.password = '*Password tidak boleh kosong';
+            isValid = false;
+        } else if (form.password.length < 8) {
+            errors.password = '*Password harus lebih dari 8 karakter';
+            isValid = false;
+        }
+
+        // Jika tidak valid, set error dan hentikan proses
+        if (!isValid) {
+            setErrorMsg(errors);
+            setLoading(false);
+            return;
+        }
+
+        // Reset error messages
+        setErrorMsg({ email: '', password: '' });
+
+        // Lakukan login
         await loginService(form, (status: boolean, res: any) => {
-            // Validasi email
-            if (!form.email.includes('@gmail.com') && !form.email.includes('@test.com')) {
-                setErrorLogin('*Email harus di isi dengan benar');
-                setLoading(false);
-                return;
-            }
-
-            // Validasi password tidak boleh kosong dan harus lebih dari 8 karakter
-            if (form.password === "") {
-                setErrorLogin('*Password tidak boleh kosong');
-                setLoading(false);
-                return;
-            }
-
-            if (form.password.length < 8) {
-                setErrorLogin('*Password harus lebih dari 8 karakter');
-                setLoading(false);
-                return;
-            }
-
-
             if (status) {
                 setErrorLogin('');
                 const tokenCookies = `token=${res.data.token}`;
-                const roleCookies = `role=${res.data.role}`
+                const roleCookies = `role=${res.data.role}`;
                 document.cookie = tokenCookies; // Set cookie
                 document.cookie = roleCookies; // Set cookie
-                // Akses localStorage hanya di sisi klien
                 localStorage.setItem('name', res.data.name);
                 localStorage.setItem('id', res.data.id);
                 localStorage.setItem('image', res.data.image);
                 localStorage.setItem('role', res.data.role);
-                localStorage.setItem('token', res.data.token)
+                localStorage.setItem('token', res.data.token);
                 setLoading(false);
 
+                // Redirect berdasarkan role
                 if (res.data.role === 'superadmin') {
                     router.push('/dashboard-super-admin');
                 } else if (res.data.role === 'user') {
-                    router.push('/dashboard-user')
+                    router.push('/dashboard-user');
                 } else if (res.data.role === 'admin') {
-                    router.push('/dashboard-officer')
+                    router.push('/dashboard-officer');
                 }
 
             } else {
@@ -89,8 +104,6 @@ const Login = () => {
                 console.log(res.data);
                 setLoading(false);
             }
-
-
         });
     };
 
@@ -114,12 +127,12 @@ const Login = () => {
                             <Image src={logo} alt="logo" width={70} height={70} />
                         </div>
 
-                        <InputForm placeholder='Masukkan Email' type='email' htmlFor={'email'} value={form.email} onChange={handleChange} />
+                        <InputForm errorMsg={errorMsg.email} placeholder='Masukkan Email' type='email' htmlFor={'email'} value={form.email} onChange={handleChange} />
                         <div className="relative">
                             <button onClick={togglePassword} type='button' className='icon-password h-full  bg-transparent flex absolute right-0 justify-center items-center pe-4'>
                                 {showPassword ? <FaEyeSlash size={20} color='#636363' /> : <IoEye size={20} color='#636363' />}
                             </button>
-                            <InputForm className='form-input-login mb-2' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
+                            <InputForm errorMsg={errorMsg.password} className='form-input-login mb-2' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
                         </div>
                         <p className='text-red my-3 text-sm'>{errorLogin}</p>
                         <ButtonPrimary typeButon={"submit"} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center`}>
