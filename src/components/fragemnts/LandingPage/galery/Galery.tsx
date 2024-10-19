@@ -1,6 +1,5 @@
 import { url } from '@/api/auth';
 import { fetcher } from '@/api/fetcher';
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import useSWR from 'swr';
@@ -12,8 +11,11 @@ const Galery = (props: Props) => {
         keepPreviousData: true,
     });
 
-    // Mengambil array gambar dari data API
-    const images = data?.data?.[0]?.name || [];
+    // Mengambil data array terakhir dari data API
+    const lastItem = data?.data?.[data?.data?.length - 1];
+
+    // Mengambil array gambar dari data terakhir
+    const images = lastItem?.name || [];
 
     return (
         <section className='container mx-auto py-10'>

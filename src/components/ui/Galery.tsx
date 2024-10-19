@@ -23,7 +23,7 @@ const Galery = (props: Props) => {
             <section className="image-list  container mx-auto my-20 min-h-[50vh]">
                 <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4  gap-4">
                     {dataImage?.map((item: any, index: any) => (
-                        <>
+                        <div key={index}>
 
                             {
                                 item.name.map((image: any, index: number) => (
@@ -38,7 +38,7 @@ const Galery = (props: Props) => {
                                     </div>
                                 ))
                             }
-                        </>
+                        </div>
                     ))}
 
                 </div>
