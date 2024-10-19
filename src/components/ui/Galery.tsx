@@ -15,23 +15,19 @@ const Galery = (props: Props) => {
         keepPreviousData: true,
     });
     const dataImage = data?.data
+    console.log(dataImage);
+
     return (
         <>
             <Navbar />
             <section className="image-list  container mx-auto my-20 min-h-[50vh]">
                 <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4  gap-4">
                     {dataImage?.map((item: any, index: any) => (
-                        <div className="cover group relative" key={index}>
-                            <Swiper
-                                spaceBetween={10}
-                                pagination={{
-                                    clickable: true,
-                                }}
-                                modules={[Pagination]}
-                                className="mySwiper h-full rounded-lg"
-                            >
-                                {item.name?.map((image: any, index: any) => (
-                                    <SwiperSlide key={index}>
+                        <>
+
+                            {
+                                item.name.map((image: any, index: number) => (
+                                    <div className="cover group relative" key={index}>
                                         <div className="relative h-50">
                                             <img
                                                 src={image} // Mengambil URL langsung dari `image`
@@ -39,11 +35,12 @@ const Galery = (props: Props) => {
                                                 className="w-full h-full object-cover rounded-md"
                                             />
                                         </div>
-                                    </SwiperSlide>
-                                ))}
-                            </Swiper>
-                        </div>
+                                    </div>
+                                ))
+                            }
+                        </>
                     ))}
+
                 </div>
             </section>
             <Footer />

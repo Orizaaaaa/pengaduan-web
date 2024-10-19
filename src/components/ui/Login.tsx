@@ -87,6 +87,7 @@ const Login = () => {
             } else {
                 setErrorLogin('*Email atau password salah');
                 console.log(res.data);
+                setLoading(false);
             }
 
 
