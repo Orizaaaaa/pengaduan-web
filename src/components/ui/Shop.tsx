@@ -12,11 +12,13 @@ import useSWR from 'swr'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 
 type Props = {}
 
 const Shop = (props: Props) => {
+    const pathName = usePathname()
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
     const [loading, setLoading] = useState(false)
@@ -172,7 +174,7 @@ const Shop = (props: Props) => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
 
                         {filteredData?.map((item: any, index: number) => (
-                            <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
+                            <CardHover location={`${pathName}/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                         ))}
                     </div>
                 </section>
