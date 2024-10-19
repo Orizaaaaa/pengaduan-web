@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic';
 import Image from 'next/image'
 import { logo } from '@/app/image'
@@ -11,6 +11,7 @@ import News from '../fragemnts/LandingPage/news/News'
 import Faq from '../fragemnts/LandingPage/faq/Faq'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
 import Navbar from '../fragemnts/navbar/Navbar'
+import { useRouter } from 'next/navigation';
 
 
 // Import komponen Map secara dinamis tanpa SSR
@@ -21,6 +22,11 @@ const Map = dynamic(() => import('../fragemnts/maps/Map'), {
 
 
 const LandingUi = () => {
+    const router = useRouter()
+    const [role, setRole] = useState<string | null>(null);
+    useEffect(() => {
+        setRole(localStorage.getItem("role"));
+    }, []);
 
     return (
         <>
@@ -31,7 +37,14 @@ const LandingUi = () => {
                         <h1 className='text-3xl lg:text-6xl font-bold text-secondary' >Selamat Datang di website <span className='text-white' >Desa Garut</span> </h1>
                         <p className='mt-5 text-sm md:text-base text-white' >Masyarakat dapat mengadukan permasalahan yang terjadi di garut perihal keamanan, ketertiban umum, kesejahtraan
                             sosial, pemberdayaan masyarakat, pemerintahan, ekonomi dan pembangunan</p>
-                        <ButtonPrimary className='py-2 px-4 mt-10 rounded-full bg-secondary'>Buat Laporan</ButtonPrimary>
+                        {!role ?
+                            <div className="flex gap-5 items-center">
+                                <ButtonPrimary onClick={() => router.push('/login')} className='py-2 px-6 mt-10 rounded-lg bg-secondary'>Login </ButtonPrimary>
+                                <ButtonPrimary onClick={() => router.push('/register')} className='py-2 text-primary px-6 mt-10 rounded-lg bg-primary'> Daftar</ButtonPrimary>
+                            </div>
+                            : ''}
+
+
                     </div>
 
                     <div className="flex justify-center items-center col-span-2 mt-12 lg:mt-0">

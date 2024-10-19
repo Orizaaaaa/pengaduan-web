@@ -13,6 +13,7 @@ type Props = {}
 const Navbar = (props: Props) => {
     const router = useRouter()
     const [activeSection, setActiveSection] = useState('beranda');
+    const [role, setRole] = useState<string | null>(null);
     const [navbarBg, setnavbarBg] = useState(false);
     const pathname = usePathname()
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,6 +22,13 @@ const Navbar = (props: Props) => {
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
     };
+
+    useEffect(() => {
+        setRole(localStorage.getItem("role"));
+    }, []);
+
+
+    console.log('nav role', role);
 
 
 
@@ -77,6 +85,17 @@ const Navbar = (props: Props) => {
     }, []);
 
 
+    const routesLogin = (value: any) => {
+        if (value === 'superadmin') {
+            return 'dashboard-super-admin'
+        } else if (value === 'admin') {
+            return 'dashboard-officer'
+        } else {
+            return 'login'
+        }
+    }
+
+
 
     return (
         <nav className={`navbar-up fixed top-0 left-0 py-2.5 w-full z-999999 ${navbarBg ? 'navbarbgActive shadow-xl' : ''}`}>
@@ -125,8 +144,8 @@ const Navbar = (props: Props) => {
                             </li>
                         ))}
                         <li>
-                            <ButtonPrimary onClick={() => router.push('/login')} className="items-center justify-center font-medium gap-2 px-4 py-1 rounded-md w-full lg:w-auto mt-3 lg:mt-0  ">
-                                Login
+                            <ButtonPrimary onClick={() => router.push(`/${routesLogin(role)}`)} className="items-center justify-center font-medium gap-2 px-4 py-1 rounded-md w-full lg:w-auto mt-3 lg:mt-0  ">
+                                {!role ? 'Login' : 'Dashboard'}
                             </ButtonPrimary>
                         </li>
                     </ul>
