@@ -18,21 +18,25 @@ type Props = {}
 const Register = (props: Props) => {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(true);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(true); // Untuk konfirmasi password
     const [errorMsg, setErrorMsg] = useState({
         name: '',
         email: '',
         password: '',
+        confirmPassword: '', // Tambahkan untuk konfirmasi password
         image: '',
         role: '',
         number_phone: '',
         nik: ''
     });
     const [typePassword, setTypePassword] = useState("password");
+    const [typeConfirmPassword, setTypeConfirmPassword] = useState("password"); // Untuk konfirmasi password
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         name: '',
         email: '',
         password: '',
+        confirmPassword: '', // Tambahkan untuk konfirmasi password
         image: null as File | null,
         role: 'user',
         number_phone: '',
@@ -43,6 +47,12 @@ const Register = (props: Props) => {
         setShowPassword(!showPassword);
         setTypePassword(showPassword ? "text" : "password");
     };
+
+    const toggleConfirmPassword = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+        setTypeConfirmPassword(showConfirmPassword ? "text" : "password");
+    };
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -110,8 +120,10 @@ const Register = (props: Props) => {
         setLoading(true);
 
         // Reset error messages
-        const newErrorMsg = { name: '', email: '', password: '', image: '', role: '', number_phone: '', nik: '' };
+        const newErrorMsg = { name: '', email: '', password: '', confirmPassword: '', image: '', role: '', number_phone: '', nik: '' };
         setErrorMsg(newErrorMsg);
+
+        let valid = true;
 
         // Validasi nama
         const nameRegex = /^[A-Za-z\s\-\_\'\.\,\&\(\)]{1,100}$/;
@@ -122,7 +134,6 @@ const Register = (props: Props) => {
         // Validasi angka (untuk NIK dan No. HP)
         const numberRegex = /^[0-9]+$/;
 
-        let valid = true;
 
         // Cek apakah semua field diisi
         if (!form.name) {
@@ -137,6 +148,12 @@ const Register = (props: Props) => {
             newErrorMsg.password = '*Password harus diisi';
             valid = false;
         }
+
+        if (form.password !== form.confirmPassword) {
+            newErrorMsg.confirmPassword = '*Password dan Konfirmasi Password tidak sama';
+            valid = false;
+        }
+
         if (!form.number_phone) {
             newErrorMsg.number_phone = '*No HP harus diisi';
             valid = false;
@@ -190,7 +207,8 @@ const Register = (props: Props) => {
         // Jika lolos validasi
         const imageUrl = await postImage({ image: form.image });
         if (imageUrl) {
-            const data = { ...form, image: imageUrl };
+            const { confirmPassword, ...dataWithoutConfirmPassword } = form;
+            const data = { ...dataWithoutConfirmPassword, image: imageUrl };
             registerUser(data, (status: boolean) => {
                 if (status) {
                     router.push('/login');
@@ -310,12 +328,18 @@ const Register = (props: Props) => {
                         </div>
 
                         <div className="relative">
-                            <button onClick={togglePassword} type='button' className={`icon-password h-full  bg-transparent
-                                 flex absolute right-0 justify-center items-center pe-4  ${errorMsg.password ? 'pb-5' : ''}`}>
-                                {showPassword ? <FaEyeSlash size={20} color='#636363' />
-                                    : <IoEye size={20} color='#636363' />}
+                            <button onClick={togglePassword} type='button' className="icon-password h-full bg-transparent flex absolute right-0 justify-center items-center pe-4">
+                                {showPassword ? <FaEyeSlash size={20} color='#636363' /> : <IoEye size={20} color='#636363' />}
                             </button>
-                            <InputForm errorMsg={errorMsg.password} className='form-input-login' htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
+                            <InputForm errorMsg={errorMsg.password} htmlFor="password" onChange={handleChange} type={typePassword} value={form.password} placeholder="Masukkan Kata Sandi" />
+                        </div>
+
+                        {/* Tambahan form untuk Konfirmasi Password */}
+                        <div className="relative mt-1">
+                            <button onClick={toggleConfirmPassword} type='button' className="icon-password h-full bg-transparent flex absolute right-0 justify-center items-center pe-4">
+                                {showConfirmPassword ? <FaEyeSlash size={20} color='#636363' /> : <IoEye size={20} color='#636363' />}
+                            </button>
+                            <InputForm errorMsg={errorMsg.confirmPassword} htmlFor="confirmPassword" onChange={handleChange} type={typeConfirmPassword} value={form.confirmPassword} placeholder="Konfirmasi Kata Sandi" />
                         </div>
                         <ButtonPrimary typeButon={"submit"} className={`rounded-lg w-full mb-3 font-medium py-2 flex justify-center items-center  bg-primary`}>
                             {loading ? <Spinner className={`w-5 h-5`} size="sm" color="white" /> : 'Daftar'}
