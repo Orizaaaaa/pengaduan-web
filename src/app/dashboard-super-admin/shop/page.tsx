@@ -242,150 +242,153 @@ const Page = (props: Props) => {
 
     return (
         <DefaultLayout>
-            {/* headershop */}
-            <div className="bg-[#FFC107] min-h-10 rounded-xl grid md:grid-cols-2 p-5 gap-5 md:gap-0">
-                <div className="flex flex-col justify-center items-center">
-                    <div className="text">
-                        <h1 className=' text-xl md:text-2xl  font-bold'>Gunakan Fitur  <span className='text-primary font-bold' >Toko Online</span>  untuk
-                            memudahkan anda menjual sesuatu </h1>
-                        <h2 className='text-white font-light' >Pesanan Online dibuat mudah,dan cepat </h2>
-                        <ButtonPrimary className='py-1 px-2 rounded-md mt-4' onClick={openModalCreate} >Tambah Produk</ButtonPrimary>
+            <div className="bg-white p-3 rounded-md">
+                <div className="bg-[#FFC107] min-h-10 rounded-xl grid md:grid-cols-2 p-5 gap-5 md:gap-0">
+                    <div className="flex flex-col justify-center items-center">
+                        <div className="text">
+                            <h1 className=' text-xl md:text-2xl  font-bold'>Gunakan Fitur  <span className='text-primary font-bold' >Toko Online</span>  untuk
+                                memudahkan anda menjual sesuatu </h1>
+                            <h2 className='text-white font-light' >Pesanan Online dibuat mudah,dan cepat </h2>
+                            <ButtonPrimary className='py-1 px-2 rounded-md mt-4' onClick={openModalCreate} >Tambah Produk</ButtonPrimary>
+                        </div>
                     </div>
+                    <div className="image order-first md:order-last">
+                        <Image className='h-64' src={bannerShop} alt='bannershop' />
+                    </div>
+
                 </div>
-                <div className="image order-first md:order-last">
-                    <Image className='h-64' src={bannerShop} alt='bannershop' />
-                </div>
 
-            </div>
+                {/* categories 2 */}
+                <section className='my-10' >
+                    <h1 className='text-2xl font-bold my-10'>Kategori</h1>
+                    <Swiper
+                        slidesPerView={6} // Jumlah default slide yang ditampilkan
+                        spaceBetween={30}
+                        autoplay={{
+                            delay: 3000,
+                            disableOnInteraction: false,
+                        }}
+                        loop={true} // Membuat slide menjadi infinite loop
+                        breakpoints={{
+                            // Saat lebar layar >= 1024px
+                            1024: {
+                                slidesPerView: 6, // 6 slide
+                                spaceBetween: 30,
+                            },
+                            // Saat lebar layar >= 768px
+                            768: {
+                                slidesPerView: 2, // 2 slide
+                                spaceBetween: 20,
+                            },
+                            // Untuk layar <= 640px, 1 slide akan ditampilkan
+                            0: {
+                                slidesPerView: 2, // 1 slide
+                                spaceBetween: 10,
+                            },
+                        }}
+                        modules={[Autoplay]}
+                        className="mySwiper"
+                    >
 
-            {/* categories 2 */}
-            <section className='my-10' >
-                <h1 className='text-2xl font-bold my-10'>Kategori</h1>
-                <Swiper
-                    slidesPerView={6} // Jumlah default slide yang ditampilkan
-                    spaceBetween={30}
-                    autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                    }}
-                    loop={true} // Membuat slide menjadi infinite loop
-                    breakpoints={{
-                        // Saat lebar layar >= 1024px
-                        1024: {
-                            slidesPerView: 6, // 6 slide
-                            spaceBetween: 30,
-                        },
-                        // Saat lebar layar >= 768px
-                        768: {
-                            slidesPerView: 2, // 2 slide
-                            spaceBetween: 20,
-                        },
-                        // Untuk layar <= 640px, 1 slide akan ditampilkan
-                        0: {
-                            slidesPerView: 2, // 1 slide
-                            spaceBetween: 10,
-                        },
-                    }}
-                    modules={[Autoplay]}
-                    className="mySwiper"
-                >
-
-                    {categoryCaraosel.map((item, index) => (
-                        <SwiperSlide key={index}>
-                            <div className="flex flex-col justify-center items-center">
-                                <div className="w-30 h-30 rounded-full overflow-hidden">
-                                    <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
+                        {categoryCaraosel.map((item, index) => (
+                            <SwiperSlide key={index}>
+                                <div className="flex flex-col justify-center items-center">
+                                    <div className="w-30 h-30 rounded-full overflow-hidden">
+                                        <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
+                                    </div>
+                                    <p className='text-center mt-2 text-sm' >{item.title}</p>
                                 </div>
-                                <p className='text-center mt-2 text-sm' >{item.title}</p>
-                            </div>
-                        </SwiperSlide>
+                            </SwiperSlide>
+                        ))}
+
+                    </Swiper>
+
+                </section>
+
+                <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
+                    <h1 className='text-2xl font-bold my-10'>Produk</h1>
+                    <div className="w-full md:w-auto">
+                        {/* filter search berada disini  */}
+                        <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Produk" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
+                    {filteredData?.map((item: any, index: number) => (
+                        <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                     ))}
-
-                </Swiper>
-
-            </section>
-
-            <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
-                <h1 className='text-2xl font-bold my-10'>Produk</h1>
-                <div className="w-full md:w-auto">
-                    {/* filter search berada disini  */}
-                    <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Produk" />
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
-                {filteredData?.map((item: any, index: number) => (
-                    <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
-                ))}
-            </div>
+                <ModalDefault isOpen={isOpen} onClose={onClose}>
+                    <div>
+                        <CaraoselImage>
+                            {form.image.length > 0 ? (
+                                form.image.map((image, index) => (
+                                    <SwiperSlide key={index}>
+                                        <>
+                                            <div className="flex justify-center items-center " style={{ pointerEvents: 'none' }}>
+                                                <img
+                                                    src={URL.createObjectURL(image)}
+                                                    alt={`preview-${index}`}
+                                                    className="w-auto h-[100px] relative"
+                                                />
+                                            </div>
+                                            <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                            <p className='text-red text-center text-sm ' >{errorMsg.image}</p>
+                                        </>
+                                    </SwiperSlide>
+                                ))
+                            ) : (
+                                <div className='flex flex-col items-center'>
+                                    <Image className="w-auto h-[100px] relative " src={camera} alt="image"></Image>
+                                    <p className='text-red text-center text-sm ' >{errorMsg.image}</p>
+                                </div>
+                            )}
+                        </CaraoselImage>
 
-            <ModalDefault isOpen={isOpen} onClose={onClose}>
-                <div>
-                    <CaraoselImage>
-                        {form.image.length > 0 ? (
-                            form.image.map((image, index) => (
-                                <SwiperSlide key={index}>
-                                    <>
-                                        <div className="flex justify-center items-center " style={{ pointerEvents: 'none' }}>
-                                            <img
-                                                src={URL.createObjectURL(image)}
-                                                alt={`preview-${index}`}
-                                                className="w-auto h-[100px] relative"
-                                            />
-                                        </div>
-                                        <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
-                                        <p className='text-red text-center text-sm ' >{errorMsg.image}</p>
-                                    </>
-                                </SwiperSlide>
-                            ))
-                        ) : (
-                            <div className='flex flex-col items-center'>
-                                <Image className="w-auto h-[100px] relative " src={camera} alt="image"></Image>
-                                <p className='text-red text-center text-sm ' >{errorMsg.image}</p>
-                            </div>
-                        )}
-                    </CaraoselImage>
+                        <div className="grid grid-cols-2 justify-between my-1 gap-2">
+                            <ButtonPrimary className='rounded-md relative cursor-pointer py-1 px-2' >Tambah Image
+                                <input
+                                    type="file"
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    id="image-input-add"
+                                    onChange={(e) => handleImageChange(e, 'add')}
+                                />
+                            </ButtonPrimary>
+                            <ButtonSecondary className='rounded-md  py-1 px-2' onClick={() => setForm(prevForm => ({ ...prevForm, image: [] }))} >Hapus Semua</ButtonSecondary>
+                        </div>
 
-                    <div className="grid grid-cols-2 justify-between my-1 gap-2">
-                        <ButtonPrimary className='rounded-md relative cursor-pointer py-1 px-2' >Tambah Image
-                            <input
-                                type="file"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                id="image-input-add"
-                                onChange={(e) => handleImageChange(e, 'add')}
-                            />
-                        </ButtonPrimary>
-                        <ButtonSecondary className='rounded-md  py-1 px-2' onClick={() => setForm(prevForm => ({ ...prevForm, image: [] }))} >Hapus Semua</ButtonSecondary>
+                    </div>
+                    <InputForm errorMsg={errorMsg.name} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
+
+                    <div className="flex gap-4 items-center">
+                        <div className="dropdown ">
+                            <h1 className='font-medium' >Kategori</h1>
+                            <DropdownCustom clearButton={false} defaultItems={dataDropdown()} onSelect={(e: any) => onSelectionChange(e)}>
+                                {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                            </DropdownCustom>
+                            <p className='text-red text-sm ' >{errorMsg.category}</p>
+                        </div>
+                        <InputForm errorMsg={errorMsg.quantity} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
                     </div>
 
-                </div>
-                <InputForm errorMsg={errorMsg.name} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={form.name} onChange={handleChange} />
-
-                <div className="flex gap-4 items-center">
-                    <div className="dropdown ">
-                        <h1 className='font-medium' >Kategori</h1>
-                        <DropdownCustom clearButton={false} defaultItems={dataDropdown()} onSelect={(e: any) => onSelectionChange(e)}>
-                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
-                        </DropdownCustom>
-                        <p className='text-red text-sm ' >{errorMsg.category}</p>
+                    <div className="flex gap-4 items-center">
+                        <InputForm errorMsg={errorMsg.address} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
+                        <InputForm errorMsg={errorMsg.description} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
                     </div>
-                    <InputForm errorMsg={errorMsg.quantity} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300 h-9' title='Kuantitas' htmlFor='quantity' type='text' value={form.quantity} onChange={handleChange} />
-                </div>
-
-                <div className="flex gap-4 items-center">
-                    <InputForm errorMsg={errorMsg.address} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Lokasi' htmlFor='address' type='text' value={form.address} onChange={handleChange} />
-                    <InputForm errorMsg={errorMsg.description} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Deskripsi' htmlFor='description' type='text' value={form.description} onChange={handleChange} />
-                </div>
 
 
-                <InputForm errorMsg={errorMsg.price} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
-                <div className="flex justify-end gap-2">
-                    <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
-                    <ButtonPrimary onClick={handleCreate}
-                        className='px-4 py-2 rounded-md flex justify-center items-center'
-                    >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
-                </div>
-            </ModalDefault>
+                    <InputForm errorMsg={errorMsg.price} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={form.price} onChange={handleChange} />
+                    <div className="flex justify-end gap-2">
+                        <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
+                        <ButtonPrimary onClick={handleCreate}
+                            className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
+                    </div>
+                </ModalDefault>
+            </div>
+            {/* headershop */}
+
         </DefaultLayout>
     )
 }
