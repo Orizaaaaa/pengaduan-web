@@ -15,6 +15,9 @@ const NewReport = (props: Props) => {
         });
 
     }, []);
+
+    console.log(dataReport);
+
     return (
         <section className='container mx-auto my-20' >
             <div className="text-start text-2xl">

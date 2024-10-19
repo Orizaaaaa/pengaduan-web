@@ -17,11 +17,11 @@ export const formatDateNext = (tanggal: any) => {
 
 export const statusChange = (value: string) => {
     if (value === 'Diproses') {
-        return ('bg-[#FF7F0A]')
+        return ('text-yellow-500')
     } else if (value === 'Menunggu') {
-        return ('bg-primary')
+        return ('text-primary')
     } else if (value === 'Selesai') {
-        return ('bg-lime-700')
+        return ('text-green-400')
     }
 }
 
