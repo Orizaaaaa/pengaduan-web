@@ -610,7 +610,7 @@ const Page = (props: Props) => {
 
                     <div className="flex mt-2 justify-end">
                         <ButtonPrimary onClick={handleUpdate} className='px-4 py-2 rounded-md flex justify-center items-center'
-                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim kontol'}</ButtonPrimary>
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
                     </div>
                 </section>}
 
