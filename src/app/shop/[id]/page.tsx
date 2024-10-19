@@ -5,6 +5,7 @@ import { deleteProduct } from '@/api/shop'
 import { employe } from '@/app/image'
 import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
+import ButtonSecondary from '@/components/elements/buttonSecondary'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import Navbar from '@/components/fragemnts/navbar/Navbar'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
@@ -23,6 +24,7 @@ import useSWR from 'swr'
 type Props = {}
 
 const Page = (props: Props) => {
+    const router = useRouter()
     const idProduct: any = useParams().id
     const { data, error } = useSWR(`${url}/shop/${idProduct}`, fetcher, {
         keepPreviousData: true,
@@ -30,6 +32,19 @@ const Page = (props: Props) => {
     const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
     const dataProduct = data?.data
 
+    console.log(dataProduct);
+    const sendWa = () => {
+        const message = `Hallo ${dataProduct.user.name}, saya tertarik dengan produk Anda: 
+      *${dataProduct.name}* 
+      - Deskripsi: ${dataProduct.description}
+      - Harga: Rp${dataProduct.price.toLocaleString()}
+      - Lokasi: ${dataProduct.address}
+      
+      Apakah produk ini masih tersedia?`;
+
+        const whatsappLink = `https://wa.me/${dataProduct.user.number_phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappLink, '_blank');
+    };
 
     return (
         <div className=' container mx-auto'>
@@ -49,9 +64,12 @@ const Page = (props: Props) => {
                                 {dataProduct?.image.map((img: string, index: number) => (
                                     <SwiperSlide key={index}>
                                         <div className="w-full h-55">
-                                            <img src={img} alt={`Slide ${index}`} className="w-full h-full  object-cover rounded-md" />
+                                            <img
+                                                src={img}
+                                                alt={`Slide ${index}`}
+                                                className="w-full h-full object-cover rounded-md"
+                                            />
                                         </div>
-
                                     </SwiperSlide>
                                 ))}
                             </Swiper>
@@ -60,29 +78,43 @@ const Page = (props: Props) => {
                             <Swiper
                                 onSwiper={setThumbsSwiper}
                                 spaceBetween={10}
-                                slidesPerView={4}
+                                slidesPerView={4} // default untuk desktop
+                                breakpoints={{
+                                    640: { slidesPerView: 2 }, // untuk layar lebih kecil
+                                    768: { slidesPerView: 3 }, // untuk tablet
+                                    1024: { slidesPerView: 4 }, // untuk desktop
+                                }}
                                 watchSlidesProgress={true}
                                 modules={[Thumbs]}
                                 className="swiper-thumbs"
                             >
                                 {dataProduct?.image.map((img: string, index: number) => (
                                     <SwiperSlide key={index}>
-                                        <div className="h-30 w-full">
-                                            <img src={img} alt={`Thumb ${index}`} className="w-full h-full object-cover cursor-pointer rounded-md" />
+                                        <div className="h-20 sm:h-24 md:h-30 w-full">
+                                            <img
+                                                src={img}
+                                                alt={`Thumb ${index}`}
+                                                className="w-full h-full object-cover cursor-pointer rounded-md"
+                                            />
                                         </div>
-
                                     </SwiperSlide>
                                 ))}
                             </Swiper>
                         </div>
 
-                        <div className="flex justify-end mt-3 ">
-                            <ButtonPrimary className='py-1 px-2 rounded-md'>
-                                Beli Sekarang
-                            </ButtonPrimary>
+
+                        <div className="user mt-10 px-12 ">
+                            <div className="flex  gap-3">
+                                <div className="w-15 h-15">
+                                    <img className='rounded-full object-cover w-full h-full' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaNkwLyEyzTkzMxP-UkOMaOArlSmqK6O9GFw&s' alt="user" />
+                                </div>
+                                <div className="text">
+                                    <h1 className='font-medium'> {capitalizeWords(dataProduct?.user?.name)} </h1>
+                                    <p className='text-slate-500'> {dataProduct?.user?.number_phone} </p>
+                                </div>
+                            </div>
+
                         </div>
-
-
                     </div>
 
 
@@ -116,18 +148,15 @@ const Page = (props: Props) => {
                             <p>{dataProduct?.description}</p>
                         </div>
 
-                        <div className="user mt-3 border-black border-2 p-2 rounded-md ">
-                            <div className="flex gap-3">
-                                <div className="w-15 h-15">
-                                    <img className='rounded-full object-cover w-full h-full' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaNkwLyEyzTkzMxP-UkOMaOArlSmqK6O9GFw&s' alt="user" />
-                                </div>
-                                <div className="text">
-                                    <h1 className='font-medium'> {capitalizeWords(dataProduct?.user?.name)} </h1>
-                                    <p className='text-slate-500'> {dataProduct?.user?.number_phone} </p>
-                                </div>
-                            </div>
-
+                        <div className="flex  mt-5 gap-4 ">
+                            <button onClick={() => router.back()} className='py-1 px-2 rounded-md border-2 border-primary text-primary' >
+                                Kembali
+                            </button>
+                            <ButtonPrimary onClick={sendWa} className='py-1 px-2 rounded-md'>
+                                Beli Sekarang
+                            </ButtonPrimary>
                         </div>
+
                     </div>
 
 
