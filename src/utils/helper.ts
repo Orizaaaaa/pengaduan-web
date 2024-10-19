@@ -100,5 +100,25 @@ export const parseCoordinate = (coord: string): number => {
     return parsedCoord;
 };
 
+export function formatDateCapital(dateString: string): string {
+    const date = new Date(dateString);
+
+    // Buat array bulan dalam format tiga huruf
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+    // Ambil tanggal, bulan (dari array), dan tahun
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    // Format jadi seperti 20 AUG 2024
+    return `${day} ${month} ${year}`;
+}
+
+// Contoh penggunaan
+const formattedDate = formatDate("2024-10-12T13:03:45.300Z");
+console.log(formattedDate); // Output: 12 OCT 2024
+
+
 const dateNow = new Date();
 export const dateFirst = getFirstDayOfMonth(dateNow);

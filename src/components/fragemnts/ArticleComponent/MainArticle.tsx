@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation'
 import useSWR from 'swr'
 import { fetcher } from '@/api/fetcher'
 import { url } from '@/api/auth'
-import { formatNews } from '@/utils/helper'
+import { formatDateCapital, formatNews } from '@/utils/helper'
 import { useState } from 'react'
+import { CiCalendar } from 'react-icons/ci'
 
 type Props = {}
 
@@ -40,6 +41,9 @@ const MainArticle = (props: Props) => {
         );
     });
 
+    console.log(dataNews);
+
+
     return (
         <section>
             <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10 ">
@@ -55,6 +59,10 @@ const MainArticle = (props: Props) => {
                             <img className='rounded-t-lg w-full h-full' src={item.image} alt="jalan rusak" />
                         </div>
                         <div className="text px-2 py-1 space-y-2 mb-2">
+                            <div className="my-1 flex items-center gap-1">
+                                <CiCalendar color='#94A3B8' />
+                                <p className='text-small text-slate-400 font-light' >{formatDateCapital(item.createdAt)}</p>
+                            </div>
                             <h1 className='font-medium text-sm md:text-base' >{item.title}</h1>
                             <p className='text-sm text-slate-400' >{formatNews(item.description)}</p>
                         </div>
