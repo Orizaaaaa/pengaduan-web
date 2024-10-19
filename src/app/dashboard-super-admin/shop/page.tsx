@@ -243,12 +243,12 @@ const Page = (props: Props) => {
     return (
         <DefaultLayout>
             {/* headershop */}
-            <div className="bg-[#FFC107] min-h-10 rounded-xl grid md:grid-cols-2 p-10 gap-5 md:gap-0">
+            <div className="bg-[#FFC107] min-h-10 rounded-xl grid md:grid-cols-2 p-5 gap-5 md:gap-0">
                 <div className="flex flex-col justify-center items-center">
                     <div className="text">
-                        <h1 className=' text-xl md:text-2xl lg:text-3xl font-bold'>Gunakan Fitur  <span className='text-primary font-bold' >Toko Online</span>  untuk
+                        <h1 className=' text-xl md:text-2xl  font-bold'>Gunakan Fitur  <span className='text-primary font-bold' >Toko Online</span>  untuk
                             memudahkan anda menjual sesuatu </h1>
-                        <h2 className='text-slate-400 font-light' >Pesanan Online dibuat mudah,dan cepat </h2>
+                        <h2 className='text-white font-light' >Pesanan Online dibuat mudah,dan cepat </h2>
                         <ButtonPrimary className='py-1 px-2 rounded-md mt-4' onClick={openModalCreate} >Tambah Produk</ButtonPrimary>
                     </div>
                 </div>
