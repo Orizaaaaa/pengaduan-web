@@ -1,4 +1,4 @@
-import { building, galery, leftPatern, newspaper, onlineShopping, pupr, report } from '@/app/image'
+import { building, galery, leftPatern, newspaper, onlineShopping, pupr, report, rightPatern } from '@/app/image'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -47,7 +47,7 @@ const AllFitur = (props: Props) => {
                         <p>ini adalah beberapa fitur yang kami sediakan.</p>
                     </div>
 
-                    <div className='grid py-12 grid-cols-3  lg:grid-cols-5 gap-5'>
+                    <div className='grid pt-12 pb-30 grid-cols-3  lg:grid-cols-5 gap-5'>
                         {dataFitur.map((item: any, index: number) => (
                             <Link href={item.location} className='flex flex-col justify-center items-center'>
                                 <div className=" w-30 h-30 md:w-50 md:h-50">
@@ -63,8 +63,8 @@ const AllFitur = (props: Props) => {
                     </div>
 
                 </div>
+                <Image className='w-full' src={rightPatern} alt='right' />
             </div>
-
         </div>
     )
 }

@@ -54,6 +54,7 @@ import newspaper from '../assets/newspaper.png'
 import report from '../assets/report.png'
 import onlineShopping from '../assets/online-shopping.png'
 import leftPatern from '../assets/pattern-blue-left.png'
+import rightPatern from '../assets/pattern-blue-white.png'
 
 import bgPengaduan from '../assets/pengaduanBg.png'
 
@@ -70,6 +71,6 @@ export {
     bgPengaduan, imageLogin, camera,
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
     headerPengaduan, pembangunan, manusiaLaptop,
-    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin,
+    basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin, rightPatern,
     bannerShop, allCategori, mkpp, leftPatern, report, building, newspaper, onlineShopping, galery
 };

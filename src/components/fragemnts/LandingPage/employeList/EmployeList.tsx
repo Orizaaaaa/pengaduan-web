@@ -2,7 +2,7 @@
 
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
-import { employe, human1 } from '@/app/image'
+import { employe, human1, rightPatern } from '@/app/image'
 import { capitalizeWords } from '@/utils/helper'
 import Image from 'next/image'
 import React from 'react'
@@ -23,7 +23,7 @@ const EmployeList = (props: Props) => {
 
 
     return (
-        <section className='container mx-auto my-15'>
+        <section className='container mx-auto mb-9'>
             <div className="text-center text-2xl my-10">
                 <h1 className="text-primary font-medium" >Staff Karyawan</h1>
                 <h1 className="text-primary font-bold" >Berikut adalah staff kami</h1>
