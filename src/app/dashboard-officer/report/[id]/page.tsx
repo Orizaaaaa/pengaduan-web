@@ -39,6 +39,7 @@ const Page = () => {
     const { id }: any = useParams(); // Menggunakan id dari useParams
     const name = typeof window !== 'undefined' ? localStorage.getItem("name") : null; // Memastikan localStorage hanya diakses di client side
     const [dataReport, setDataReport] = useState<Report | null>(null);
+    const [loading, setLoading] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [statusFrom, setStatusForm] = useState('')
     const [formComent, setFormComent] = useState({
@@ -95,15 +96,18 @@ const Page = () => {
         { label: "Diproses", value: "Diproses" },
         { label: "Menunggu", value: "Menunggu" },
         { label: "Selesai", value: "Selesai" },
+        { label: "Ditolak", value: "Ditolak" },
     ]
 
 
 
 
     const handleDeleteReport = () => {
+        setLoadingDelete(true)
         deleteReport(id, (res: any) => {
             router.push('/dashboard-officer/report')
             console.log(res);
+            setLoadingDelete(false)
         })
     }
 
@@ -113,6 +117,7 @@ const Page = () => {
 
 
     const handleChangeStatus = async () => {
+        setLoading(true)
         const dataStatus = {
             status: statusFrom
         }
@@ -122,6 +127,7 @@ const Page = () => {
                 getReportById(id, (result: any) => {
                     setDataReport(result.data);
                     setStatusForm(result.data.status);
+                    setLoading(false)
                 });
             }
 
@@ -210,7 +216,8 @@ const Page = () => {
                             </DropdownCustom>
 
                         </div>
-                        <ButtonPrimary className='px-4 py-2 rounded-md' onClick={handleChangeStatus}>Ubah Status</ButtonPrimary>
+                        <ButtonPrimary onClick={handleChangeStatus} className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ubah Status'}</ButtonPrimary>
                     </div>
 
 

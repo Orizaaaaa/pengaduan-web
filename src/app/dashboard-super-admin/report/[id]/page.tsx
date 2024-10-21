@@ -146,92 +146,95 @@ const Page = () => {
 
     return (
         <DefaultLayout>
-            <div className="grid grid-cols-1 lg:grid-cols-2 my-3 gap-8 lg:gap-0">
-                <div className="left space-y-6">
-                    {dataDetailLaporan.map((item, index) => (
-                        <div className="text" key={index}>
-                            <h1 className="text-lg font-semibold">{item.title}</h1>
-                            <p>{item.text}</p>
-                        </div>
-                    ))}
+            <div className="bg-white p-3">
+                <div className="grid grid-cols-1 lg:grid-cols-2 my-3 gap-8 lg:gap-0">
+                    <div className="left space-y-6">
+                        {dataDetailLaporan.map((item, index) => (
+                            <div className="text" key={index}>
+                                <h1 className="text-lg font-semibold">{item.title}</h1>
+                                <p>{item.text}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="right">
+                        <img
+                            className="h-[170px] md:h-[300px] rounded-md w-auto mx-auto"
+                            src={dataReport?.imageReport[0]}
+                            alt="Report Image"
+                        />
+                    </div>
                 </div>
-                <div className="right">
-                    <img
-                        className="h-[170px] md:h-[300px] rounded-md w-auto mx-auto"
-                        src={dataReport?.imageReport[0]}
-                        alt="Report Image"
-                    />
-                </div>
-            </div>
 
-            <MapChoise
-                markerPosition={{
-                    lat: parseCoordinate(dataReport?.latitude || "0"),
-                    lng: parseCoordinate(dataReport?.longitude || "0"),
-                }}
-                zoom={10}
-                text={dataReport?.address || ''}
-                className="h-[370px] rounded-md my-5"
-            />
+                <MapChoise
+                    markerPosition={{
+                        lat: parseCoordinate(dataReport?.latitude || "0"),
+                        lng: parseCoordinate(dataReport?.longitude || "0"),
+                    }}
+                    zoom={10}
+                    text={dataReport?.address || ''}
+                    className="h-[370px] rounded-md my-5"
+                />
 
-            <form className="coment" onSubmit={pushComent}>
-                <h1 className="text-primary font-semibold">Komentar ({dataReport?.comment.length})</h1>
-                <div className="display-comment bg-white w-full h-60 rounded-md p-3 overflow-y-auto">
-                    {dataReport?.comment.length === 0 && (
-                        <p className="text-gray-400">Belum ada komentar</p>
-                    )}
+                <form className="coment" onSubmit={pushComent}>
+                    <h1 className="text-primary font-semibold">Komentar ({dataReport?.comment.length})</h1>
+                    <div className="display-comment bg-slate-300 w-full h-60 rounded-md p-3 overflow-y-auto">
+                        {dataReport?.comment.length === 0 && (
+                            <p className="text-gray-400">Belum ada komentar</p>
+                        )}
 
-                    {dataReport?.comment.map((item: any, index: number) => (
-                        <div key={index}>
-                            {item.name !== name ? (
-                                <div className="comment my-3 p-2 bg-gray-500 w-fit rounded-tl-2xl rounded-r-xl">
-                                    <p className="text-white text-md">{capitalizeWords(item.name)}</p>
-                                    <p className="text-white text-sm">{item.message}</p>
-                                </div>
-                            ) : (
-                                <div ref={textRef} className="flex justify-end my-3">
-                                    <div className="comment p-2 bg-primary w-fit rounded-tr-2xl rounded-l-xl">
+                        {dataReport?.comment.map((item: any, index: number) => (
+                            <div key={index}>
+                                {item.name !== name ? (
+                                    <div className="comment my-3 p-2 bg-slate-500 w-fit rounded-tl-2xl rounded-r-xl">
                                         <p className="text-white text-md">{capitalizeWords(item.name)}</p>
                                         <p className="text-white text-sm">{item.message}</p>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-
-                <h1 className="mt-4">Pesan : </h1>
-                <label htmlFor="message"></label>
-                <input
-                    className="w-full h-9 rounded-md bg-gray-400 px-3 outline-none"
-                    onChange={handleChangeComent}
-                    type="text"
-                    value={formComent.message}
-                />
-
-                <div className="flex justify-end">
-                    <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md mt-4">
-                        Kirim pesan
-                    </button>
-                </div>
-
-                <ButtonDelete onClick={openModalDelete} className=' px-4 py-2 rounded-md'>
-                    Hapus Laporan
-                </ButtonDelete>
-
-                <div className="flex justify-end items-center gap-3 mt-3">
-                    <div className="flex w-fit justify-center items-center gap-3">
-                        <DropdownCustom defaultSelectedKey={statusFrom} clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
-                            {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
-                        </DropdownCustom>
-
+                                ) : (
+                                    <div ref={textRef} className="flex justify-end my-3">
+                                        <div className="comment p-2 bg-primary w-fit rounded-tr-2xl rounded-l-xl">
+                                            <p className="text-white text-md">{capitalizeWords(item.name)}</p>
+                                            <p className="text-white text-sm">{item.message}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
 
-                    <ButtonPrimary onClick={handleChangeStatus} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
-                    >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ubah Status'}</ButtonPrimary>
+                    <h1 className="mt-4">Pesan : </h1>
+                    <label htmlFor="message"></label>
+                    <input
+                        className="w-full h-9 rounded-md bg-slate-200 px-3 outline-none"
+                        onChange={handleChangeComent}
+                        type="text"
+                        value={formComent.message}
+                    />
 
-                </div>
-            </form>
+                    <div className="flex justify-end">
+                        <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md mt-4">
+                            Kirim pesan
+                        </button>
+                    </div>
+
+                    <ButtonDelete onClick={openModalDelete} className=' px-4 py-2 rounded-md'>
+                        Hapus Laporan
+                    </ButtonDelete>
+
+                    <div className="flex justify-end items-center gap-3 mt-3">
+                        <div className="flex w-fit justify-center items-center gap-3">
+                            <DropdownCustom defaultSelectedKey={statusFrom} clearButton={false} defaultItems={dataStatus} onSelect={(e: any) => onSelectionChange(e)}>
+                                {(item: any) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+                            </DropdownCustom>
+
+                        </div>
+
+                        <ButtonPrimary onClick={handleChangeStatus} disabled={loading} className='px-4 py-2 rounded-md flex justify-center items-center'
+                        >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Ubah Status'}</ButtonPrimary>
+
+                    </div>
+                </form>
+            </div>
+
 
             <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
                 apakah anda yakin ingin menghapus laporan ini

@@ -344,7 +344,7 @@ const Page = () => {
 
 
                                     <div className="flex justify-end my-2">
-                                        <ButtonPrimary className='px-4 py-2 rounded-md' typeButon={'submit'}  >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}  </ButtonPrimary>
+                                        <ButtonPrimary className='px-4 py-2 rounded-md flrx justify-center items-center' typeButon={'submit'}  >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}  </ButtonPrimary>
                                     </div>
                                 </div>
 
