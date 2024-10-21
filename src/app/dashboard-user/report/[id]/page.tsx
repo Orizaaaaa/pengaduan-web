@@ -126,7 +126,7 @@ const Page = () => {
                         {dataReport?.comment.map((item, index) => (
                             <div key={index}>
                                 {item.name !== name ? (
-                                    <div className="comment my-3 p-2 bg-slate-500 w-fit rounded-tl-2xl rounded-r-xl">
+                                    <div className="comment my-3 p-2 bg-slate-400 w-fit rounded-tl-2xl rounded-r-xl">
                                         <p className="text-white text-md">{capitalizeWords(item.name)}</p>
                                         <p className="text-white text-sm">{item.message}</p>
                                     </div>
