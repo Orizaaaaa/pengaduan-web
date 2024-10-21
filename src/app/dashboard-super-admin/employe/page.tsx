@@ -2,15 +2,11 @@
     ;
 import { createEmploye, deleteEmploye, getAllEmploye } from "@/api/employe";
 import { postImage } from "@/api/imagePost";
-import { getAllUnitWork } from "@/api/unitWork";
-import { deleteUser, getAllUser } from "@/api/user";
 import { camera } from "@/app/image";
 import ButtonDelete from "@/components/elements/buttonDelete";
 import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
 import InputForm from "@/components/elements/input/InputForm";
-import InputReport from "@/components/elements/input/InputReport";
-import ModalDefault from "@/components/fragemnts/modal/modal";
 import ModalAlert from "@/components/fragemnts/modal/modalAlert";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate, formatDateStr } from "@/utils/helper";
