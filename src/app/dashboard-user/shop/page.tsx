@@ -32,6 +32,7 @@ type Props = {}
 const Page = (props: Props) => {
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
+    const [mySearchData, setMySearchData] = useState("")
     const [loading, setLoading] = useState(false)
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
@@ -67,7 +68,7 @@ const Page = (props: Props) => {
     const openModalCreate = () => {
         onOpen()
     }
-    console.log(form);
+
 
 
     const handleChange = (e: any) => {
@@ -225,6 +226,10 @@ const Page = (props: Props) => {
     const handleSearch = (e: any) => {
         setSearchData(e.target.value);
     };
+    const handleMySearch = (e: any) => {
+        setMySearchData(e.target.value); // Handle pencarian produk Anda
+    };
+
 
 
     // Fungsi untuk menangani klik kategori
@@ -239,6 +244,16 @@ const Page = (props: Props) => {
             item.description.toLowerCase().includes(searchData.toLowerCase());
         return isCategoryMatch && isSearchMatch;
     });
+
+    const filteredMyData = dataShop?.filter((item: any) => {
+        const isUserMatch = item.user?._id === form.user; // Cek user._id produk dengan userId yang login
+        const isCategoryMatch = selectedCategory === 'Semua Kategori' || item.category === selectedCategory;
+        const isSearchMatch = item.name.toLowerCase().includes(mySearchData.toLowerCase()) ||
+            item.description.toLowerCase().includes(mySearchData.toLowerCase());
+        return isUserMatch && isCategoryMatch && isSearchMatch;
+    });
+
+    console.log(dataShop);
 
     return (
         <DefaultLayout>
@@ -315,6 +330,19 @@ const Page = (props: Props) => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
                     {filteredData?.map((item: any, index: number) => (
+                        <CardHover location={`/dashboard-user/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
+                    ))}
+                </div>
+
+                <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
+                    <h1 className='text-2xl font-bold my-10'>Produk Anda</h1>
+                    <div className="w-full md:w-auto">
+                        <Search onChange={handleMySearch} className='border-2 border-black' placeholder="Cari Produk Anda" />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
+                    {filteredMyData?.map((item: any, index: number) => (
                         <CardHover location={`/dashboard-user/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                     ))}
                 </div>
