@@ -24,7 +24,7 @@ const CardReport = ({ location, image, title, address, status, date, desc }: Pro
             <div className="images h-[150px] w-full relative">
                 <img className='rounded-lg w-full h-full' src={image} alt="image card report" />
             </div>
-            <h1 className=' font-semibold text-lg'>{title}</h1>
+            <h1 className=' font-semibold text-lg mt-2  '>{title}</h1>
             <div className="flex justify-between items-center">
                 <div className="my-1 flex items-center gap-1">
                     <CiCalendar color='#94A3B8' />
