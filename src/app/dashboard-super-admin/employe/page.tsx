@@ -333,8 +333,8 @@ const Page = () => {
                                     </div>
 
                                     <div className="flex gap-8 mb-2">
-                                        <DatePicker value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
-                                        <DatePicker value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
+                                        <DatePicker showMonthAndYearPickers value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
+                                        <DatePicker showMonthAndYearPickers value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
                                     </div>
 
                                     <InputForm errorMsg={errorMsg.address} title='Alamat' className='bg-slate-200 ' htmlFor="address" type="text" onChange={handleChange} value={form.address} />

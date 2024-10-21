@@ -205,18 +205,7 @@ const Page = (props: Props) => {
             <div className="w-full flex flex-col justify-center items-center min-h-[70vh]">
                 <div className="relative w-full h-125 md:h-96" style={{ perspective: '1000px' }}>
                     <div
-                        id="card"
-                        className={`absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-yellow-500 transition-transform duration-500 ease-out ${isHovered ? "scale-95" : "scale-100"
-                            }`}
-                        style={{
-                            transform: `rotateX(${rotation.rotateX}deg) rotateY(${rotation.rotateY}deg)`,
-                            transitionTimingFunction: 'ease-out',
-                        }}
-                        onMouseMove={(e) => {
-                            handleMouseMove(e);
-                            setIsHovered(true);
-                        }}
-                        onMouseLeave={handleMouseLeave}
+                        className='flex items-center justify-center rounded-xl p-4 bg-primary'
                     >
 
                         <div className="text-white px-1 md:px-0 ">
@@ -327,8 +316,8 @@ const Page = (props: Props) => {
                                     </div>
 
                                     <div className="flex gap-8 mb-2">
-                                        <DatePicker value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
-                                        <DatePicker value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
+                                        <DatePicker showMonthAndYearPickers value={form.birthDate} label={"Tanggal Lahir"} variant={'underlined'} onChange={(e) => setForm({ ...form, birthDate: e })} />
+                                        <DatePicker showMonthAndYearPickers value={form.joinDate} label={"Tanggal Bergabung"} variant={'underlined'} onChange={(e) => setForm({ ...form, joinDate: e })} />
                                     </div>
 
                                     <InputForm title='Alamat' className='bg-slate-200 ' htmlFor="address" type="text" onChange={handleChange} value={form.address} />

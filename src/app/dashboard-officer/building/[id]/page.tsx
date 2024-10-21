@@ -571,7 +571,7 @@ const Page = (props: Props) => {
                                 <div className="flex  gap-5">
                                     <div className="text">
                                         <h1 className='font-medium' >Tahun</h1>
-                                        <DatePicker aria-label='date' value={form.date} variant={'underlined'} onChange={(e) => setForm({ ...form, date: e })} />
+                                        <DatePicker showMonthAndYearPickers aria-label='date' value={form.date} variant={'underlined'} onChange={(e) => setForm({ ...form, date: e })} />
                                     </div>
                                 </div>
 
