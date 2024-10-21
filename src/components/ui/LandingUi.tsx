@@ -13,6 +13,7 @@ import Footer from '../fragemnts/LandingPage/footer/Footer'
 import Navbar from '../fragemnts/navbar/Navbar'
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@nextui-org/react';
+import AllFitur from './AllFitur';
 
 // Import komponen Map secara dinamis tanpa SSR
 const Map = dynamic(() => import('../fragemnts/maps/Map'), {
@@ -72,6 +73,7 @@ const LandingUi = () => {
                         </div>
                     </section>
                     <AboutUs />
+                    <AllFitur />
                     <EmployeList />
                     <Galery />
                     <News />
