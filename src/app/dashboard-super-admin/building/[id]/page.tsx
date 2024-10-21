@@ -441,7 +441,7 @@ const Page = (props: Props) => {
 
                 <section className=' bg-white p-4 mx-auto py-10 px-5  rounded-md '>
                     <div className="flex justify-center items-center w-full">
-                        <InputForm className='bg-slate-300 w-full' type='text' placeholder='Nama Pembangunan' value={form.title} htmlFor='title' onChange={handleChange} />
+                        <InputForm errorMsg={errorMsg.title} className='bg-slate-300 w-full' type='text' placeholder='Nama Pembangunan' value={form.title} htmlFor='title' onChange={handleChange} />
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-10">
