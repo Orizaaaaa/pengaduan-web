@@ -95,7 +95,7 @@ const DashboardAdmin = () => {
 
 
                 {dataCard.map((item, index) => (
-                    <>
+                    <React.Fragment key={index}>
                         {loading ? (
                             <Card>
                                 <div role="status" className="max-w-sm animate-pulse flex-col justify-center items-center">
@@ -103,14 +103,15 @@ const DashboardAdmin = () => {
                                     <div className="h-7  w-7  bg-gray-300 rounded-md mb-4"></div>
                                 </div>
                             </Card>
-                        ) : (<Card key={index}>
-                            <div className="flex-col">
-                                <h1>{item.name}</h1>
-                                <h1 className={`text-2xl font-semibold ${colorCard(item.name)}`}>{item.value}</h1>
-                            </div>
-                        </Card>)
+                        ) : (
+                            <Card>
+                                <div className="flex-col">
+                                    <h1>{item.name}</h1>
+                                    <h1 className={`text-2xl font-semibold ${colorCard(item.name)}`}>{item.value}</h1>
+                                </div>
+                            </Card>)
                         }
-                    </>
+                    </React.Fragment>
                 ))}
             </div >
 
