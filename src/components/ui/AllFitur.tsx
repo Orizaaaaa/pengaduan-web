@@ -49,7 +49,7 @@ const AllFitur = (props: Props) => {
 
                     <div className='grid pt-12 pb-34 grid-cols-3  lg:grid-cols-5 gap-5'>
                         {dataFitur.map((item: any, index: number) => (
-                            <Link href={item.location} className='flex flex-col justify-center items-center'>
+                            <Link key={index} href={item.location} className='flex flex-col justify-center items-center'>
                                 <div className=" w-30 h-30 ">
                                     <Image
                                         src={item.image}
