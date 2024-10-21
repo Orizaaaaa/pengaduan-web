@@ -32,8 +32,8 @@ const LandingUi = () => {
         // Set timeout untuk menampilkan halaman sesungguhnya setelah 3 detik
         const timer = setTimeout(() => {
             setTransition(true); // Mulai transisi
-            setTimeout(() => setLoading(false), 500); // Tunda pergantian halaman selama animasi (0.5 detik)
-        }, 3000); // 3 detik waktu loading
+            setTimeout(() => setLoading(false), 1000); // Tunda pergantian halaman selama animasi (0.5 detik)
+        }); // 3 detik waktu loading
 
         return () => clearTimeout(timer); // Bersihkan timer saat komponen di-unmount
     }, []);
