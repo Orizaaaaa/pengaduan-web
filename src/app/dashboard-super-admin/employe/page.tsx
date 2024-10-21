@@ -263,7 +263,12 @@ const Page = () => {
                         {dataUser?.map((user: any, index: any) => (
                             <TableRow key={index}>
                                 <TableCell>{index + 1}</TableCell>
-                                <TableCell>{<Link href={`/dashboard-super-admin/employe/${user._id}`}>{capitalizeWords(user.name)}</Link>}</TableCell>
+                                <TableCell>{<Link className="flex items-center gap-2 underline" href={`/dashboard-super-admin/employe/${user._id}`}>
+                                    <div className="h-10 w-10 rounded-full bg-primary">
+                                        <img className=" w-full h-full rounded-full object-cover" src={user.image} alt="" />
+                                    </div>
+                                    <p  >{capitalizeWords(user.name)}</p>
+                                </Link>}</TableCell>
                                 <TableCell>{(user.email)}</TableCell>
                                 <TableCell>{user.phoneNumber}</TableCell>
                                 <TableCell>{capitalizeWords(user.division)}</TableCell>
