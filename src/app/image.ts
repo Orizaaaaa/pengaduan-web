@@ -47,6 +47,7 @@ import pertanian from '../assets/pertanian.png'
 import polisi from '../assets/polisi.png'
 import pupr from '../assets/pupr.png'
 import imageLogin from '../assets/imageLogin.png'
+import mkpp from '../assets/mkpp.png'
 
 import bgPengaduan from '../assets/pengaduanBg.png'
 
@@ -64,5 +65,5 @@ export {
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
     headerPengaduan, pembangunan, manusiaLaptop,
     basarnas, dinsos, dishub, kejaksaan, pertanian, polisi, pupr, bgLogin,
-    bannerShop, allCategori
+    bannerShop, allCategori, mkpp
 };
