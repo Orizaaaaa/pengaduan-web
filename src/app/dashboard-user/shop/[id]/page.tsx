@@ -32,18 +32,16 @@ type Props = {}
 
 const Page = (props: Props) => {
     const [loading, setLoading] = useState(false)
-    const [errorMsg, setErrorMsg] = useState(
-        {
-            name: '',
-            description: '',
-            address: '',
-            price: '',
-            image: '',
-            category: '',
-            quantity: '',
-            user: '',
-        }
-    )
+    const [errorMsg, setErrorMsg] = useState({
+        name: '',
+        description: '',
+        address: '',
+        price: '',
+        image: '',
+        category: '',
+        quantity: '',
+    })
+
     const [idUser, setIdUser] = useState<string | null>(null);
     const idProduct: any = useParams().id
     const { data, error } = useSWR(`${url}/shop/${idProduct}`, fetcher, {
@@ -252,41 +250,58 @@ const Page = (props: Props) => {
     console.log(formUpdate);
 
     const handleUpdate = async () => {
-        setLoading(true)
-        if (formUpdate.image.length === 0) {
-            setErrorMsg((prev) => ({
-                ...prev,
-                imageUpdate: '*Gambar tidak boleh kosong',
-            }));
+        setLoading(true);
+
+        // Validasi form tidak boleh kosong
+        const newErrorMsg = {
+            name: formUpdate.name === '' ? '*Nama tidak boleh kosong' : '',
+            description: formUpdate.description === '' ? '*Deskripsi tidak boleh kosong' : '',
+            address: formUpdate.address === '' ? '*Alamat tidak boleh kosong' : '',
+            price: formUpdate.price === '' ? '*Harga tidak boleh kosong' : '',
+            image: formUpdate.image.length === 0 ? '*Gambar tidak boleh kosong' : '',
+            category: formUpdate.category === '' ? '*Kategori tidak boleh kosong' : '',
+            quantity: formUpdate.quantity === '' ? '*Jumlah tidak boleh kosong' : '',
+        };
+
+        // Set error message jika ada field yang kosong
+        setErrorMsg(newErrorMsg);
+
+        // Cek apakah ada field yang kosong
+        const isFormInvalid = Object.values(newErrorMsg).some((msg) => msg !== '');
+
+        // Jika form tidak valid, hentikan proses
+        if (isFormInvalid) {
             setLoading(false);
-        } else {
-            // Pisahkan gambar yang berupa URL string dan File
-            const existingUrls = formUpdate.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
-            const newFiles = formUpdate.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
-
-            // Upload gambar baru ke Cloudinary jika ada
-            let uploadedUrls: string[] = [];
-            if (newFiles.length > 0) {
-                uploadedUrls = await postImagesArray({ images: newFiles });
-            }
-
-            // Gabungkan URL lama dengan URL baru yang di-upload
-            const allUrls = [...existingUrls, ...uploadedUrls];
-
-            // Data untuk dikirim ke update API
-            const data = {
-                ...formUpdate,
-                image: allUrls,
-            };
-
-            await updateShop(idProduct, data, (result: any) => {
-                console.log(result);
-                mutate(`${url}/shop/${idProduct}`);
-                setLoading(false);
-                onClose()
-            })
+            return;
         }
-    }
+
+        // Pisahkan gambar yang berupa URL string dan File
+        const existingUrls = formUpdate.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
+        const newFiles = formUpdate.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
+
+        // Upload gambar baru ke Cloudinary jika ada
+        let uploadedUrls: string[] = [];
+        if (newFiles.length > 0) {
+            uploadedUrls = await postImagesArray({ images: newFiles });
+        }
+
+        // Gabungkan URL lama dengan URL baru yang di-upload
+        const allUrls = [...existingUrls, ...uploadedUrls];
+
+        // Data untuk dikirim ke update API
+        const data = {
+            ...formUpdate,
+            image: allUrls,
+        };
+
+        await updateShop(idProduct, data, (result: any) => {
+            console.log(result);
+            mutate(`${url}/shop/${idProduct}`);
+            setLoading(false);
+            onClose();
+        });
+    };
+
 
 
 
