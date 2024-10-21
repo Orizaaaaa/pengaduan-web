@@ -3,12 +3,16 @@ import { getCategories } from '@/api/category'
 import { postImage } from '@/api/imagePost'
 import { createReport } from '@/api/report'
 import { camera } from '@/app/image'
+import ButtonPrimary from '@/components/elements/buttonPrimary'
 import Card from '@/components/elements/card/Card'
+import InputForm from '@/components/elements/input/InputForm'
 import InputReport from '@/components/elements/input/InputReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { Spinner } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { title } from 'process'
 import React, { useEffect, useState } from 'react'
 import { useMapEvents } from 'react-leaflet'
 const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'), {
@@ -18,9 +22,18 @@ const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'),
 type Props = {}
 
 const CreateReport = (props: Props) => {
+    const [loading, setLoading] = useState(false)
+    const [errorMsg, setErrorMsg] = useState({
+        title: '',
+        image: '',
+        lat: '',
+        long: '',
+        location: '',
+        desc: '',
+        categori: ''
+    });
 
-    const [errorMsg, setErrorMsg] = useState('')
-    const [category, setCategory] = useState([])
+    const [category, setCategory] = useState([]);
     const [formData, setFormData] = useState({
         title: "",
         image: null as File | null,
@@ -29,82 +42,143 @@ const CreateReport = (props: Props) => {
         location: '',
         desc: '',
         categori: ''
-
     });
 
     useEffect(() => {
         getCategories((result: any) => {
-            setCategory(result.data)
-        })
+            setCategory(result.data);
+        });
     }, []);
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // Komponen untuk menangani event klik pada peta
     const MapEvents = () => {
         useMapEvents({
             click(e: any) {
-                // Memperbarui posisi marker dengan posisi klik
-                setFormData({ ...formData, lat: e.latlng.lat, long: e.latlng.lng, });
+                setFormData({ ...formData, lat: e.latlng.lat, long: e.latlng.lng });
             }
         });
         return null;
     };
 
-    //lingkaran button
     const handleCategory = (value: string) => {
-        setFormData({ ...formData, categori: value })
+        setFormData({ ...formData, categori: value });
     }
-    //input gambar
+
     const handleFileManager = (fileName: string) => {
         if (fileName === 'add') {
             const fileInput = document.getElementById("image-input-add") as HTMLInputElement | null;
             fileInput ? fileInput.click() : null;
         } else {
             console.log('error');
-
         }
     };
+
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
         if (InputSelect === 'add') {
             const selectedImage = e.target.files?.[0];
-            setFormData({ ...formData, image: selectedImage || null });
-        } else {
-            console.log('error');
 
+            if (selectedImage) {
+                // Validasi tipe file
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(selectedImage.type)) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                    }));
+                    return; // Tidak update state jika tipe file tidak valid
+                }
+
+                // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+                const maxSize = 5 * 1024 * 1024;
+                if (selectedImage.size > maxSize) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Ukuran file maksimal 5 MB',
+                    }));
+                    return; // Tidak update state jika ukuran file lebih dari 5MB
+                }
+
+                // Hapus pesan error jika file valid
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '',
+                }));
+
+                // Update state dengan file yang valid
+                setFormData({ ...formData, image: selectedImage });
+            } else {
+                console.log('error');
+            }
         }
     };
 
-    // submit laporan 
-    const router = useRouter()
-    const handleSubmit = async (e: any) => {
+    const router = useRouter();
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (formData && formData.image && formData.image && formData.lat && formData.long && formData.location && formData.desc && formData.categori) {
+
+        // Reset error messages
+        setErrorMsg({
+            title: '',
+            image: '',
+            lat: '',
+            long: '',
+            location: '',
+            desc: '',
+            categori: ''
+        });
+
+        // Validasi sebelum mengirim laporan
+        let valid = true;
+
+        if (!formData.title) {
+            setErrorMsg((prev) => ({ ...prev, title: '*Judul laporan harus diisi' }));
+            valid = false;
+        }
+
+        if (!formData.image) {
+            setErrorMsg((prev) => ({ ...prev, image: '*Gambar harus diisi' }));
+            valid = false;
+        }
+
+        if (!formData.location) {
+            setErrorMsg((prev) => ({ ...prev, location: '*Lokasi kejadian harus diisi' }));
+            valid = false;
+        }
+
+        if (!formData.categori) {
+            setErrorMsg((prev) => ({ ...prev, categori: '*Kategori harus dipilih' }));
+            valid = false;
+        }
+
+        if (valid) {
+            setLoading(true)
             const imageUrl = await postImage({ image: formData.image });
             if (imageUrl) {
                 const formUnitWork: any = {
-                    title: formData.title, imageReport: [imageUrl], longitude: String(formData.long), latitude: String(formData.lat),
-                    address: formData.location, description: formData.desc, category: formData.categori
-                }
+                    title: formData.title,
+                    imageReport: [imageUrl],
+                    longitude: String(formData.long),
+                    latitude: String(formData.lat),
+                    address: formData.location,
+                    description: formData.desc,
+                    category: formData.categori
+                };
 
                 createReport(formUnitWork, (status: boolean, res: any) => {
                     if (status) {
-                        router.push('/dashboard-user/report')
-                        setErrorMsg('')
+                        router.push('/dashboard-user/report');
                         console.log(res);
+                        setLoading(false)
                     }
-                })
-
+                });
             } else {
-                setErrorMsg('*Tolong isi semua form dengan benar')
+                console.log('Error uploading image.');
             }
-        } else {
-            setErrorMsg('*Tolong isi semua form dengan benar')
         }
-
     };
     return (
         <DefaultLayout>
@@ -112,8 +186,8 @@ const CreateReport = (props: Props) => {
                 <h1 className="text-lg font-semibold text-primary py-4 border-b-2 border-primary" >Buat Laporan</h1>
                 <div className="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
                     <div className="input-report ">
-                        <InputReport htmlFor="title" title="Judul Laporan  " type="text" onChange={handleChange} value={formData.title} />
-                        <InputReport htmlFor="location" title="Lokasi kejadian  " type="text" onChange={handleChange} value={formData.location} placeholder="nama jalan atau tempat.." />
+                        <InputForm errorMsg={errorMsg.title} className='bg-slate-300' htmlFor="title" title="Judul Laporan  " type="text" onChange={handleChange} value={formData.title} />
+                        <InputForm errorMsg={errorMsg.location} className='bg-slate-300' htmlFor="location" title="Lokasi kejadian  " type="text" onChange={handleChange} value={formData.location} />
                         <label className="font-medium" htmlFor="desc" >Deskripsi Laporan  </label>
                         <textarea onChange={handleChange} name="desc" id="desc" cols={30} value={formData.desc} rows={4} className="block p-2.5 w-full bg-slate-300 rounded-md outline-none mt-2" ></textarea>
                     </div>
@@ -141,11 +215,13 @@ const CreateReport = (props: Props) => {
                         <div className="flex justify-center gap-3 mt-3">
                             <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${formData.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
                         </div>
+
+                        {errorMsg.image && <p className="text-red text-sm">{errorMsg.image}</p>}
                     </div>
                 </div>
 
                 {/* maps */}
-                <MapChoise markerPosition={{ lat: formData.lat, lng: formData.long }} zoom={13} text="Lokasi kejadian" className="h-[370px]  rounded-md mt-4" >
+                <MapChoise markerPosition={{ lat: formData.lat, lng: formData.long }} zoom={13} text={formData.location} className="h-[300px]  rounded-md mt-4" >
                     <MapEvents />
                 </MapChoise>
                 <h1 className="my-3 text-medium font-medium" >Pilih salah satu kategori</h1>
@@ -160,8 +236,10 @@ const CreateReport = (props: Props) => {
                         </div>
                     ))}
                 </div>
-                <p className="text-red " >{errorMsg}</p>
-                <button className="bg-primary text-white px-4 py-2 rounded-md w-full mt-4" onClick={handleSubmit}>Kirim Laporan</button>
+                <p className='text-red text-sm'>{errorMsg.categori}</p>
+
+                <ButtonPrimary onClick={handleSubmit} className='px-4 py-2 rounded-md flex justify-center items-center w-full mt-4'
+                >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim Laporan'}</ButtonPrimary>
             </Card>
         </DefaultLayout>
     )
