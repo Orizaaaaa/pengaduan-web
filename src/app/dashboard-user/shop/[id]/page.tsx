@@ -1,7 +1,8 @@
 'use client'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
-import { deleteProduct } from '@/api/shop'
+import { postImagesArray } from '@/api/imagePost'
+import { deleteProduct, updateShop } from '@/api/shop'
 import { camera, employe } from '@/app/image'
 import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
@@ -25,7 +26,7 @@ import { FaPen } from 'react-icons/fa6'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { Navigation, Thumbs } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 
 type Props = {}
 
@@ -240,9 +241,52 @@ const Page = (props: Props) => {
         setFormUpdate((prevForm) => ({ ...prevForm, [name]: value }));
     }
 
-    console.log(dataProduct);
+
+    const deleteArrayImage = (index: number,) => {
+        setFormUpdate(prevState => ({
+            ...prevState,
+            image: prevState.image.filter((_, i) => i !== index)
+        }));
+    };
+
     console.log(formUpdate);
 
+    const handleUpdate = async () => {
+        setLoading(true)
+        if (formUpdate.image.length === 0) {
+            setErrorMsg((prev) => ({
+                ...prev,
+                imageUpdate: '*Gambar tidak boleh kosong',
+            }));
+            setLoading(false);
+        } else {
+            // Pisahkan gambar yang berupa URL string dan File
+            const existingUrls = formUpdate.image.filter((item: any): item is string => typeof item === 'string'); // Gambar lama (URL)
+            const newFiles = formUpdate.image.filter((item: any): item is File => item instanceof File); // Gambar baru (File)
+
+            // Upload gambar baru ke Cloudinary jika ada
+            let uploadedUrls: string[] = [];
+            if (newFiles.length > 0) {
+                uploadedUrls = await postImagesArray({ images: newFiles });
+            }
+
+            // Gabungkan URL lama dengan URL baru yang di-upload
+            const allUrls = [...existingUrls, ...uploadedUrls];
+
+            // Data untuk dikirim ke update API
+            const data = {
+                ...formUpdate,
+                image: allUrls,
+            };
+
+            await updateShop(idProduct, data, (result: any) => {
+                console.log(result);
+                mutate(`${url}/shop/${idProduct}`);
+                setLoading(false);
+                onClose()
+            })
+        }
+    }
 
 
 
@@ -381,10 +425,10 @@ const Page = (props: Props) => {
                                             <img
                                                 src={typeof image === 'string' ? image : URL.createObjectURL(image)} // Cek apakah image berupa string atau File
                                                 alt={`preview-${index}`}
-                                                className="w-auto h-[200px] relative"
+                                                className="w-auto h-[100px] relative"
                                             />
                                         </div>
-                                        <button
+                                        <button onClick={() => deleteArrayImage(index)}
                                             className="button-delete array-image absolute top-0 right-0 z-10"
                                         >
                                             <IoCloseCircleOutline color="red" size={34} />
@@ -394,7 +438,7 @@ const Page = (props: Props) => {
                             ))
                         ) : (
                             <div className="flex justify-center">
-                                <Image className="w-auto h-[200px] relative" src={camera} alt="image" />
+                                <Image className="w-auto h-[100px] relative" src={camera} alt="image" />
                             </div>
                         )}
                     </CaraoselImage>
@@ -412,6 +456,7 @@ const Page = (props: Props) => {
                     </div>
                 </div>
 
+                <InputForm errorMsg={errorMsg.name} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Nama Produk' htmlFor='name' type='text' value={formUpdate.name} onChange={handleChange} />
                 <div className="flex gap-4 items-center">
                     <div className="dropdown ">
                         <h1 className='font-medium' >Kategori</h1>
@@ -432,7 +477,7 @@ const Page = (props: Props) => {
                 <InputForm errorMsg={errorMsg.price} marginDiown='mb-0' styleTitle='font-medium' className='bg-slate-300' title='Harga' htmlFor='price' type='text' value={formUpdate.price} onChange={handleChange} />
                 <div className="flex justify-end gap-2">
                     <ButtonDelete className='rounded-md  py-2 px-2' onClick={onClose} >Batal</ButtonDelete>
-                    <ButtonPrimary
+                    <ButtonPrimary onClick={handleUpdate}
                         className='px-4 py-2 rounded-md flex justify-center items-center'
                     >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
                 </div>
