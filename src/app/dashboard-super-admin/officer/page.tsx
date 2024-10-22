@@ -10,10 +10,11 @@ import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords } from "@/utils/helper";
-import { Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import { Skeleton, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 const OfficerList = () => {
+    const [loadingUi, setLoadingUi] = useState(true)
     const { onOpen, onClose, isOpen } = useDisclosure();
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -45,6 +46,7 @@ const OfficerList = () => {
             const data = result.data ? result.data.filter((role: any) =>
                 role.role === 'admin') : [];
             setDataUser(data)
+            setLoadingUi(false)
         })
     }, []);
 
@@ -255,20 +257,35 @@ const OfficerList = () => {
                         <TableColumn>ACTION</TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {dataUser?.map((user: any, index: any) => (
-                            <TableRow key={index}>
-                                <TableCell>{index + 1}</TableCell>
-                                <TableCell>{capitalizeWords(user.name)}</TableCell>
-                                <TableCell>{capitalizeWords(user.email)}</TableCell>
-                                <TableCell>{capitalizeWords(user.number_phone)}</TableCell>
-                                <TableCell>{capitalizeWords(user.role)}</TableCell>
-                                <TableCell>{user.unitWork ? capitalizeWords(user.unitWork.name) : '-'}</TableCell>
-                                <TableCell><ButtonDelete className=" rounded-md w-full py-2"
-                                    onClick={() => handleDeleteModal(user.id)}>Delete</ButtonDelete></TableCell>
-                            </TableRow>
-                        ))}
-
-                        {/* key nya di buat index */}
+                        {loadingUi ? (
+                            // Render skeleton rows during loading
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            dataUser?.map((user: any, index: number) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{capitalizeWords(user.name)}</TableCell>
+                                    <TableCell>{capitalizeWords(user.email)}</TableCell>
+                                    <TableCell>{capitalizeWords(user.number_phone)}</TableCell>
+                                    <TableCell>{capitalizeWords(user.role)}</TableCell>
+                                    <TableCell>{user.unitWork ? capitalizeWords(user.unitWork.name) : '-'}</TableCell>
+                                    <TableCell>
+                                        <ButtonDelete className="rounded-md w-full py-2"
+                                            onClick={() => handleDeleteModal(user.id)}>Delete</ButtonDelete>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </Card>
