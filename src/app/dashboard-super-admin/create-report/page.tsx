@@ -3,14 +3,14 @@ import { getCategories } from '@/api/category'
 import { postImage } from '@/api/imagePost'
 import { createReport } from '@/api/report'
 import { camera } from '@/app/image'
+import ButtonPrimary from '@/components/elements/buttonPrimary'
 import Card from '@/components/elements/card/Card'
 import InputForm from '@/components/elements/input/InputForm'
-import InputReport from '@/components/elements/input/InputReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { Skeleton, Spinner } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { title } from 'process'
 import React, { useEffect, useState } from 'react'
 import { useMapEvents } from 'react-leaflet'
 const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'), {
@@ -20,6 +20,8 @@ const MapChoise = dynamic(() => import('@/components/fragemnts/maps/MapChoise'),
 type Props = {}
 
 const CreateReport = (props: Props) => {
+    const [loading, setLoading] = useState(false)
+    const [loadingUi, setLoadingUi] = useState(true)
     const [errorMsg, setErrorMsg] = useState({
         title: '',
         image: '',
@@ -44,6 +46,7 @@ const CreateReport = (props: Props) => {
     useEffect(() => {
         getCategories((result: any) => {
             setCategory(result.data);
+            setLoadingUi(false);
         });
     }, []);
 
@@ -116,7 +119,7 @@ const CreateReport = (props: Props) => {
     const router = useRouter();
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        setLoading(true)
         // Reset error messages
         setErrorMsg({
             title: '',
@@ -168,13 +171,17 @@ const CreateReport = (props: Props) => {
                     if (status) {
                         router.push('/dashboard-super-admin/report');
                         console.log(res);
+                        setLoading(false)
                     }
                 });
             } else {
                 console.log('Error uploading image.');
+                setLoading(false)
             }
         }
     };
+
+
     return (
         <DefaultLayout>
             <Card>
@@ -216,24 +223,53 @@ const CreateReport = (props: Props) => {
                 </div>
 
                 {/* maps */}
-                <MapChoise markerPosition={{ lat: formData.lat, lng: formData.long }} zoom={13} text={formData.location} className="h-[300px]  rounded-md mt-4" >
-                    <MapEvents />
-                </MapChoise>
+
+                {loadingUi ?
+                    <Skeleton className="rounded-lg mt-5">
+                        <div className="h-[200px]  rounded-lg bg-default-300"></div>
+                    </Skeleton>
+                    : <MapChoise markerPosition={{ lat: formData.lat, lng: formData.long }} zoom={13} text={formData.location} className="h-[300px]  rounded-md mt-4" >
+                        <MapEvents />
+                    </MapChoise>}
+
+
+
                 <h1 className="my-3 text-medium font-medium" >Pilih salah satu kategori</h1>
                 <div className='grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 container mx-auto gap-5 mt-5'>
 
-                    {category.map((item: any, index) => (
-                        <div className="image flex-col justify-center items-center" key={index}>
-                            <img onClick={() => handleCategory(item._id)} src={item.image} className={`w-[70px] h-[70px] mx-auto rounded-full
-                             object-cover cursor-pointer ${formData.categori === item._id ? 'border-3 border-primary' : ''} `} alt='image' />
+                    {loadingUi ? (
+                        <>
+                            {Array.from({ length: 8 }).map((_, index) => (
+                                <div key={index} className='flex flex-col justify-center items-center gap-2'>
+                                    <Skeleton className="flex rounded-full w-[70px] h-[70px]" />
+                                    <Skeleton className="h-4 w-20 rounded-lg" />
+                                </div>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            {category.map((item: any, index: number) => (
+                                <div className="image flex-col justify-center items-center" key={index}>
+                                    <img
+                                        onClick={() => handleCategory(item._id)}
+                                        src={item.image}
+                                        className={`w-[70px] h-[70px] mx-auto rounded-full object-cover cursor-pointer ${formData.categori === item._id ? 'border-3 border-primary' : ''
+                                            }`}
+                                        alt='image'
+                                    />
+                                    <p className={`text-sm md:text-base mt-1 text-center`}>{item.name}</p>
+                                </div>
+                            ))}
+                        </>
+                    )}
 
-                            <p className={`text-sm md:text-base mt-1 text-center`}>{item.name}</p>
-                        </div>
-                    ))}
+
+
                 </div>
-                <p className='text-red text-sm'>{errorMsg.categori}</p>
 
-                <button className="bg-primary text-white px-4 py-2 rounded-md w-full mt-4" onClick={handleSubmit}>Kirim Laporan</button>
+                <p className='text-red text-sm'>{errorMsg.categori}</p>
+                <ButtonPrimary onClick={handleSubmit} className='px-4 py-2 mt-5 rounded-md flex w-full justify-center items-center'
+                >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Kirim Laporan'}</ButtonPrimary>
             </Card>
         </DefaultLayout>
     )
