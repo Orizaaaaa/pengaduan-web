@@ -9,7 +9,7 @@ import InputForm from '@/components/elements/input/InputForm'
 import InputReport from '@/components/elements/input/InputReport'
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { Spinner, useDisclosure } from '@nextui-org/react'
+import { Skeleton, Spinner, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
@@ -18,6 +18,7 @@ import { IoCloseCircleOutline } from 'react-icons/io5'
 type Props = {}
 
 const Page = (props: Props) => {
+    const [loadingUi, setLoadingUi] = useState(true)
     const [loading, setLoading] = useState(false)
     const [loadingDelete, setLoadingDelete] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -113,6 +114,7 @@ const Page = (props: Props) => {
         getCategories((result: any) => {
             setCategory(result.data);
         });
+        setLoadingUi(false)
     }, []);
 
     const handlecreateCategory = async (e: any) => {
@@ -196,18 +198,39 @@ const Page = (props: Props) => {
                             <p className="mt-1" >Tambah Kategori</p>
                         </div>
 
-                        {category.map((category: any, index) => (
-                            <div className="image flex-col justify-center items-center" key={index}>
-                                <img onClick={() => handleChangeId(category?._id)}
-                                    className={`w-[70px] h-[70px] mx-auto rounded-full object-cover   cursor-pointer 
-                               ${dataDelete === category?._id ? 'border-2 border-primary' : ''}`}
-                                    src={category.image} alt={'image kategori'} />
 
-                                <button className={`flex mt-1  ${dataDelete === category._id ? 'block' : 'hidden'}`}
-                                    onClick={handleDeleteModal} ><IoCloseCircleOutline size={20} color="red" /></button>
-                                <p className="text-sm md:text-base mt-1 text-center">{category.name}</p>
-                            </div>
-                        ))}
+                        {loadingUi ? (
+                            <>
+                                {Array.from({ length: 6 }).map((_, index) => (
+                                    <div key={index} className='flex flex-col justify-center items-center gap-2'>
+                                        <Skeleton className="flex rounded-full w-[70px] h-[70px]" />
+                                        <Skeleton className="h-4 w-20 rounded-lg" />
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                {
+                                    category.map((category: any, index) => (
+                                        <div className="image flex-col justify-center items-center" key={index}>
+                                            <img onClick={() => handleChangeId(category?._id)}
+                                                className={`w-[70px] h-[70px] mx-auto rounded-full object-cover   cursor-pointer 
+                               ${dataDelete === category?._id ? 'border-2 border-primary' : ''}`}
+                                                src={category.image} alt={'image kategori'} />
+
+                                            <button className={`flex mt-1  ${dataDelete === category._id ? 'block' : 'hidden'}`}
+                                                onClick={handleDeleteModal} ><IoCloseCircleOutline size={20} color="red" /></button>
+                                            <p className="text-sm md:text-base mt-1 text-center">{category.name}</p>
+                                        </div>
+                                    ))
+                                }
+                            </>
+                        )}
+
+
+
+
+
                     </div>
                 </Card>
 
