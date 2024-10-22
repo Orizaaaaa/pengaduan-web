@@ -8,6 +8,7 @@ import { url } from '@/api/auth'
 import { formatDateCapital, formatNews } from '@/utils/helper'
 import { useState } from 'react'
 import { CiCalendar } from 'react-icons/ci'
+import SekeletonReport from '../sekeleton/SekeletonReport'
 
 type Props = {}
 
@@ -43,6 +44,7 @@ const MainArticle = (props: Props) => {
 
     console.log(dataNews);
 
+    const isLoading = !data && !error;
 
     return (
         <section>
@@ -53,21 +55,34 @@ const MainArticle = (props: Props) => {
                 </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-7">
-                {filteredData?.map((item: any, index: number) => (
-                    <CardLink key={index} href={location(item._id)}>
-                        <div className="images h-[150px] ">
-                            <img className='rounded-t-lg w-full h-full' src={item.image} alt="jalan rusak" />
-                        </div>
-                        <div className="text px-2 py-1 space-y-2 mb-2">
-                            <div className="my-1 flex items-center gap-1">
-                                <CiCalendar color='#94A3B8' />
-                                <p className='text-small text-slate-400 font-light' >{formatDateCapital(item.createdAt)}</p>
-                            </div>
-                            <h1 className='font-medium text-sm md:text-base' >{item.title}</h1>
-                            <p className='text-sm text-slate-400' >{formatNews(item.description)}</p>
-                        </div>
-                    </CardLink>
-                ))}
+
+                {isLoading ? (
+                    Array.from({ length: 8 }).map((_, index) => (
+                        <SekeletonReport key={index} />
+                    ))
+                ) : (
+                    <>
+                        {filteredData?.map((item: any, index: number) => (
+                            <CardLink key={index} href={location(item._id)}>
+                                <div className="images h-[150px]">
+                                    <img className="rounded-t-lg w-full h-full" src={item.image} alt="jalan rusak" />
+                                </div>
+                                <div className="text px-2 py-1 space-y-2 mb-2">
+                                    <div className="my-1 flex items-center gap-1">
+                                        <CiCalendar color="#94A3B8" />
+                                        <p className="text-small text-slate-400 font-light">{formatDateCapital(item.createdAt)}</p>
+                                    </div>
+                                    <h1 className="font-medium text-sm md:text-base">{item.title}</h1>
+                                    <p className="text-sm text-slate-400">{formatNews(item.description)}</p>
+                                </div>
+                            </CardLink>
+                        ))}
+                    </>
+                )}
+
+
+
+
 
             </div>
         </section>
