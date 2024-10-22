@@ -11,13 +11,14 @@ import ModalAlert from "@/components/fragemnts/modal/modalAlert";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate, formatDateStr } from "@/utils/helper";
 import { parseDate } from "@internationalized/date";
-import { DatePicker, Modal, ModalBody, ModalContent, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import { DatePicker, Modal, ModalBody, ModalContent, Skeleton, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaPen } from "react-icons/fa6";
 
 const Page = () => {
+    const [loadingUi, setLoadingUi] = useState(true)
     const dateNow = new Date();
     const { onOpen, onClose, isOpen } = useDisclosure();
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
@@ -51,6 +52,7 @@ const Page = () => {
         getAllEmploye((result: any) => {
             console.log(result);
             setDataUser(result.data);
+            setLoadingUi(false)
         })
     }, []);
 
@@ -256,25 +258,42 @@ const Page = () => {
                         <TableColumn>ACTION</TableColumn>
                     </TableHeader>
                     <TableBody>
-                        {dataUser?.map((user: any, index: any) => (
-                            <TableRow key={index}>
-                                <TableCell>{index + 1}</TableCell>
-                                <TableCell>{<Link className="flex items-center gap-2 underline" href={`/dashboard-super-admin/employe/${user._id}`}>
-                                    <div className="h-10 w-10 rounded-full bg-primary">
-                                        <img className=" w-full h-full rounded-full object-cover" src={user.image} alt="" />
-                                    </div>
-                                    <p  >{capitalizeWords(user.name)}</p>
-                                </Link>}</TableCell>
-                                <TableCell>{(user.email)}</TableCell>
-                                <TableCell>{user.phoneNumber}</TableCell>
-                                <TableCell>{capitalizeWords(user.division)}</TableCell>
-                                <TableCell>{formatDate(user.joinDate)}</TableCell>
-                                <TableCell><ButtonDelete className="bg-red rounded-md w-full py-2"
-                                    onClick={() => handleDeleteModal(user._id)}>Delete</ButtonDelete></TableCell>
-                            </TableRow>
-                        ))}
 
-                        {/* key nya di buat index */}
+                        {loadingUi ?
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                    <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
+                                </TableRow>
+                            )) :
+                            (dataUser?.map((user: any, index: any) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{<Link className="flex items-center gap-2 underline" href={`/dashboard-super-admin/employe/${user._id}`}>
+                                        <div className="h-10 w-10 rounded-full bg-primary">
+                                            <img className=" w-full h-full rounded-full object-cover" src={user.image} alt="" />
+                                        </div>
+                                        <p  >{capitalizeWords(user.name)}</p>
+                                    </Link>}</TableCell>
+                                    <TableCell>{(user.email)}</TableCell>
+                                    <TableCell>{user.phoneNumber}</TableCell>
+                                    <TableCell>{capitalizeWords(user.division)}</TableCell>
+                                    <TableCell>{formatDate(user.joinDate)}</TableCell>
+                                    <TableCell><ButtonDelete className="bg-red rounded-md w-full py-2"
+                                        onClick={() => handleDeleteModal(user._id)}>Delete</ButtonDelete></TableCell>
+                                </TableRow>
+                            )))
+
+                        }
+
+
+
+
                     </TableBody>
                 </Table>
             </Card>
