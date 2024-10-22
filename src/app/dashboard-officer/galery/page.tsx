@@ -3,7 +3,7 @@ import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import { createGalery, deleteGalery, updateGalery } from '@/api/galery'
 import { postImagesArray } from '@/api/imagePost'
-import { camera } from '@/app/image'
+import { camera, headerShop } from '@/app/image'
 import ButtonDelete from '@/components/elements/buttonDelete'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import ButtonSecondary from '@/components/elements/buttonSecondary'
@@ -11,12 +11,13 @@ import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduc
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { AnyCalendarDate } from '@internationalized/date'
 import { Spinner, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 import React from 'react'
 import { FaPen } from 'react-icons/fa6'
 import { IoCloseCircleOutline } from 'react-icons/io5'
-import { Pagination } from 'swiper/modules'
+import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import useSWR, { mutate } from 'swr'
 
@@ -24,13 +25,15 @@ type Props = {}
 
 const GaleryAdmin = (props: Props) => {
     const { onOpen, onClose, isOpen } = useDisclosure();
+    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
+    const { isOpen: isUpdateOpen, onOpen: onUpdateOpen, onClose: onUpdateClose } = useDisclosure();
     const [loading, setLoading] = React.useState(false)
     const [loadingDelete, setLoadingDelete] = React.useState(false)
     const [errorMsg, setErrorMsg] = React.useState({
         image: '',
         imageUpdate: ''
     })
-    const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
+
     const [id, setId] = React.useState('')
     const [form, setForm] = React.useState({
         name: [] as File[],
@@ -166,6 +169,7 @@ const GaleryAdmin = (props: Props) => {
                         setForm({
                             name: [] as File[],
                         });
+                        onClose();
                     }
                 });
             } catch (error) {
@@ -175,10 +179,14 @@ const GaleryAdmin = (props: Props) => {
     };
 
 
+    const openModalCreate = () => {
+        onOpen()
+    }
+
     // action update
     const openModalUpdate = (id: any, data: any) => {
         setId(id);
-        onOpen();
+        onUpdateOpen()
         setFormUpdate({
             ...form, name: data.name // Mengambil data.name yang berisi URL gambar
         });
@@ -221,7 +229,7 @@ const GaleryAdmin = (props: Props) => {
                 mutate(`${url}/gallery/list`)
             });
 
-            onClose();
+            onUpdateClose()
         }
     };
 
@@ -244,52 +252,46 @@ const GaleryAdmin = (props: Props) => {
         })
     }
 
+    console.log(dataImage);
 
 
     return (
         <DefaultLayout>
 
-            {/* caraosel image input*/}
-            <div>
-                <CaraoselImage>
-                    {form.name.length > 0 ? (
-                        form.name.map((image, index) => (
-                            <SwiperSlide key={index}>
-                                <>
-                                    <div className="flex justify-center items-center " style={{ pointerEvents: 'none' }}>
-                                        <img
-                                            src={URL.createObjectURL(image)}
-                                            alt={`preview-${index}`}
-                                            className="w-auto h-[200px] relative"
-                                        />
+            <section className='header-shop' >
+                <Swiper
+                    slidesPerView={1} // Jumlah default slide yang ditampilkan
+                    spaceBetween={0}
+                    pagination={{
+                        clickable: true, // Pagination akan bisa diklik
+                    }}
+                    autoplay={{
+                        delay: 3000, // Waktu tunda antara slide dalam milidetik
+                        disableOnInteraction: false, // Melanjutkan autoplay meskipun pengguna berinteraksi
+                    }}
+                    modules={[Pagination, Autoplay]} // Tambahkan Autoplay ke dalam modul
+                    className="mySwiper"
+                >
+
+                    {dataImage?.map((headerShop: any) => (
+                        headerShop?.name?.map((item: any, index: number) => (
+                            <SwiperSlide key={index} >
+                                <div className="images h-[60vh] w-full relative">
+                                    <img className='rounded-lg w-full h-full object-cover' src={item} alt='header' />
+                                    {/* Overlay Hitam */}
+                                    <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+
+                                    <div className="p-4 mx-auto absolute flex flex-col justify-center items-center md:items-start inset-0 z-10">
+                                        <p className='text-white'>"Kami ingin melihat dunia dari sudut pandangmu! Unggah foto dan berikan warna pada galeri kami!"</p>
+                                        <ButtonPrimary onClick={openModalCreate} className='py-1 px-3 rounded-lg mt-3' >Tambah Galeri</ButtonPrimary>
                                     </div>
-                                    <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
-                                </>
+                                </div>
+
                             </SwiperSlide>
                         ))
-                    ) : (
-                        <div className='flex justify-center'>
-                            <Image className="w-auto h-[200px] relative " src={camera} alt="image"></Image>
-                        </div>
-                    )}
-                </CaraoselImage>
-
-                <div className="grid grid-cols-2 justify-between mt-5 gap-2">
-                    <ButtonPrimary className='rounded-md relative cursor-pointer py-2 px-1' >Tambah Image
-                        <input
-                            type="file"
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            id="image-input-add"
-                            onChange={(e) => handleImageChange(e, 'add')}
-                        />
-                    </ButtonPrimary>
-                    <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, name: [] }))} >Hapus Semua</ButtonSecondary>
-                </div>
-                <p className='text-red text-sm my-2' >{errorMsg.image}</p>
-                <ButtonPrimary onClick={handleCreate}
-                    className='px-4 py-2 rounded-md flex justify-center items-center w-full'
-                >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
-            </div>
+                    ))}
+                </Swiper>
+            </section>
 
 
             {/* list gambar */}
@@ -337,7 +339,7 @@ const GaleryAdmin = (props: Props) => {
 
 
             {/* modal update */}
-            <ModalDefault isOpen={isOpen} onClose={onClose}>
+            <ModalDefault isOpen={isUpdateOpen} onClose={onUpdateClose}>
                 <div>
                     <CaraoselImage>
                         {formUpdate.name.length > 0 ? (
@@ -389,6 +391,52 @@ const GaleryAdmin = (props: Props) => {
                     <p className='text-red text-sm my-2' >{errorMsg.imageUpdate}</p>
 
                     <ButtonPrimary className='w-full py-2 rounded-md' onClick={handleUpdate}>Kirim</ButtonPrimary>
+                </div>
+            </ModalDefault>
+
+            {/* modal create */}
+
+            <ModalDefault isOpen={isOpen} onClose={onClose}>
+                {/* caraosel image input*/}
+                <div>
+                    <CaraoselImage>
+                        {form.name.length > 0 ? (
+                            form.name.map((image, index) => (
+                                <SwiperSlide key={index}>
+                                    <>
+                                        <div className="flex justify-center items-center " style={{ pointerEvents: 'none' }}>
+                                            <img
+                                                src={URL.createObjectURL(image)}
+                                                alt={`preview-${index}`}
+                                                className="w-auto h-[200px] relative"
+                                            />
+                                        </div>
+                                        <button onClick={() => deleteArrayImage(index, 'add')} className="button-delete array image absolute top-0 right-0 z-10 "  ><IoCloseCircleOutline color="red" size={34} /></button>
+                                    </>
+                                </SwiperSlide>
+                            ))
+                        ) : (
+                            <div className='flex justify-center'>
+                                <Image className="w-auto h-[200px] relative " src={camera} alt="image"></Image>
+                            </div>
+                        )}
+                    </CaraoselImage>
+
+                    <div className="grid grid-cols-2 justify-between mt-5 gap-2">
+                        <ButtonPrimary className='rounded-md relative cursor-pointer py-2 px-1' >Tambah Image
+                            <input
+                                type="file"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                id="image-input-add"
+                                onChange={(e) => handleImageChange(e, 'add')}
+                            />
+                        </ButtonPrimary>
+                        <ButtonSecondary className='rounded-md  py-2 px-1' onClick={() => setForm(prevForm => ({ ...prevForm, name: [] }))} >Hapus Semua</ButtonSecondary>
+                    </div>
+                    <p className='text-red text-sm my-2' >{errorMsg.image}</p>
+                    <ButtonPrimary onClick={handleCreate}
+                        className='px-4 py-2 rounded-md flex justify-center items-center w-full'
+                    >{loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Simpan'}</ButtonPrimary>
                 </div>
             </ModalDefault>
 
