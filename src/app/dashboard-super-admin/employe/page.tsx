@@ -8,6 +8,7 @@ import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
 import InputForm from "@/components/elements/input/InputForm";
 import ModalAlert from "@/components/fragemnts/modal/modalAlert";
+import Search from "@/components/fragemnts/search/Search";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate, formatDateStr } from "@/utils/helper";
 import { parseDate } from "@internationalized/date";
@@ -18,6 +19,7 @@ import { useEffect, useState } from "react";
 import { FaPen } from "react-icons/fa6";
 
 const Page = () => {
+    const [searchData, setSearchData] = useState("");
     const [loadingUi, setLoadingUi] = useState(true)
     const dateNow = new Date();
     const { onOpen, onClose, isOpen } = useDisclosure();
@@ -80,6 +82,11 @@ const Page = () => {
             console.log('error');
 
         }
+    };
+
+
+    const handleSearch = (e: any) => {
+        setSearchData(e.target.value);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -225,6 +232,14 @@ const Page = () => {
 
 
 
+    const filteredData = dataUser?.filter((item: any) => {
+        return (
+            item.name && item.name.toLowerCase().includes(searchData.toLowerCase())
+
+        );
+    });
+
+
 
     return (
         <DefaultLayout>
@@ -242,8 +257,11 @@ const Page = () => {
 
 
             <Card>
-                <div className="flex justify-end my-5">
-                    <ButtonPrimary className=" rounded-md py-2 px-4" onClick={handleAddCategory} >Tambah Petugas</ButtonPrimary>
+                <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10 my-3">
+                    <ButtonPrimary onClick={handleAddCategory} className='py-2 px-4 rounded-md' >Tambah Karyawan</ButtonPrimary>
+                    <div className="w-full md:w-auto">
+                        <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Karyawan..." />
+                    </div>
                 </div>
 
 
@@ -271,7 +289,7 @@ const Page = () => {
                                     <TableCell><Skeleton className="h-6 w-full rounded-md" /></TableCell>
                                 </TableRow>
                             )) :
-                            (dataUser?.map((user: any, index: any) => (
+                            (filteredData?.map((user: any, index: any) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{<Link className="flex items-center gap-2 underline" href={`/dashboard-super-admin/employe/${user._id}`}>
