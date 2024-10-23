@@ -7,6 +7,7 @@ import { coordinateDashboard, statusDashboard } from '@/api/dashboard'
 import Image from 'next/image'
 import { manusiaLaptop } from '@/app/image'
 import dynamic from 'next/dynamic'
+import { Skeleton } from '@nextui-org/react'
 const MapsAdmin = dynamic(() => import('../fragemnts/maps/MapsAdmin'), {
     ssr: false
 });
@@ -20,16 +21,16 @@ interface Report {
 
 const DashboardOfficer = () => {
     const [dataDashboard, setDataDashboard] = useState({} as Report);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [dataCoordinate, setDataCoordinate] = useState([]);
     useEffect(() => {
-        setLoading(true)
         statusDashboard((result: any) => {
             setDataDashboard(result.data)
             setLoading(false)
         })
         coordinateDashboard((result: any) => {
             setDataCoordinate(result.data)
+            setLoading(false)
         })
     }, []);
 
@@ -95,26 +96,38 @@ const DashboardOfficer = () => {
 
 
                 {dataCard.map((item, index) => (
-                    <>
+                    <React.Fragment key={index}>
                         {loading ? (
                             <Card>
-                                <div role="status" className="max-w-sm animate-pulse flex-col justify-center items-center">
-                                    <div className="h-4 bg-gray-300 rounded-md  max-w-[360px] mb-2.5"></div>
-                                    <div className="h-7  w-7  bg-gray-300 rounded-md mb-4"></div>
+                                <div className="max-w-[300px] w-full flex items-center gap-3">
+                                    <div>
+                                        <Skeleton className="flex rounded-md w-12 h-12" />
+                                    </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        <Skeleton className="h-3 w-3/5 rounded-lg" />
+                                        <Skeleton className="h-3 w-4/5 rounded-lg" />
+                                    </div>
                                 </div>
+
                             </Card>
-                        ) : (<Card key={index}>
-                            <div className="flex-col">
-                                <h1>{item.name}</h1>
-                                <h1 className={`text-2xl font-semibold ${colorCard(item.name)}`}>{item.value}</h1>
-                            </div>
-                        </Card>)
+                        ) : (
+                            <Card>
+                                <div className="flex-col">
+                                    <h1>{item.name}</h1>
+                                    <h1 className={`text-2xl font-semibold ${colorCard(item.name)}`}>{item.value}</h1>
+                                </div>
+                            </Card>)
                         }
-                    </>
+                    </React.Fragment>
                 ))}
             </div >
 
-            <MapsAdmin center={{ lat: -6.917464, lng: 107.619125 }} dataMarker={markers} />
+            {loading ?
+                <Skeleton className="rounded-lg mt-10">
+                    <div className="h-45 rounded-lg bg-default-300"></div>
+                </Skeleton>
+                :
+                <MapsAdmin center={{ lat: -6.917464, lng: 107.619125 }} dataMarker={markers} />}
 
 
 
