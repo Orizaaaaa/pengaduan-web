@@ -74,14 +74,49 @@ const Page = () => {
 
         }
     };
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
-        if (InputSelect === 'add') {
-            const selectedImage = e.target.files?.[0];
-            setForm({ ...form, image: selectedImage || null });
-        } else {
-            console.log('error');
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        const selectedImage = e.target.files?.[0];
+
+        if (!selectedImage) {
+            console.log('No file selected');
+            return;
         }
+
+        if (InputSelect === 'add') {
+            // Validasi tipe file
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (!allowedTypes.includes(selectedImage.type)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                }));
+                return;
+            }
+
+            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+            const maxSize = 5 * 1024 * 1024;
+            if (selectedImage.size > maxSize) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Ukuran file maksimal 5 MB',
+                }));
+                return;
+            }
+
+            // Hapus pesan error jika file valid
+            setErrorMsg((prev) => ({
+                ...prev,
+                image: '',
+            }));
+
+            // Update state form dengan file yang valid
+            setForm((prevState: any) => ({
+                ...prevState,
+                image: [...prevState.image, selectedImage],
+            }));
+        }
+
     };
 
 
@@ -329,14 +364,17 @@ const Page = () => {
                             <form onSubmit={handleCreate}>
                                 <div className="images my-3">
                                     {form.image && form.image instanceof Blob ? (
-                                        <div className='relative h-[90px] w-[90px] mx-auto '>
-                                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(form.image)} />
-                                            <div className=" absolute bottom-0 right-0 ">
-                                                <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
-                                                    <FaPen color='#ffff' />
-                                                </button>
+                                        <>
+                                            <div className='relative h-[90px] w-[90px] mx-auto '>
+                                                <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(form.image)} />
+                                                <div className=" absolute bottom-0 right-0 ">
+                                                    <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                                        <FaPen color='#ffff' />
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <p className="text-center text-red mt-2" >{errorMsg.image}</p>
+                                        </>
 
                                     ) : (
                                         <>

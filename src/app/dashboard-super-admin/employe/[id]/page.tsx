@@ -40,10 +40,21 @@ const Page = (props: Props) => {
     const { isOpen: isWarningOpen, onOpen: onWarningOpen, onClose: onWarningClose } = useDisclosure();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [loading, setLoading] = useState(false)
-    const [rotation, setRotation] = useState({ rotateX: 0, rotateY: 0 });
-    const [isHovered, setIsHovered] = useState(false);
     const { id }: any = useParams()
     const [data, setData] = useState({} as Employee)
+
+    const [errorMsg, setErrorMsg] = useState(
+        {
+            name: '',
+            position: '',
+            division: '',
+            address: '',
+            email: '',
+            phoneNumber: '',
+            image: '',
+        }
+    )
+
     const [form, setForm] = useState({
         name: '',
         position: '',
@@ -76,19 +87,6 @@ const Page = (props: Props) => {
 
 
 
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        const card = e.currentTarget.getBoundingClientRect();
-        const rotateX = ((e.clientY - card.top) / card.height - 0.5) * 20;
-        const rotateY = ((e.clientX - card.left) / card.width - 0.5) * -20;
-        setRotation({ rotateX, rotateY });
-    };
-
-    const handleMouseLeave = () => {
-        setRotation({ rotateX: 0, rotateY: 0 });
-        setIsHovered(false); // Reset scale and rotation on mouse leave
-    };
-
     // action update 
     const openModalUpdate = () => {
         onOpen()
@@ -105,18 +103,118 @@ const Page = (props: Props) => {
         }
     };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
-        if (InputSelect === 'add') {
-            const selectedImage = e.target.files?.[0];
-            setForm({ ...form, image: selectedImage || null });
-        } else {
-            console.log('error');
+        const selectedImage = e.target.files?.[0];
 
+        if (!selectedImage) {
+            console.log('No file selected');
+            return;
         }
+
+        if (InputSelect === 'add') {
+            // Validasi tipe file
+            const allowedTypes = ['image/png', 'image/jpeg'];
+            if (!allowedTypes.includes(selectedImage.type)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                }));
+                return;
+            }
+
+            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+            const maxSize = 5 * 1024 * 1024;
+            if (selectedImage.size > maxSize) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '*Ukuran file maksimal 5 MB',
+                }));
+                return;
+            }
+
+            // Hapus pesan error jika file valid
+            setErrorMsg((prev) => ({
+                ...prev,
+                image: '',
+            }));
+
+            // Update state form dengan file yang valid
+            setForm((prevState: any) => ({
+                ...prevState,
+                image: [...prevState.image, selectedImage],
+            }));
+        }
+
     };
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
+
+        // Update state terlebih dahulu
+        setForm((prevForm) => ({ ...prevForm, [name]: value }));
+
+        // Validasi khusus email
+        if (name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex untuk format email
+
+            if (!emailRegex.test(value)) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    email: '*Format email tidak valid',
+                }));
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    email: '',
+                }));
+            }
+            return; // Hentikan setelah memproses email
+        }
+
+        // Validasi khusus nomor telepon
+        if (name === 'phoneNumber') {
+            let numericValue = value.replace(/\D/g, '');
+
+            if (numericValue.startsWith('08')) {
+                numericValue = '628' + numericValue.slice(2);
+            }
+
+            if (numericValue.length > 15) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    phoneNumber: '*Nomor tidak boleh lebih dari 15 angka',
+                }));
+                return;
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    phoneNumber: '',
+                }));
+            }
+
+            setForm({ ...form, [name]: numericValue });
+            return;
+        }
+
+        // Validasi agar `name` hanya mengandung huruf
+        if (name === 'name') {
+            const filteredValue = value.replace(/[^a-zA-Z\s]/g, ''); // Hanya huruf dan spasi yang diizinkan
+            const hasNumber = /\d/.test(value);
+
+            if (hasNumber) {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '*Nama tidak boleh mengandung angka',
+                }));
+            } else {
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    name: '',
+                }));
+            }
+
+            setForm((prevForm) => ({ ...prevForm, [name]: filteredValue })); // Update state dengan nilai yang difilter
+            return;
+        }
     };
 
 
@@ -125,6 +223,24 @@ const Page = (props: Props) => {
     const handleUpdate = async (e: any) => {
         e.preventDefault()
         setLoading(true)
+        const newErrorMsg: any = {
+            name: form.name ? '' : '*Nama tidak boleh kosong',
+            position: form.position ? '' : '*Posisi tidak boleh kosong',
+            division: form.division ? '' : '*Divisi tidak boleh kosong',
+            address: form.address ? '' : '*Alamat tidak boleh kosong',
+            email: form.email ? '' : '*Email tidak boleh kosong',
+            phoneNumber: form.phoneNumber ? '' : '*Nomor telepon tidak boleh kosong',
+            image: form.image ? '' : '*Gambar tidak boleh kosong',
+        };
+
+        setErrorMsg(newErrorMsg);
+        // Jika ada error, hentikan proses
+        const hasError = Object.values(newErrorMsg).some((msg) => msg !== '');
+        if (hasError) {
+            setLoading(false);
+            return;
+        }
+
         if (form.image instanceof Blob) {
             const imageUrl = await postImage({ image: form.image });
 
@@ -276,23 +392,33 @@ const Page = (props: Props) => {
                                 <div className="images  my-4">
 
                                     {form.image && form.image instanceof Blob ? (
-                                        <div className='relative h-[90px] w-[90px] mx-auto '>
-                                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(form.image)} />
-                                            <div className=" absolute bottom-0 right-0 ">
-                                                <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
-                                                    <FaPen color='#ffff' />
-                                                </button>
+                                        <>
+                                            <div className='relative h-[90px] w-[90px] mx-auto '>
+                                                <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(form.image)} />
+                                                <div className=" absolute bottom-0 right-0 ">
+                                                    <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                                        <FaPen color='#ffff' />
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <p className='text-red text-center text-sm my-1' >{errorMsg.image}</p>
+                                        </>
+
                                     ) : (
-                                        <div className='relative h-[90px] w-[90px] mx-auto '>
-                                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={form.image ? form.image : ''} />
-                                            <div className=" absolute bottom-0 right-0 ">
-                                                <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
-                                                    <FaPen color='#ffff' />
-                                                </button>
+
+                                        <>
+
+                                            <div className='relative h-[90px] w-[90px] mx-auto '>
+                                                <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={form.image ? form.image : ''} />
+                                                <div className=" absolute bottom-0 right-0 ">
+                                                    <button className={` bg-primary rounded-full p-2 ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                                        <FaPen color='#ffff' />
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <p className='text-red text-center text-sm my-1' >{errorMsg.image}</p>
+                                        </>
+
                                     )}
 
                                     <input
