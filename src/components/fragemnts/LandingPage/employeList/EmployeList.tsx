@@ -58,14 +58,16 @@ const EmployeList = (props: Props) => {
             >
                 {dataEmploye?.map((item: any, index: number) => (
                     <SwiperSlide key={index} >
-                        <div className="h-[300px] bg-primary rounded-md flex justify-end items-center flex-col ">
-                            <img className="w-auto bg-top object-cover rounded-md" src={item.image} alt="human" />
+                        <div className="bg-primary rounded-t-md flex justify-end items-center flex-col">
+                            <div className="h-[300px] w-full rounded-t-md">
+                                <img className="w-full h-full object-cover rounded-t-md" src={item.image} alt="human" />
+                            </div>
+
                             <div className="p-4 bg-white w-full text-center">
-                                <p className=' font-bold' >{capitalizeWords(item.name)}</p>
-                                <p className='text-slate-500 text-sm' > {item.division} | {item.position}</p>
+                                <p className="font-bold">{capitalizeWords(item.name)}</p>
+                                <p className="text-slate-500 text-sm">{item.division} | {item.position}</p>
                             </div>
                         </div>
-
                     </SwiperSlide>
                 ))}
 
