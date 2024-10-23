@@ -12,7 +12,9 @@ import useSWR from 'swr'
 import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { Skeleton } from '@nextui-org/react'
+import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
 
 
 type Props = {}
@@ -21,7 +23,6 @@ const Shop = (props: Props) => {
     const pathName = usePathname()
     const [selectedCategory, setSelectedCategory] = useState<string>('Semua Kategori');
     const [searchData, setSearchData] = useState("");
-    const [loading, setLoading] = useState(false)
     const { data, error } = useSWR(`${url}/shop/list`, fetcher, {
         keepPreviousData: true,
     });
@@ -45,6 +46,10 @@ const Shop = (props: Props) => {
             item.description.toLowerCase().includes(searchData.toLowerCase());
         return isCategoryMatch && isSearchMatch;
     });
+
+    const router = useRouter()
+
+    const isLoading = !data && !error
 
     return (
         <>
@@ -70,7 +75,7 @@ const Shop = (props: Props) => {
                                 <p className='text-slate-500 mt-2 text-sm' >Buah buahan dan sayuran hasil dari desa kami</p>
                                 <div className="flex gap-3 ">
                                     <ButtonPrimary className='mt-4 px-4 py-2 rounded-full' >Beli Sekarang</ButtonPrimary>
-                                    <button className='mt-4 px-4 py-2 rounded-full bg-black text-white' >Daftar Sekarang</button>
+                                    <button className='mt-4 px-4 py-2 rounded-full bg-black text-white' onClick={() => router.push('/register')} >Daftar Sekarang</button>
                                 </div>
                                 <div className="flex items-center gap-10 mt-10 ">
 
@@ -101,11 +106,6 @@ const Shop = (props: Props) => {
                             </div>
                         </div>
 
-                    </SwiperSlide>
-                    <SwiperSlide >
-                        <div className="images h-[80vh] w-full ">
-                            <Image className='rounded-t-lg w-full h-full' src={headerShop} alt='header' />
-                        </div>
                     </SwiperSlide>
                 </Swiper>
             </section>
@@ -145,16 +145,31 @@ const Shop = (props: Props) => {
                         className="mySwiper"
                     >
 
-                        {categoryCaraosel.map((item, index) => (
-                            <SwiperSlide key={index}>
-                                <div className="flex flex-col justify-center items-center">
-                                    <div className="w-30 h-30 rounded-full overflow-hidden">
-                                        <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
+                        {isLoading ? (
+                            <>
+                                {
+                                    Array.from({ length: 7 }).map((_, index) => (
+                                        <SwiperSlide key={index}>
+                                            <div className='flex flex-col justify-center items-center gap-2'>
+                                                <Skeleton className="flex rounded-full w-[70px] h-[70px]" />
+                                                <Skeleton className="h-4 w-20 rounded-lg" />
+                                            </div>
+                                        </SwiperSlide>
+                                    ))
+                                }
+                            </>
+                        ) : (
+                            categoryCaraosel.map((item, index) => (
+                                <SwiperSlide key={index}>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <div className="w-30 h-30 rounded-full overflow-hidden">
+                                            <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
+                                        </div>
+                                        <p className='text-center mt-2 text-sm'>{item.title}</p>
                                     </div>
-                                    <p className='text-center mt-2 text-sm' >{item.title}</p>
-                                </div>
-                            </SwiperSlide>
-                        ))}
+                                </SwiperSlide>
+                            ))
+                        )}
 
                     </Swiper>
 
@@ -173,9 +188,19 @@ const Shop = (props: Props) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
 
-                        {filteredData?.map((item: any, index: number) => (
-                            <CardHover location={`${pathName}/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
-                        ))}
+
+                        {isLoading ? (
+
+                            Array.from({ length: 6 }).map((_, index) => (
+                                <SekeletonReport key={index} />
+                            ))
+
+                        ) :
+                            filteredData?.map((item: any, index: number) => (
+                                <CardHover location={`${pathName}/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
+                            ))}
+
+
                     </div>
                 </section>
 
