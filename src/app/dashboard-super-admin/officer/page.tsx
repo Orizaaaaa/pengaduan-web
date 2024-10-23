@@ -1,7 +1,9 @@
 'use client'
 
-import { registerUser } from "@/api/auth";;
+import { registerUser } from "@/api/auth"; import { postImage } from "@/api/imagePost";
+;
 import { deleteUser, getAllUser } from "@/api/user";
+import { camera } from "@/app/image";
 import ButtonDelete from "@/components/elements/buttonDelete";
 import ButtonPrimary from "@/components/elements/buttonPrimary";
 import Card from "@/components/elements/card/Card";
@@ -11,7 +13,9 @@ import ModalDefault from "@/components/fragemnts/modal/modal";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords } from "@/utils/helper";
 import { Skeleton, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { FaPen } from "react-icons/fa6";
 
 const OfficerList = () => {
     const [loadingUi, setLoadingUi] = useState(true)
@@ -26,16 +30,19 @@ const OfficerList = () => {
         email: '',
         unitWork: '',
         password: '',
+        image: '',
+        message: ''
     })
     const [dataUser, setDataUser] = useState([]);
     const [formData, setFormData] = useState({
+        image: null as File | null,
         name: ' ',
         nik: '',
         number_phone: '',
         email: '',
         unitWork: '',
         password: '',
-        role: 'admin'
+        role: 'admin',
     })
     const [dataDelete, setDataDelete] = useState('')
 
@@ -54,6 +61,54 @@ const OfficerList = () => {
     const handleAddCategory = () => {
         onOpen();
     }
+
+    const handleFileManager = (fileName: string) => {
+        if (fileName === 'add') {
+            const fileInput = document.getElementById("image-input-add") as HTMLInputElement | null;
+            fileInput ? fileInput.click() : null;
+        } else {
+            console.log('error');
+        }
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
+        if (InputSelect === 'add') {
+            const selectedImage = e.target.files?.[0];
+
+            if (selectedImage) {
+                // Validasi tipe file
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(selectedImage.type)) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*',
+                    }));
+                    return; // Tidak update state jika tipe file tidak valid
+                }
+
+                // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+                const maxSize = 5 * 1024 * 1024;
+                if (selectedImage.size > maxSize) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Ukuran file maksimal 5 MB',
+                    }));
+                    return; // Tidak update state jika ukuran file lebih dari 5MB
+                }
+
+                // Hapus pesan error jika file valid
+                setErrorMsg((prev) => ({
+                    ...prev,
+                    image: '',
+                }));
+
+                // Update state dengan file yang valid
+                setFormData({ ...formData, image: selectedImage });
+            } else {
+                console.log('error');
+            }
+        }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -140,7 +195,9 @@ const OfficerList = () => {
             unitWork: '',
             number_phone: '',
             nik: '',
-            password: ''
+            password: '',
+            image: '',
+            message: ''
         });
 
         let hasError = false;
@@ -164,42 +221,54 @@ const OfficerList = () => {
             setErrorMsg((prev) => ({ ...prev, password: '*Password tidak boleh kosong' }));
             hasError = true;
         }
+        if (!formData.image) {
+            setErrorMsg((prev) => ({ ...prev, image: '*Foto profil harus diunggah' }));
+            hasError = true;
+        }
 
         if (hasError) {
             setLoading(false); // Selesai loading jika ada error
             return;
         }
 
-        await registerUser(formData, (status: boolean, res: any) => {
-            if (status) {
-                setFormData({
-                    name: ' ',
-                    email: '',
-                    unitWork: '',
-                    number_phone: '',
-                    nik: ' ',
-                    password: '',
-                    role: 'admin'
-                });
-                getAllUser((result: any) => {
-                    console.log(result);
-                    const data = result.data ? result.data.filter((role: any) =>
-                        role.role === 'admin') : [];
-                    setDataUser(data)
-                })
-                onClose();
-            } else {
-                if (res?.data?.message) {
-                    setErrorMsg((prev) => ({
-                        ...prev,
-                        ...res.data.message
-                    }));
+        const imageUrl = await postImage({ image: formData.image });
+        if (imageUrl) {
+            const data = { ...formData, image: imageUrl };
+            await registerUser(data, (status: boolean, res: any) => {
+                if (status) {
+                    setFormData({
+                        image: null as File | null,
+                        name: ' ',
+                        email: '',
+                        unitWork: '',
+                        number_phone: '',
+                        nik: ' ',
+                        password: '',
+                        role: 'admin'
+                    });
+                    getAllUser((result: any) => {
+                        console.log(result);
+                        const data = result.data ? result.data.filter((role: any) =>
+                            role.role === 'admin') : [];
+                        setDataUser(data)
+                    })
+                    onClose();
                 } else {
-                    console.log('Error occurred:', res);
+                    if (res?.response?.data?.data?.error) {
+                        if (res?.response?.data?.data?.error === 'Email has been used') {
+                            setErrorMsg((prev) => ({ ...prev, message: 'Email telah di gunakan' }));
+                        }
+
+                    } else {
+                        console.log('Error occurred:', res);
+                    }
                 }
-            }
-            setLoading(false); // Selesai loading setelah create selesai
-        });
+                setLoading(false); // Selesai loading setelah create selesai
+            });
+        }
+
+
+
     };
 
 
@@ -275,7 +344,7 @@ const OfficerList = () => {
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{capitalizeWords(user.name)}</TableCell>
-                                    <TableCell>{capitalizeWords(user.email)}</TableCell>
+                                    <TableCell>{user.email}</TableCell>
                                     <TableCell>{capitalizeWords(user.number_phone)}</TableCell>
                                     <TableCell>{capitalizeWords(user.role)}</TableCell>
                                     <TableCell>{user.unitWork ? capitalizeWords(user.unitWork.name) : '-'}</TableCell>
@@ -291,6 +360,37 @@ const OfficerList = () => {
             </Card>
 
             <ModalDefault isOpen={isOpen} onClose={onClose}>
+
+                <div className="images ">
+                    {formData.image && formData.image instanceof Blob ? (
+                        <div className='relative h-[90px] w-[90px] mx-auto '>
+                            <img className=" h-[90px] w-[90px]  rounded-full border-3 border-primary" src={URL.createObjectURL(formData.image)} />
+                            <div className=" absolute bottom-0 right-0 ">
+                                <button className={` bg-primary rounded-full p-2 ${formData.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')}>
+                                    <FaPen color='#ffff' />
+                                </button>
+                            </div>
+                        </div>
+
+                    ) : (
+                        <>
+                            <div className="images mx-auto border-dashed border-2 border-black rounded-full bg-gray-300 h-[80px] w-[80px] flex justify-center items-center relative">
+                                <button className="flex-col justify-center items-center h-full w-full" type="button" onClick={() => handleFileManager('add')}>
+                                    <Image className="w-10 h-10 mx-auto" src={camera} alt="cam" />
+                                </button>
+                            </div>
+                            <p className='text-center mt-2 text-small text-red' >{errorMsg.image}</p>
+                        </>
+                    )}
+                    <input
+                        type="file"
+                        className="hidden"
+                        id="image-input-add"
+                        onChange={(e) => handleImageChange(e, 'add')}
+                    />
+
+                </div>
+
                 <InputForm errorMsg={errorMsg.nik} className="bg-slate-300" type="text" htmlFor="nik" title="NIK  " onChange={handleChange} value={formData.nik} />
                 <InputForm errorMsg={errorMsg.name} className="bg-slate-300" htmlFor="name" title="Nama Petugas  " type="text" onChange={handleChange} value={formData.name} />
                 <div className="flex justify-between">
@@ -300,6 +400,7 @@ const OfficerList = () => {
 
 
                 <InputForm errorMsg={errorMsg.password} className="bg-slate-300" htmlFor="password" title="Password " type="text" onChange={handleChange} value={formData.password} />
+                <p className="text-red text-sm" >{errorMsg.message}</p>
                 <ButtonPrimary onClick={createOfficer} className='px-4 py-2
                  rounded-md flex justify-center items-center'> {loading ? <Spinner
                         className={`w-5 h-5 mx-8`} size="sm" color="white" />
