@@ -15,9 +15,10 @@ import InputReport from '@/components/elements/input/InputReport'
 import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import Search from '@/components/fragemnts/search/Search'
+import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject'
-import { AutocompleteItem, Spinner, useDisclosure } from '@nextui-org/react'
+import { AutocompleteItem, Skeleton, Spinner, useDisclosure } from '@nextui-org/react'
 import Image from 'next/image'
 
 import React, { useEffect, useState } from 'react'
@@ -240,6 +241,9 @@ const Page = (props: Props) => {
         return isCategoryMatch && isSearchMatch;
     });
 
+
+    const isLoading = !data && !error
+
     return (
         <DefaultLayout>
             <div className="bg-white p-3 rounded-md">
@@ -289,18 +293,31 @@ const Page = (props: Props) => {
                         modules={[Autoplay]}
                         className="mySwiper"
                     >
-
-                        {categoryCaraosel.map((item, index) => (
-                            <SwiperSlide key={index}>
-                                <div className="flex flex-col justify-center items-center">
-                                    <div className="w-30 h-30 rounded-full overflow-hidden">
-                                        <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
+                        {isLoading ? (
+                            <>
+                                {
+                                    Array.from({ length: 6 }).map((_, index) => (
+                                        <SwiperSlide key={index}>
+                                            <div className='flex flex-col justify-center items-center gap-2'>
+                                                <Skeleton className="flex rounded-full w-[70px] h-[70px]" />
+                                                <Skeleton className="h-4 w-20 rounded-lg" />
+                                            </div>
+                                        </SwiperSlide>
+                                    ))
+                                }
+                            </>
+                        ) : (
+                            categoryCaraosel.map((item, index) => (
+                                <SwiperSlide key={index}>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <div className="w-30 h-30 rounded-full overflow-hidden">
+                                            <Image onClick={() => handleCategoryClick(item.title)} className="w-full h-full object-cover cursor-pointer" src={item.image} alt="shop1" />
+                                        </div>
+                                        <p className='text-center mt-2 text-sm'>{item.title}</p>
                                     </div>
-                                    <p className='text-center mt-2 text-sm' >{item.title}</p>
-                                </div>
-                            </SwiperSlide>
-                        ))}
-
+                                </SwiperSlide>
+                            ))
+                        )}
                     </Swiper>
 
                 </section>
@@ -314,9 +331,17 @@ const Page = (props: Props) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 my-7">
-                    {filteredData?.map((item: any, index: number) => (
-                        <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
-                    ))}
+                    {isLoading ? (
+
+                        Array.from({ length: 6 }).map((_, index) => (
+                            <SekeletonReport key={index} />
+                        ))
+
+                    ) :
+                        (filteredData?.map((item: any, index: number) => (
+                            <CardHover location={`/dashboard-super-admin/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
+                        )))}
+
                 </div>
 
                 <ModalDefault isOpen={isOpen} onClose={onClose}>
