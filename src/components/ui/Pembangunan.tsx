@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../fragemnts/navbar/Navbar'
 import ButtonPrimary from '../elements/buttonPrimary'
 import Search from '../fragemnts/search/Search'
@@ -8,15 +8,29 @@ import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import CardBuilding from '../elements/card/CardBuilding'
 import { formatDate } from '@/utils/helper'
+import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
 
 type Props = {}
 
 const Pembangunan = (props: Props) => {
+    const [searchData, setSearchData] = useState("");
     const { data, error } = useSWR(`${url}/infrastucture/list`, fetcher, {
         keepPreviousData: true,
     });
     const dataPembanguan = data?.data
+    const handleSearch = (e: any) => {
+        setSearchData(e.target.value);
+    };
+
+    const filteredData = dataPembanguan?.filter((item: any) => {
+        return (
+            item.title && item.title.toLowerCase().includes(searchData.toLowerCase())
+
+        );
+    });
     console.log(dataPembanguan);
+
+    const isLoading = !data && !error
 
     return (
         <>
@@ -43,17 +57,23 @@ const Pembangunan = (props: Props) => {
                 <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
                     <h1 className='text-2xl font-bold '>Pembangunan</h1>
                     <div className="w-full md:w-auto"> {/* Membatasi lebar search di layar besar */}
-                        <Search className='border-2 border-black' placeholder="Cari Pembangunan..." />
+                        <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Pembangunan..." />
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-7">
 
+                    {isLoading ? (
+                        Array.from({ length: 6 }).map((_, index) => (
+                            <SekeletonReport key={index} />
+                        ))
 
-                    {dataPembanguan?.map((item: any, index: number) => (
-                        <CardBuilding key={index} title={item.title} imageUrl={item.image}
-                            date={formatDate(item.date)} location={item.address}
-                            link={`/pembangunan/${item._id}`} />
-                    ))}
+                    ) : (
+                        filteredData?.map((item: any, index: number) => (
+                            <CardBuilding key={index} title={item.title} imageUrl={item.image}
+                                date={formatDate(item.date)} location={item.address}
+                                link={`/pembangunan/${item._id}`} />
+                        ))
+                    )}
                 </div>
             </section>
 
