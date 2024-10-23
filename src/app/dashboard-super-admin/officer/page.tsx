@@ -10,6 +10,7 @@ import Card from "@/components/elements/card/Card";
 import InputForm from "@/components/elements/input/InputForm";
 import InputReport from "@/components/elements/input/InputReport";
 import ModalDefault from "@/components/fragemnts/modal/modal";
+import Search from "@/components/fragemnts/search/Search";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords } from "@/utils/helper";
 import { Skeleton, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
@@ -18,6 +19,7 @@ import { useEffect, useState } from "react";
 import { FaPen } from "react-icons/fa6";
 
 const OfficerList = () => {
+    const [searchData, setSearchData] = useState("");
     const [loadingUi, setLoadingUi] = useState(true)
     const { onOpen, onClose, isOpen } = useDisclosure();
     const [loadingDelete, setLoadingDelete] = useState(false)
@@ -182,6 +184,9 @@ const OfficerList = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleSearch = (e: any) => {
+        setSearchData(e.target.value);
+    };
 
 
     //membuat petugas
@@ -294,6 +299,15 @@ const OfficerList = () => {
         });
     };
 
+    const filteredData = dataUser?.filter((item: any) => {
+        return (
+            item.name && item.name.toLowerCase().includes(searchData.toLowerCase())
+
+        );
+    });
+    console.log(dataUser);
+
+
     return (
         <DefaultLayout>
 
@@ -310,10 +324,13 @@ const OfficerList = () => {
 
 
             <Card>
-                <div className="flex justify-end my-5">
-                    <ButtonPrimary className=" rounded-md py-2 px-4" onClick={handleAddCategory} >Tambah Petugas</ButtonPrimary>
-                </div>
 
+                <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10 my-3">
+                    <ButtonPrimary onClick={handleAddCategory} className='py-2 px-4 rounded-md' >Tambah Petugas</ButtonPrimary>
+                    <div className="w-full md:w-auto">
+                        <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Petugas..." />
+                    </div>
+                </div>
 
                 <Table aria-label="Example static collection table">
                     <TableHeader>
@@ -340,7 +357,7 @@ const OfficerList = () => {
                                 </TableRow>
                             ))
                         ) : (
-                            dataUser?.map((user: any, index: number) => (
+                            filteredData?.map((user: any, index: number) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{capitalizeWords(user.name)}</TableCell>
