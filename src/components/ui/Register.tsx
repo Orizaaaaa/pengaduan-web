@@ -133,7 +133,8 @@ const Register = (props: Props) => {
         const passwordRegex = /^[A-Za-z0-9]+$/;
         // Validasi angka (untuk NIK dan No. HP)
         const numberRegex = /^[0-9]+$/;
-
+        // Validasi nomor telepon yang dimulai dengan 628 dan minimal 10 digit
+        const phoneRegex = /^628[0-9]{8,}$/;
 
         // Cek apakah semua field diisi
         if (!form.name) {
@@ -158,14 +159,17 @@ const Register = (props: Props) => {
             newErrorMsg.number_phone = '*No HP harus diisi';
             valid = false;
 
-        } else if (!/^08[0-9]{8,}$/.test(form.number_phone)) {
+            // Menggunakan validasi baru untuk nomor telepon
+        } else if (!phoneRegex.test(form.number_phone)) {
             newErrorMsg.number_phone = '*No HP harus dimulai dengan 628 dan berisi minimal 10 digit angka';
             valid = false;
         }
+
         if (!form.nik) {
             newErrorMsg.nik = '*NIK harus diisi';
             valid = false;
         }
+
         if (!form.image) {
             newErrorMsg.image = '*Foto profil harus diunggah';
             valid = false;
@@ -209,7 +213,12 @@ const Register = (props: Props) => {
         if (imageUrl) {
             const { confirmPassword, ...dataWithoutConfirmPassword } = form;
             const data = { ...dataWithoutConfirmPassword, image: imageUrl };
-            registerUser(data, (status: boolean) => {
+            registerUser(data, (status: boolean, res: any) => {
+                if (res?.response?.data?.data?.error) {
+                    setErrorMsg({
+                        ...errorMsg, email: 'Email sudah terdaftar',
+                    })
+                }
                 if (status) {
                     router.push('/login');
                 }
@@ -217,6 +226,7 @@ const Register = (props: Props) => {
             });
         }
     };
+
 
     const handleFileManager = (fileName: string) => {
         if (fileName === 'add') {
@@ -336,7 +346,7 @@ const Register = (props: Props) => {
 
                         {/* Tambahan form untuk Konfirmasi Password */}
                         <div className="relative mt-1">
-                            <button onClick={toggleConfirmPassword} type='button' className="icon-password h-full bg-transparent flex absolute right-0 justify-center items-center pe-4">
+                            <button onClick={toggleConfirmPassword} type='button' className={`icon-password h-full bg-transparent flex absolute right-0 justify-center items-center pe-4 ${errorMsg.confirmPassword ? 'pb-4' : ''}`}>
                                 {showConfirmPassword ? <FaEyeSlash size={20} color='#636363' /> : <IoEye size={20} color='#636363' />}
                             </button>
                             <InputForm errorMsg={errorMsg.confirmPassword} htmlFor="confirmPassword" onChange={handleChange} type={typeConfirmPassword} value={form.confirmPassword} placeholder="Konfirmasi Kata Sandi" />
