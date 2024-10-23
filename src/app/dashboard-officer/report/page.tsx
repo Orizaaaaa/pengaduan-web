@@ -2,6 +2,7 @@
 
 import { getAllReport } from '@/api/report';
 import CardReport from '@/components/fragemnts/CardReport/CardReport';
+import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react'
@@ -12,7 +13,7 @@ type Props = {}
 
 const AllReport = (props: Props) => {
     const [role, setRole] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [dataReport, setDataReport] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("");
     const [searchData, setSearchData] = useState("");
@@ -20,7 +21,6 @@ const AllReport = (props: Props) => {
 
     useEffect(() => {
         setRole(localStorage.getItem("role"));
-        setLoading(true)
         getAllReport((result: any) => {
             setDataReport(result.data);
             setLoading(false)
@@ -79,18 +79,31 @@ const AllReport = (props: Props) => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-6 gap-3">
 
-                {filteredData.map((item: any, index: number) => (
-                    <CardReport
-                        location={`/dashboard-officer/report/${item.id}`}
-                        image={item.imageReport[0]}
-                        title={item.title}
-                        address={item.address}
-                        status={item.status}
-                        date={item.createdAt}
-                        desc={item.description}
-                        key={index}
-                    />
-                ))}
+                {loading ?
+                    <>
+                        <SekeletonReport />
+                        <SekeletonReport />
+                        <SekeletonReport />
+                        <SekeletonReport />
+                        <SekeletonReport />
+                        <SekeletonReport />
+                    </> :
+                    <>
+                        {filteredData.map((item: any, index: number) => (
+                            <CardReport
+                                location={`/dashboard-officer/report/${item.id}`}
+                                image={item.imageReport[0]}
+                                title={item.title}
+                                address={item.address}
+                                status={item.status}
+                                date={item.createdAt}
+                                desc={item.description}
+                                key={index}
+                            />
+                        ))}
+                    </>}
+
+
 
 
             </div>
