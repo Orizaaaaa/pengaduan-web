@@ -6,6 +6,7 @@ import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { Button, Card, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react'
+import { HiOutlineFilter } from 'react-icons/hi';
 import { IoSearch } from 'react-icons/io5';
 
 type Props = {}
@@ -62,16 +63,16 @@ const AllReport = (props: Props) => {
             <div className="flex justify-end">
                 <Dropdown>
                     <DropdownTrigger>
-                        <Button className=" mt-4"
-                            variant="bordered"
-                        >
+                        <button className=' flex justify-center items-center gap-2 bg-white border-2 mt-3 py-1 px-3 rounded-lg border-primary  text-primary ' >
                             Status
-                        </Button>
+                            <HiOutlineFilter />
+                        </button>
                     </DropdownTrigger>
                     <DropdownMenu className="w-full" aria-label="Static Actions">
                         <DropdownItem key="Semua Status" onClick={() => handleStatusSelect("")}>Semua Status</DropdownItem>
                         <DropdownItem key="Menunggu" onClick={() => handleStatusSelect("Menunggu")}> Menunggu</DropdownItem>
                         <DropdownItem onClick={() => handleStatusSelect("Diproses")} key="Diproses">Di Proses</DropdownItem>
+                        <DropdownItem onClick={() => handleStatusSelect("Selesai")} key="Selesai">Selesai</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>
