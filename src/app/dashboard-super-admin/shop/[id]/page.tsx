@@ -60,6 +60,9 @@ const Page = (props: Props) => {
     };
 
 
+    const isLoading = !data && !error
+
+
     return (
         <DefaultLayout>
             <div className="min-h-[100vh] bg-white p-4 rounded-md">
