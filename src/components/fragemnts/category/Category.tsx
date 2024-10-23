@@ -28,7 +28,7 @@ const Category = () => {
             <div className='grid my-15 grid-cols-3 md:grid-cols-4 lg:grid-cols-8 container mx-auto gap-5'>
 
                 {isLoading ? (
-                    Array.from({ length: 6 }).map((_, index) => (
+                    Array.from({ length: 8 }).map((_, index) => (
                         <div key={index} className='flex flex-col justify-center items-center gap-2'>
                             <Skeleton className="flex rounded-full w-25 h-25 md:w-39 md:h-39" />
                             <Skeleton className="h-4 w-full rounded-lg" />

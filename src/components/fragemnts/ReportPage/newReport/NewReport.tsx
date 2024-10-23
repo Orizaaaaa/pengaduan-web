@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import CardReport from '../../CardReport/CardReport'
 import { getAllReport } from '@/api/report'
+import { Skeleton } from '@nextui-org/react'
+import SekeletonReport from '../../sekeleton/SekeletonReport'
 
 type Props = {}
 
 const NewReport = (props: Props) => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [dataReport, setDataReport] = useState([]);
     useEffect(() => {
         getAllReport((result: any) => {
@@ -26,18 +28,25 @@ const NewReport = (props: Props) => {
             </div>
 
             <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  mt-12 gap-4">
-                {dataReport.map((item: any, index: number) => (
-                    <CardReport
-                        location={`/dashboard-user/report/${item.id}`}
-                        image={item.imageReport[0]}
-                        title={item.title}
-                        address={item.address}
-                        status={item.status}
-                        date={item.createdAt}
-                        desc={item.description}
-                        key={index}
-                    />
-                ))}
+
+                {loading ? (
+                    Array.from({ length: 6 }).map((_, index) => (
+                        <SekeletonReport />
+                    ))
+                ) : (
+                    dataReport.map((item: any, index: number) => (
+                        <CardReport
+                            location={`/dashboard-user/report/${item.id}`}
+                            image={item.imageReport[0]}
+                            title={item.title}
+                            address={item.address}
+                            status={item.status}
+                            date={item.createdAt}
+                            desc={item.description}
+                            key={index}
+                        />
+                    ))
+                )}
 
             </section>
         </section>
