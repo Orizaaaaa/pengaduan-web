@@ -1,11 +1,7 @@
 'use client'
 import { url } from '@/api/auth'
-import { getCategories } from '@/api/category'
 import { fetcher } from '@/api/fetcher'
-import { categoryData } from '@/utils/dataObject'
-import { Button, Popover, PopoverContent, PopoverTrigger, Skeleton, Tooltip } from '@nextui-org/react'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import { Popover, PopoverContent, PopoverTrigger, Skeleton } from '@nextui-org/react'
 import useSWR from 'swr'
 
 const Category = () => {
