@@ -1,4 +1,4 @@
-import { allCategori, education, garbage, hospital, medicalKit, nationalPark, noParking, road, shop1, shop2, shop3, shop4, shop5, shop6, shop7, tree, waterPolution } from "@/app/image"
+import { allCategori, shop1, shop2, shop3, shop4, shop5, shop6, shop7, } from "@/app/image"
 import { AiOutlineFileDone } from "react-icons/ai"
 import { BsPersonFillGear } from "react-icons/bs"
 import { FaWhatsapp } from "react-icons/fa6"
@@ -100,42 +100,6 @@ export const dataText = [
         title: 'Laporan Selesai',
         subtitle: 'Ketika laporan selesai maka akan menginformasikan status kerjaan laporan terhadap pelapor, dan bisa menilai dan berkomentar terkait kinerja perusahaan',
         icon: <AiOutlineFileDone size={25} color="#024395" />
-    },
-]
-
-
-export const categoryData = [
-    {
-        image: waterPolution,
-        name: 'Pembuangan limbah'
-    },
-    {
-        image: education,
-        name: 'Edukasi'
-    },
-    {
-        image: garbage,
-        name: 'Sampah'
-    },
-    {
-        image: hospital,
-        name: 'Rumah sakit'
-    },
-    {
-        image: nationalPark,
-        name: 'Taman'
-    },
-    {
-        image: noParking,
-        name: 'Parkir liar'
-    },
-    {
-        image: road,
-        name: 'Jalan rusak'
-    },
-    {
-        image: tree,
-        name: 'Pohon tumbang'
     },
 ]
 
