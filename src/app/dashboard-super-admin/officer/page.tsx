@@ -315,8 +315,8 @@ const OfficerList = () => {
                 <div className=" rounded-full ">
                     <div className="grid ">
                         <div className="flex-col space-y-3 my-auto">
-                            <h1 className=" text-lg font-semibold md:text-2xl md:font-bold font-inter" >Halaman Petugas </h1>
-                            <p className="text-gray-500 text-sm md:text-base" >Ini adalah halaman kategori anda dapat menambah atau menghapus seorang petugas</p>
+                            <h1 className=" text-lg font-semibold md:text-2xl md:font-bold font-inter" >Halaman Admin </h1>
+                            <p className="text-gray-500 text-sm md:text-base" >Ini adalah halaman admin anda dapat menambah atau menghapus seorang Admin</p>
                         </div>
                     </div>
                 </div>
@@ -326,9 +326,9 @@ const OfficerList = () => {
             <Card>
 
                 <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10 my-3">
-                    <ButtonPrimary onClick={handleAddCategory} className='py-2 px-4 rounded-md' >Tambah Petugas</ButtonPrimary>
+                    <ButtonPrimary onClick={handleAddCategory} className='py-2 px-4 rounded-md' >Tambah Admin</ButtonPrimary>
                     <div className="w-full md:w-auto">
-                        <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Petugas..." />
+                        <Search onChange={handleSearch} className='border-2 border-black' placeholder="Cari Admin..." />
                     </div>
                 </div>
 

@@ -72,7 +72,7 @@ const MainArticle = (props: Props) => {
                                         <CiCalendar color="#94A3B8" />
                                         <p className="text-small text-slate-400 font-light">{formatDateCapital(item.createdAt)}</p>
                                     </div>
-                                    <h1 className="font-medium text-sm md:text-base">{item.title}</h1>
+                                    <h1 className="font-medium text-sm md:text-base">{formatNews(item.title)}</h1>
                                     <p className="text-sm text-slate-400">{formatNews(item.description)}</p>
                                 </div>
                             </CardLink>

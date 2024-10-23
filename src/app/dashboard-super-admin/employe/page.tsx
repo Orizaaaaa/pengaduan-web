@@ -249,7 +249,7 @@ const Page = () => {
                     <div className="grid ">
                         <div className="flex-col space-y-3 my-auto">
                             <h1 className=" text-lg font-semibold md:text-2xl md:font-bold font-inter" >Halaman karyawan </h1>
-                            <p className="text-gray-500 text-sm md:text-base" >Ini adalah halaman kategori anda dapat menambah atau menghapus seorang petugas</p>
+                            <p className="text-gray-500 text-sm md:text-base" >Ini adalah halaman karyawan anda dapat menambah atau menghapus seorang karyawan</p>
                         </div>
                     </div>
                 </div>
