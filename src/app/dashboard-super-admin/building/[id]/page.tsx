@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import dynamic from 'next/dynamic'
-import { bgPengaduan, camera, pembangunan } from '@/app/image'
+import { camera } from '@/app/image'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import useSWR, { mutate } from 'swr'
 import { url } from '@/api/auth'
@@ -568,7 +568,7 @@ const Page = (props: Props) => {
                                     </div>
                                 </div>
 
-                                <div className="flex  gap-5">
+                                <div className="flex  gap-5"  >
                                     <div className="text">
                                         <h1 className='font-medium' >Tahun</h1>
                                         <DatePicker showMonthAndYearPickers aria-label='date' value={form.date} variant={'underlined'} onChange={(e) => setForm({ ...form, date: e })} />
