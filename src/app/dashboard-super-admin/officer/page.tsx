@@ -33,7 +33,6 @@ const OfficerList = () => {
         unitWork: '',
         password: '',
         image: '',
-        message: ''
     })
     const [dataUser, setDataUser] = useState([]);
     const [formData, setFormData] = useState({
@@ -202,7 +201,7 @@ const OfficerList = () => {
             nik: '',
             password: '',
             image: '',
-            message: ''
+
         });
 
         let hasError = false;
@@ -261,7 +260,7 @@ const OfficerList = () => {
                 } else {
                     if (res?.response?.data?.data?.error) {
                         if (res?.response?.data?.data?.error === 'Email has been used') {
-                            setErrorMsg((prev) => ({ ...prev, message: 'Email telah di gunakan' }));
+                            setErrorMsg((prev) => ({ ...prev, email: 'Email telah di gunakan' }));
                         }
 
                     } else {
@@ -417,7 +416,6 @@ const OfficerList = () => {
 
 
                 <InputForm errorMsg={errorMsg.password} className="bg-slate-300" htmlFor="password" title="Password " type="text" onChange={handleChange} value={formData.password} />
-                <p className="text-red text-sm" >{errorMsg.message}</p>
                 <ButtonPrimary onClick={createOfficer} className='px-4 py-2
                  rounded-md flex justify-center items-center'> {loading ? <Spinner
                         className={`w-5 h-5 mx-8`} size="sm" color="white" />
