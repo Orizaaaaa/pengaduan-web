@@ -31,7 +31,7 @@ const NewReport = (props: Props) => {
 
                 {loading ? (
                     Array.from({ length: 6 }).map((_, index) => (
-                        <SekeletonReport />
+                        <SekeletonReport key={index} />
                     ))
                 ) : (
                     dataReport.map((item: any, index: number) => (
