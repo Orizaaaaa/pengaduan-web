@@ -3,8 +3,9 @@ import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import CardBuilding from '@/components/elements/card/CardBuilding'
+import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { formatDate } from '@/utils/helper'
+import { formatDate, formatDateCapital } from '@/utils/helper'
 import { useRouter } from 'next/navigation'
 
 import React from 'react'
@@ -19,7 +20,7 @@ const Page = (props: Props) => {
     const dataPembanguan = data?.data
     console.log(dataPembanguan);
     const router = useRouter()
-
+    const isLoading = !data && !error
     return (
         <DefaultLayout>
             <div className="flex justify-end">
@@ -27,11 +28,20 @@ const Page = (props: Props) => {
 
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-7">
-                {dataPembanguan?.map((item: any, index: number) => (
-                    <CardBuilding key={index} title={item.title} imageUrl={item.image}
-                        date={formatDate(item.date)} location={item.address}
-                        link={`/dashboard-super-admin/building/${item._id}`} />
-                ))}
+
+                {isLoading ? (
+                    Array.from({ length: 6 }).map((_, index) => (
+                        <SekeletonReport key={index} />
+                    ))
+
+                ) : (
+                    dataPembanguan?.map((item: any, index: number) => (
+                        <CardBuilding key={index} title={item.title} imageUrl={item.image}
+                            date={formatDateCapital(item.date)} location={item.address}
+                            link={`/dashboard-super-admin/building/${item._id}`} />
+                    ))
+                )}
+
 
             </div>
 

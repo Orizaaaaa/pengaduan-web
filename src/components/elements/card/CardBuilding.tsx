@@ -55,10 +55,10 @@ const CardBuilding = ({ title, imageUrl, date, location, link }: Props) => {
                 </div>
             </div>
 
-            <div className="flex px-2 justify-end py-2 items-center gap-3 mt-2">
+            <div className="flex px-2 justify-end py-2 items-center gap-3 mt-1">
                 <ButtonPrimary
                     onClick={() => router.push(link)}
-                    className="py-2 px-4 flex justify-center items-center rounded-xl text-sm lg:text-base"
+                    className="py-2 px-4 flex justify-center items-center rounded-md text-sm lg:text-base"
                 >
                     Selengkap nya <IoIosArrowForward />
                 </ButtonPrimary>
