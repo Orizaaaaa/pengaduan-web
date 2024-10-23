@@ -4,6 +4,7 @@ import { url } from '@/api/auth'
 import { fetcher } from '@/api/fetcher'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import { formatNews } from '@/utils/helper'
+import { Skeleton } from '@nextui-org/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -19,7 +20,7 @@ const News = (props: Props) => {
 
     // Mengambil array artikel dari data API
     const dataArticle = data?.data || [];
-
+    const isLoading = !data && !error
     return (
         <section className='news my-12' id='news'>
             <div className="container mx-auto p-2 lg:p-0">
@@ -35,7 +36,35 @@ const News = (props: Props) => {
                 {/* hero2 */}
                 <div className="hero-2 mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-3 lg:gap-10">
-                        {dataArticle.length > 0 ? (
+                        {isLoading ? (
+                            <>
+                                {/* Placeholder Artikel Utama */}
+                                <div className="col-span-3 h-80">
+                                    <Skeleton className="h-full w-full rounded-md">
+                                        <div className="h-full w-full bg-gray-300"></div>
+                                    </Skeleton>
+                                </div>
+
+                                {/* Placeholder Deskripsi */}
+                                <div className="desc col-span-2 flex flex-col justify-between h-full">
+                                    <Skeleton className="h-6 w-3/4 mb-4 rounded-md">
+                                        <div className="h-6 bg-gray-300"></div>
+                                    </Skeleton>
+                                    <Skeleton className="h-4 w-full mb-2 rounded-md">
+                                        <div className="h-4 bg-gray-300"></div>
+                                    </Skeleton>
+                                    <Skeleton className="h-4 w-full mb-2 rounded-md">
+                                        <div className="h-4 bg-gray-300"></div>
+                                    </Skeleton>
+                                    <Skeleton className="h-4 w-1/2 mb-6 rounded-md">
+                                        <div className="h-4 bg-gray-300"></div>
+                                    </Skeleton>
+                                    <Skeleton className="h-10 w-full rounded-md">
+                                        <div className="h-10 bg-gray-300 rounded-md"></div>
+                                    </Skeleton>
+                                </div>
+                            </>
+                        ) : (
                             <>
                                 {/* Artikel Utama */}
                                 <div className="col-span-3 h-80">
@@ -60,27 +89,36 @@ const News = (props: Props) => {
                                     </ButtonPrimary>
                                 </div>
                             </>
-                        ) : (
-                            <p>Loading...</p>
                         )}
+
                     </div>
                 </div>
 
                 {/* hero 3 bottom */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
-                    {dataArticle.slice(1, 4).map((article: any, index: number) => (
-                        <div className='h-60' key={article._id}>
-                            <img
-                                className='w-full h-full rounded-md object-cover'
-                                src={article.image || '/default-image.jpg'}
-                                alt={article.title}
-                                width={400}
-                                height={400}
-                            />
-                            <div className='text-sm md:text-base' dangerouslySetInnerHTML={{ __html: article.title }} />
 
-                        </div>
-                    ))}
+                    {isLoading ?
+                        Array.from({ length: 3 }).map((_, index) => (
+                            <Skeleton className={`h-60 bg-gray-300 rounded-md`} key={index}>
+                                <div className="w-full h-full object-cover rounded-md" ></div>
+                            </Skeleton>
+                        )) :
+                        <>
+                            {dataArticle.slice(1, 4).map((article: any, index: number) => (
+                                <div className='h-60' key={index}>
+                                    <img
+                                        className='w-full h-full rounded-md object-cover'
+                                        src={article.image || '/default-image.jpg'}
+                                        alt={article.title}
+                                        width={400}
+                                        height={400}
+                                    />
+                                    <div className='text-sm md:text-base' dangerouslySetInnerHTML={{ __html: article.title }} />
+
+                                </div>
+                            ))}
+                        </>}
+
                 </div>
 
             </div>
