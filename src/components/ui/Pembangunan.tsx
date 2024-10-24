@@ -9,6 +9,7 @@ import { fetcher } from '@/api/fetcher'
 import CardBuilding from '../elements/card/CardBuilding'
 import { formatDate } from '@/utils/helper'
 import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
+import Footer from '../fragemnts/LandingPage/footer/Footer'
 
 type Props = {}
 
@@ -76,7 +77,7 @@ const Pembangunan = (props: Props) => {
                     )}
                 </div>
             </section>
-
+            <Footer />
         </>
 
     )

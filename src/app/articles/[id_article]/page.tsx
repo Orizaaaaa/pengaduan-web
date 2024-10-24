@@ -14,11 +14,15 @@ const Page = (props: Props) => {
         keepPreviousData: true,
     });
     const dataArticle = data?.data
+    console.log(dataArticle);
 
     return (
         <>
             <Navbar />
-            <div className='p-10 mt-17 bg-white  rounded-lg mb-10 ' dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
+            <div className="container mx-auto">
+                <img className="h-60 rounded-md mb-3 mt-17" src={dataArticle?.image} alt="" />
+            </div>
+            <div className='md:p-10  bg-white rounded-lg mb-10 ' dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
         </>
 
     )
