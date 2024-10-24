@@ -48,6 +48,25 @@ const Shop = (props: Props) => {
         return isCategoryMatch && isSearchMatch;
     });
 
+
+    const sendWa = ({ name, productName, description, price, address, phone }: { name: string, productName: string, description: string, price: number, address: string, phone: string }) => {
+        const message = `Hallo ${name}, saya tertarik dengan produk Anda: 
+        *${productName}* 
+        - Deskripsi: ${description}
+        - Harga: Rp${price.toLocaleString()}
+        - Lokasi: ${address}
+        
+        Apakah produk ini masih tersedia?`;
+
+        const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappLink, '_blank');
+    };
+
+
+
+    console.log(dataShop);
+
+
     const router = useRouter()
 
     const isLoading = !data && !error
@@ -75,7 +94,7 @@ const Shop = (props: Props) => {
                                 <h1 className='text-3xl md:text-5xl font-extrabold'>Fresh</h1>
                                 <p className='text-slate-500 mt-2 text-sm' >Buah buahan dan sayuran hasil dari desa kami</p>
                                 <div className="flex gap-3 ">
-                                    <ButtonPrimary className='mt-4 px-4 py-2 rounded-full' >Beli Sekarang</ButtonPrimary>
+                                    <a className='mt-4 px-4 py-2 rounded-full bg-primary text-white' href="#product">Beli Sekarang</a>
                                     <button className='mt-4 px-4 py-2 rounded-full bg-black text-white' onClick={() => router.push('/register')} >Daftar Sekarang</button>
                                 </div>
                                 <div className="flex items-center gap-10 mt-10 ">
@@ -187,7 +206,7 @@ const Shop = (props: Props) => {
                     </div>
 
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
+                    <div id='product' className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 my-7">
 
 
                         {isLoading ? (
@@ -198,7 +217,16 @@ const Shop = (props: Props) => {
 
                         ) :
                             filteredData?.map((item: any, index: number) => (
-                                <CardHover location={`${pathName}/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
+                                <CardHover
+                                    onBuy={() => sendWa({
+                                        name: item.name,
+                                        productName: item.user.name,
+                                        description: item.description,
+                                        price: item.price,
+                                        address: item.address,
+                                        phone: item.user.number_phone
+                                    })}
+                                    location={`${pathName}/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                             ))}
 
 
