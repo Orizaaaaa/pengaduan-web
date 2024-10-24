@@ -13,6 +13,9 @@ import { FaBookOpen, FaRegAddressCard, FaRegNewspaper } from "react-icons/fa6";
 import { IoMdImages, IoMdPricetags } from "react-icons/io";
 import { BsBuildingAdd, BsBuildingsFill, BsShop } from "react-icons/bs";
 import { LuBookPlus } from "react-icons/lu";
+import SidebarLinkGroup from "./SidebarLinkGroup";
+import Link from "next/link";
+import { GrArticle } from "react-icons/gr";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -113,15 +116,74 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       return (
         <>
           <NavigationList icon={<RxDashboard size={19} />} title="Dasboard" pathname="/dashboard-super-admin" />
-          <NavigationList icon={<FaBookOpen size={19} />} title="Laporan" pathname="/dashboard-super-admin/report" />
-          <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-super-admin/create-report" />
+          <SidebarLinkGroup
+            activeCondition={
+              pathname === "/forms" || pathname.includes("forms")
+            }
+          >
+            {(handleClick, open) => {
+              return (
+                <React.Fragment>
+                  <Link
+                    href="#"
+                    className={`group relative flex items-center gap-2.5 rounded-lg px-4 py-2 font-medium text-slate-400 duration-300 ease-in-out
+                       hover:bg-primary hover:text-white 
+                       ${(pathname === "dashboard-super-admin/report" ||
+                        pathname === "/dashboard-super-admin/create-report" ||
+                        pathname === "/dashboard-super-admin/category" ||
+                        pathname.includes("report") ||
+                        pathname.includes("category")) &&
+                      "bg-primary text-white"}
+                    
+                      }`}
+
+                    onClick={(e) => { e.preventDefault(); sidebarExpanded ? handleClick() : setSidebarExpanded(true); }}
+                  >
+
+
+                    <FaBookOpen size={19} />
+                    Laporan
+
+                    <svg
+                      className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${open && "rotate-180"
+                        }`}
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M4.41107 6.9107C4.73651 6.58527 5.26414 6.58527 5.58958 6.9107L10.0003 11.3214L14.4111 6.91071C14.7365 6.58527 15.2641 6.58527 15.5896 6.91071C15.915 7.23614 15.915 7.76378 15.5896 8.08922L10.5896 13.0892C10.2641 13.4147 9.73651 13.4147 9.41107 13.0892L4.41107 8.08922C4.08563 7.76378 4.08563 7.23614 4.41107 6.9107Z"
+                        fill=""
+                      />
+                    </svg>
+                  </Link>
+
+
+                  <div
+                    className={`translate transform overflow-hidden ${!open && "hidden"
+                      }`}
+                  >
+                    <ul className="mb-5.5 mt-4 flex flex-col gap-2.5 bg-slate-100 rounded-md ">
+                      <NavigationList icon={<FaBookOpen size={19} />} title="List Laporan" pathname="/dashboard-super-admin/report" />
+                      <NavigationList icon={<LuBookPlus size={19} />} title="Buat Laporan" pathname="/dashboard-super-admin/create-report" />
+                      <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-super-admin/category" />
+                    </ul>
+                  </div>
+                </React.Fragment>
+              );
+            }}
+          </SidebarLinkGroup>
           <NavigationList icon={<AiOutlineUserSwitch size={19} />} title="Admin" pathname="/dashboard-super-admin/officer" />
           <NavigationList icon={<FaRegAddressCard size={19} />} title="Karyawan" pathname="/dashboard-super-admin/employe" />
-          <NavigationList icon={<IoMdPricetags size={19} />} title="Kategori" pathname="/dashboard-super-admin/category" />
           <NavigationList icon={<FaRegNewspaper size={19} />} title="Artikel" pathname="/dashboard-super-admin/articles" />
           <NavigationList icon={<IoMdImages size={19} />} title="Galeri" pathname="/dashboard-super-admin/galery" />
           <NavigationList icon={<BsShop size={19} />} title="Toko Online" pathname="/dashboard-super-admin/shop" />
           <NavigationList icon={<BsBuildingsFill size={19} />} title="Pembangunan" pathname="/dashboard-super-admin/building" />
+
         </>
       );
     }

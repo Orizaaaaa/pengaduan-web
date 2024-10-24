@@ -39,67 +39,67 @@ body::-webkit-scrollbar {
     color: black;
 }
 
-nav .line {
+#navbar .line {
     fill: none;
     stroke: #024395;
     stroke-width: 6;
     transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-nav .line1 {
+#navbar .line1 {
     stroke-dasharray: 60 207;
     stroke-width: 6;
 }
 
-nav .line2 {
+#navbar .line2 {
     stroke-dasharray: 60 60;
     stroke-width: 6;
 }
 
-nav .line3 {
+#navbar .line3 {
     stroke-dasharray: 60 207;
     stroke-width: 6;
 }
 
-nav .opened .line1 {
+#navbar .opened .line1 {
     stroke-dasharray: 90 207;
     stroke-dashoffset: -134;
     stroke-width: 6;
 }
 
-nav .opened .line2 {
+#navbar .opened .line2 {
     stroke-dasharray: 1 60;
     stroke-dashoffset: -30;
     stroke-width: 6;
 }
 
-nav .opened .line3 {
+#navbar .opened .line3 {
     stroke-dasharray: 90 207;
     stroke-dashoffset: -134;
     stroke-width: 6;
 }
 
-nav .title-section {
+#navbar .title-section {
     margin-top: 50px;
     margin-bottom: 50px;
 }
 
-nav .flex ul li a {
+#navbar .flex ul li a {
     color: #ffff;
     font-weight: 400;
 }
 
-nav .flex ul li a:hover,
-nav .flex ul li a.active {
+#navbar .flex ul li a:hover,
+#navbar .flex ul li a.active {
     color: #024395;
     font-weight: 600;
 }
 
-nav .flex a:hover::after {
+#navbar .flex a:hover::after {
     width: 100%;
 }
 
-nav .flex ul li a.active::after {
+#navbar .flex ul li a.active::after {
     content: '';
     display: block;
     width: 100%;
@@ -108,7 +108,7 @@ nav .flex ul li a.active::after {
     transition: width .3s;
 }
 
-nav .flex ul li a::after {
+#navbar .flex ul li a::after {
     content: '';
     display: block;
     width: 0;
@@ -161,7 +161,4 @@ nav .flex ul li a::after {
         transition: 0.4s;
     }
 
-    /* nav .flex ul {
-        background-color: #cbd5e1;
-    } */
 }
