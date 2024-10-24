@@ -139,14 +139,6 @@ nav .flex ul li a::after {
     height: 100vh;
 }
 
-#footer {
-    padding-top: 21vh;
-    background-image: url('./../assets/bgFooter.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    height: max-content;
-}
 
 
 @media screen and (max-width: 1256px) {
