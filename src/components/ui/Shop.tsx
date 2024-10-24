@@ -15,6 +15,7 @@ import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Skeleton } from '@nextui-org/react'
 import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
+import Footer from '../fragemnts/LandingPage/footer/Footer'
 
 
 type Props = {}
@@ -206,6 +207,8 @@ const Shop = (props: Props) => {
 
 
             </section>
+
+            <Footer />
         </>
 
     )
