@@ -275,7 +275,7 @@ const Page = () => {
                             />
 
                             <div className="flex justify-end">
-                                <button type="submit" className="bg-primary text-white px-4 py-2 rounded-md mt-4">
+                                <button type="submit" className="border-2 border-primary text-primary px-4 py-2 rounded-md mt-4">
                                     Kirim pesan
                                 </button>
                             </div>
