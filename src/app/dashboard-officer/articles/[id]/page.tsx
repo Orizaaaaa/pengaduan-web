@@ -9,7 +9,7 @@ import ButtonPrimary from '@/components/elements/buttonPrimary'
 import InputForm from '@/components/elements/input/InputForm'
 import ModalAlert from '@/components/fragemnts/modal/modalAlert'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
-import { Spinner, useDisclosure } from '@nextui-org/react'
+import { Skeleton, Spinner, useDisclosure } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 import { useParams, useRouter } from 'next/navigation'
@@ -142,6 +142,8 @@ const Page = (props: Props) => {
         })
     }
 
+    const isLoading = !data && !error
+
     return (
         <DefaultLayout>
             <div className=" button-action flex justify-end m-3 gap-3 ">
@@ -152,59 +154,86 @@ const Page = (props: Props) => {
 
             </div>
 
-            {updateOpen ?
 
+            {isLoading ? (
                 <>
-                    <div className="w-full">
-                        <div >
-                            <div className="images ">
-
-                                {form.image && form.image instanceof Blob ? (
-                                    <img className="h-[170px] md:h-[300px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
-                                ) : (
-                                    <div className="images  rounded-md h-[200px] bg-gray-300 p-2">
-                                        <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
-                                            <img className="w-auto h-full mx-auto rounded-md" src={form.image ? form.image : ''} alt='cam' />
-                                        </button>
-                                    </div>
-                                )}
-
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    id="image-input-add"
-                                    onChange={(e) => handleImageChange(e, 'add')}
-                                />
-
-                                <div className="flex justify-center gap-3 mt-3">
-                                    <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
-                                </div>
-                            </div>
-                            {/* This is the main initialization of the Jodit editor */}
-                            <InputForm htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.title} />
-                            <JoditEditor
-                                value={form.description}         // This is important
-                                config={config}         // Only use when you declare some custom configs
-                                onChange={handleChangeEditor} // Handle the changes
-                                className="w-full h-[70%] text-black bg-white"
-                            />
-                        </div>
-
-                        <div className="flex justify-end w-full my-4">
-                            <ButtonPrimary onClick={handleUpdateArticle} className='px-4 py-2 rounded-md flex justify-center items-center'> {loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Perbarui Artikel'}  </ButtonPrimary>
-                        </div>
-
+                    <Skeleton className="rounded-lg w-70">
+                        <div className="h-36 rounded-lg bg-default-300"></div>
+                    </Skeleton>
+                    <div className="bg-white rounded-lg mt-4 space-y-4 p-3">
+                        <Skeleton className="w-full rounded-lg">
+                            <div className="h-3  w-full rounded-lg bg-default-200"></div>
+                        </Skeleton>
+                        <Skeleton className="w-full rounded-lg">
+                            <div className="h-3  w-full rounded-lg bg-default-200"></div>
+                        </Skeleton>
+                        <Skeleton className="w-32.5 rounded-lg">
+                            <div className="h-3  w-32.5 rounded-lg bg-default-200"></div>
+                        </Skeleton>
+                        <Skeleton className="w-full rounded-lg">
+                            <div className="h-3  w-full rounded-lg bg-default-200"></div>
+                        </Skeleton>
                     </div>
                 </>
+            ) : (
+                updateOpen ?
 
-                :
-                <>
-                    <div className=" p-1 md:p-4  bg-white shadow-10 rounded-lg mb-10">
-                        <h1 className='h1 text-lg font-medium my-3' >{dataArticle?.title}</h1>
-                        <div dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
-                    </div>
+                    <>
+                        <div className="w-full">
+                            <div >
+                                <div className="images ">
 
-                </>}
+                                    {form.image && form.image instanceof Blob ? (
+                                        <img className="h-[170px] md:h-[300px] w-auto mx-auto rounded-md" src={URL.createObjectURL(form.image)} />
+                                    ) : (
+                                        <div className="images  rounded-md h-[200px] bg-gray-300 p-2">
+                                            <button className="flex-col justify-center items-center h-full w-full " type="button" onClick={() => handleFileManager('add')} >
+                                                <img className="w-auto h-full mx-auto rounded-md" src={form.image ? form.image : ''} alt='cam' />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        id="image-input-add"
+                                        onChange={(e) => handleImageChange(e, 'add')}
+                                    />
+
+                                    <div className="flex justify-center gap-3 mt-3">
+                                        <button className={`border-2 border-primary  text-primary px-4 py-2 rounded-md ${form.image === null ? 'hidden' : ''}`} type="button" onClick={() => handleFileManager('add')} >Ubah Gambar</button>
+                                    </div>
+                                </div>
+                                {/* This is the main initialization of the Jodit editor */}
+                                <InputForm htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.title} />
+                                <JoditEditor
+                                    value={form.description}         // This is important
+                                    config={config}         // Only use when you declare some custom configs
+                                    onChange={handleChangeEditor} // Handle the changes
+                                    className="w-full h-[70%] text-black bg-white"
+                                />
+                            </div>
+
+                            <div className="flex justify-end w-full my-4">
+                                <ButtonPrimary onClick={handleUpdateArticle} className='px-4 py-2 rounded-md flex justify-center items-center'> {loading ? <Spinner className={`w-5 h-5 mx-8`} size="sm" color="white" /> : 'Perbarui Artikel'}  </ButtonPrimary>
+                            </div>
+
+                        </div>
+                    </>
+                    :
+                    <>
+                        <img className="h-60 rounded-md mb-3" src={dataArticle?.image} alt="" />
+                        <div className=" p-1 md:p-4  bg-white shadow-10 rounded-lg mb-10">
+                            <h1 className='h1 text-lg font-medium my-3' >{dataArticle?.title}</h1>
+                            <div dangerouslySetInnerHTML={{ __html: dataArticle?.description }}></div>
+                        </div>
+
+                    </>
+            )}
+
+
+
+
 
             <ModalAlert isOpen={isWarningOpen} onClose={onWarningClose}>
                 <h1>Apakah anda yakin ingin menghapus artikel ini yang berjudul <br /> <span className='font-medium' > " {dataArticle?.title} "</span> </h1>

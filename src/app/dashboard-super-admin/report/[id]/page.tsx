@@ -136,6 +136,7 @@ const Page = () => {
 
         })
     }
+
     const isLoading = !data && !error;
 
     return (
