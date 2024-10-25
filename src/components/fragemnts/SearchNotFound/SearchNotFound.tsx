@@ -17,7 +17,7 @@ const SearchNotFound = ({ text, height, width }: Props) => {
                 src={searchNotFound}
                 style={{ height: height, width: width }}
             />
-            <p>{text}</p>
+            <p className='text-slate-400 text-center' >{text}</p>
         </div>
     )
 }
