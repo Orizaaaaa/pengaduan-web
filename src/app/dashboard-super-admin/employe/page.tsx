@@ -9,6 +9,7 @@ import Card from "@/components/elements/card/Card";
 import InputForm from "@/components/elements/input/InputForm";
 import ModalAlert from "@/components/fragemnts/modal/modalAlert";
 import Search from "@/components/fragemnts/search/Search";
+import SearchNotFound from "@/components/fragemnts/SearchNotFound/SearchNotFound";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords, formatDate, formatDateStr } from "@/utils/helper";
 import { parseDate } from "@internationalized/date";
@@ -310,7 +311,9 @@ const Page = () => {
                         <TableColumn>TANGGAL LAHIR</TableColumn>
                         <TableColumn>ACTION</TableColumn>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody emptyContent={
+                        <SearchNotFound height="200px" width="400px" text="Data tidak di temukan" />
+                    }>
 
                         {loadingUi ?
                             Array.from({ length: 5 }).map((_, index) => (

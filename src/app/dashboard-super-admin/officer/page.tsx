@@ -2,6 +2,7 @@
 
 import { registerUser } from "@/api/auth"; import { postImage } from "@/api/imagePost";
 ;
+import searchNotFound from '../../../assets/notFound.json'
 import { deleteUser, getAllUser } from "@/api/user";
 import { camera } from "@/app/image";
 import ButtonDelete from "@/components/elements/buttonDelete";
@@ -13,10 +14,12 @@ import ModalDefault from "@/components/fragemnts/modal/modal";
 import Search from "@/components/fragemnts/search/Search";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { capitalizeWords } from "@/utils/helper";
+import { Player } from "@lottiefiles/react-lottie-player";
 import { Skeleton, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaPen } from "react-icons/fa6";
+import SearchNotFound from "@/components/fragemnts/SearchNotFound/SearchNotFound";
 
 const OfficerList = () => {
     const [searchData, setSearchData] = useState("");
@@ -341,7 +344,9 @@ const OfficerList = () => {
                         <TableColumn>UNIT KERJA</TableColumn>
                         <TableColumn>ACTION</TableColumn>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody emptyContent={
+                        <SearchNotFound height="200px" width="400px" text="Data tidak di temukan" />
+                    }>
                         {loadingUi ? (
                             // Render skeleton rows during loading
                             Array.from({ length: 5 }).map((_, index) => (
