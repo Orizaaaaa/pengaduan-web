@@ -603,7 +603,7 @@ const Page = (props: Props) => {
                         <hr className='w-full text-[#eeeeee]' />
                     </div>
                     <div className="location mt-5">
-                        <MapChoise markerPosition={{ lat: form.location.latitude, lng: form.location.longitude }} zoom={13} text="Lokasi kejadian" className="h-[300px]  rounded-md mt-4" >
+                        <MapChoise markerPosition={{ lat: form.location.latitude, lng: form.location.longitude }} zoom={13} text={form.address || 'Lokasi Pembangunan'} className="h-[300px]  rounded-md mt-4" >
                             <MapEvents />
                         </MapChoise>
                     </div>
