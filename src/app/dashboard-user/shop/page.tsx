@@ -15,6 +15,7 @@ import InputReport from '@/components/elements/input/InputReport'
 import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import Search from '@/components/fragemnts/search/Search'
+import SearchNotFound from '@/components/fragemnts/SearchNotFound/SearchNotFound'
 import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject'
@@ -359,6 +360,13 @@ const Page = (props: Props) => {
                         )))}
                 </div>
 
+                {!isLoading && (!filteredData || filteredData.length === 0) && (
+                    <div className="w-full flex items-center justify-center">
+                        <SearchNotFound text="Produk tidak ditemukan" height="300px" width="300px" />
+                    </div>
+                )}
+
+
                 <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
                     <h1 className='text-2xl font-bold my-10'>Produk Anda</h1>
                     <div className="w-full md:w-auto">
@@ -374,6 +382,12 @@ const Page = (props: Props) => {
                             <CardHover location={`/dashboard-user/shop/` + item._id} key={index} title={item.name} desc={item.description} image={item?.image[0]} price={item.price} />
                         ))) : null}
                 </div>
+
+                {!isLoading && (!filteredMyData || filteredMyData.length === 0) && (
+                    <div className="w-full flex items-center justify-center">
+                        <SearchNotFound text="Produk tidak ditemukan" height="300px" width="300px" />
+                    </div>
+                )}
                 <ModalDefault isOpen={isOpen} onClose={onClose}>
                     <div>
                         <CaraoselImage>

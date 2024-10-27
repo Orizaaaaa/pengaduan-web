@@ -2,6 +2,7 @@
 
 import { getAllReport } from '@/api/report';
 import CardReport from '@/components/fragemnts/CardReport/CardReport';
+import SearchNotFound from '@/components/fragemnts/SearchNotFound/SearchNotFound';
 import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
@@ -102,6 +103,12 @@ const AllReport = (props: Props) => {
                     </>}
 
             </div>
+
+            {!loading && (!filteredData || filteredData.length === 0) && (
+                <div className="w-full flex items-center justify-center">
+                    <SearchNotFound text="Laporan tidak ditemukan" height="300px" width="300px" />
+                </div>
+            )}
 
         </DefaultLayout>
     )
