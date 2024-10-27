@@ -112,7 +112,7 @@ const Page = () => {
                         lng: parseCoordinate(dataReport?.longitude || "0"),
                     }}
                     zoom={10}
-                    text="Lokasi kejadian"
+                    text={dataReport?.address || ""}
                     className="h-[370px] rounded-md my-5"
                 />
 
