@@ -113,7 +113,7 @@ const Page = (props: Props) => {
                 </div>
                 <div className="location mt-5">
                     {dataBuilding?.location?.latitude && dataBuilding?.location?.longitude ? (
-                        <Map
+                        <Map addres={dataBuilding?.address}
                             lat={parseCoordinate(dataBuilding?.location?.latitude)}
                             lng={parseCoordinate(dataBuilding?.location?.longitude)}
                         />
