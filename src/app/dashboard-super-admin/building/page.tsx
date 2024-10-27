@@ -4,6 +4,7 @@ import { fetcher } from '@/api/fetcher'
 import ButtonPrimary from '@/components/elements/buttonPrimary'
 import CardBuilding from '@/components/elements/card/CardBuilding'
 import Search from '@/components/fragemnts/search/Search'
+import SearchNotFound from '@/components/fragemnts/SearchNotFound/SearchNotFound'
 import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { formatDate, formatDateCapital } from '@/utils/helper'
@@ -62,6 +63,13 @@ const Page = (props: Props) => {
 
 
             </div>
+
+            {!isLoading && (!filteredData || filteredData.length === 0) && (
+                <div className="w-full flex items-center justify-center">
+                    <SearchNotFound text="Pembangunan tidak ditemukan" height="300px" width="300px" />
+                </div>
+            )}
+
 
         </DefaultLayout>
     )
