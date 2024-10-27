@@ -60,7 +60,7 @@ const CardBuilding = ({ title, imageUrl, date, location, link }: Props) => {
                     onClick={() => router.push(link)}
                     className="py-2 px-4 flex justify-center items-center rounded-md text-sm lg:text-base"
                 >
-                    Selengkap nya <IoIosArrowForward />
+                    Selengkapnya <IoIosArrowForward />
                 </ButtonPrimary>
             </div>
         </div>
