@@ -43,8 +43,8 @@ const Page = (props: Props) => {
         description: '',
         address: '',
         location: {
-            latitude: 0,
-            longitude: 0,
+            latitude: -6.922677843794353,
+            longitude: 107.61159896850587,
         },
         status: '',
         image: [] as File[],
@@ -265,6 +265,8 @@ const Page = (props: Props) => {
         }
     };
 
+
+    console.log(form);
 
 
 

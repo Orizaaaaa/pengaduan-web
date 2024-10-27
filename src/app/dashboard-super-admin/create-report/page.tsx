@@ -36,8 +36,8 @@ const CreateReport = (props: Props) => {
     const [formData, setFormData] = useState({
         title: "",
         image: null as File | null,
-        lat: -6.840540,
-        long: 107.430687,
+        lat: -6.922677843794353,
+        long: 107.61159896850587,
         location: '',
         desc: '',
         categori: ''
