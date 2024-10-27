@@ -15,6 +15,7 @@ import InputReport from '@/components/elements/input/InputReport'
 import CaraoselImage from '@/components/fragemnts/caraoselProduct/caraoselProduct'
 import ModalDefault from '@/components/fragemnts/modal/modal'
 import Search from '@/components/fragemnts/search/Search'
+import SearchNotFound from '@/components/fragemnts/SearchNotFound/SearchNotFound'
 import SekeletonReport from '@/components/fragemnts/sekeleton/SekeletonReport'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import { categoryCaraosel } from '@/utils/dataObject'
@@ -343,6 +344,12 @@ const Page = (props: Props) => {
                         )))}
 
                 </div>
+
+                {!isLoading && (!filteredData || filteredData.length === 0) && (
+                    <div className="w-full flex items-center justify-center">
+                        <SearchNotFound text="Produk tidak ditemukan" height="300px" width="300px" />
+                    </div>
+                )}
 
                 <ModalDefault isOpen={isOpen} onClose={onClose}>
                     <div>
