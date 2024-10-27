@@ -8,7 +8,8 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 type Props = {
     lat: number,
-    lng: number
+    lng: number,
+    addres: string
 }
 
 // Atur ikon default untuk marker
@@ -23,7 +24,7 @@ let DefaultIcon = L.icon({
 // Atur ikon marker default
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const Map = ({ lat, lng }: Props) => {
+const Map = ({ lat, lng, addres }: Props) => {
     const center = { lat: lat, lng: lng };
     return (
         <MapContainer
@@ -39,7 +40,7 @@ const Map = ({ lat, lng }: Props) => {
 
             <Marker position={center}>
                 <Popup>
-                    <p>{'PT INTI ( Gedung Utama ) lt 4, JL. Moch. Toha No.77, Cigelereng, Kec.Regol, Kota Bandung, Jawa Barat 40253'}</p>
+                    <p>{addres}</p>
                 </Popup>
             </Marker>
         </MapContainer>
