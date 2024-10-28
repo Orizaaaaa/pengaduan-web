@@ -197,9 +197,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between lg:justify-center gap-2 px-6 py-5.5 lg:py-6.5">
-        <div >
+        <Link href={'/'} >
           <Image className="h-12" src={logo2} alt="logo" />
-        </div>
+        </Link>
 
         <button
           ref={trigger}
