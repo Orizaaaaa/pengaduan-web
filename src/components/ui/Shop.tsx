@@ -16,6 +16,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Skeleton } from '@nextui-org/react'
 import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
+import SearchNotFound from '../fragemnts/SearchNotFound/SearchNotFound'
 
 
 type Props = {}
@@ -231,6 +232,12 @@ const Shop = (props: Props) => {
 
 
                     </div>
+
+                    {!isLoading && (!filteredData || filteredData.length === 0) && (
+                        <div className="w-full flex items-center justify-center">
+                            <SearchNotFound text="Produk tidak ditemukan" height="300px" width="300px" />
+                        </div>
+                    )}
                 </section>
 
 
