@@ -1,13 +1,28 @@
 'use client'
 import { useEffect, useState } from 'react';
 import ButtonPrimary from '@/components/elements/buttonPrimary';
+import { statusDashboard } from '@/api/dashboard';
+import { useRouter } from 'next/navigation';
 
 type Props = {}
+interface Report {
+    Menunggu: number
+    Diproses: number
+    Selesai: number
+}
+
 
 const Header = (props: Props) => {
+    const router = useRouter()
+    const [dataDashboard, setDataDashboard] = useState({} as Report);
     const [waitingCount, setWaitingCount] = useState(0);
     const [processingCount, setProcessingCount] = useState(0);
     const [completedCount, setCompletedCount] = useState(0);
+    useEffect(() => {
+        statusDashboard((result: any) => {
+            setDataDashboard(result.data)
+        })
+    }, []);
 
     useEffect(() => {
         // Function to animate the count from 0 to the target number
@@ -26,12 +41,16 @@ const Header = (props: Props) => {
             }, stepTime);
         };
 
-        // Animating each count
-        animateCount(setWaitingCount, 120);
-        animateCount(setProcessingCount, 600);
-        animateCount(setCompletedCount, 20);
+        // Check if dataDashboard is populated before animating
+        if (dataDashboard.Menunggu && dataDashboard.Diproses && dataDashboard.Selesai) {
+            // Animating each count
+            animateCount(setWaitingCount, dataDashboard.Menunggu);
+            animateCount(setProcessingCount, dataDashboard.Diproses);
+            animateCount(setCompletedCount, dataDashboard.Selesai);
+        }
+    }, [dataDashboard]);
 
-    }, []);
+
 
     return (
         <section className='mb-30' id='header-report'>
@@ -44,7 +63,7 @@ const Header = (props: Props) => {
                         Masyarakat dapat mengadukan permasalahan yang terjadi di Garut perihal keamanan, ketertiban umum, kesejahteraan
                         sosial, pemberdayaan masyarakat, pemerintahan, ekonomi, dan pembangunan.
                     </p>
-                    <ButtonPrimary className='py-2 px-4 mt-10 rounded-full bg-primary'>
+                    <ButtonPrimary onClick={() => router.push('dashboard-user/create-report')} className='py-2 px-4 mt-10 rounded-full bg-primary'>
                         Buat Laporan
                     </ButtonPrimary>
                 </div>
