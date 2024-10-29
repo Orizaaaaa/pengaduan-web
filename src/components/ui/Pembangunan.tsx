@@ -10,6 +10,8 @@ import CardBuilding from '../elements/card/CardBuilding'
 import { formatDate } from '@/utils/helper'
 import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
+import Image from 'next/image'
+import { building2, peopleConstruct } from '@/app/image'
 
 type Props = {}
 
@@ -36,24 +38,68 @@ const Pembangunan = (props: Props) => {
     return (
         <>
             <Navbar />
-            <section className='mb-20' id='header-pengaduan'>
-                <div className='container mx-auto min-h-[100vh] grid items-center px-4 pt-5 md:px-20 overflow-x-hidden'>
-                    <div className="title">
-                        <h1 className='text-4xl lg:text-6xl font-bold text-white'>
-                            PEMBANGUAN <br /> DESA
-                        </h1>
-                        <p className='mt-5 text-sm md:text-base text-white'>
-                            Masyarakat dapat melihat pembangunan yang sedang di kerjakan olah desa secara transparan
-                        </p>
-                        <ButtonPrimary className='py-2 px-4 mt-10 rounded-full bg-primary'>
-                            Lihat Pembangunan
-                        </ButtonPrimary>
+
+            <div className="images h-[80vh] w-full relative mb-7">
+                <Image className="rounded-t-lg w-full h-full object-cover" src={building2} alt="header" />
+
+                {/* Overlay gradasi hitam */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+
+                <div className="container mx-auto absolute flex flex-col justify-center items-start  inset-0 z-10">
+                    <h1 className='text-3xl md:text-5xl'>
+                        <span className='text-white font-extrabold mr-1'>Pembangunan</span>
+                        <span className='font-light'>untuk masa depan Desa</span>
+                    </h1>
+                    <h1 className="text-3xl md:text-5xl font-extrabold text-yellow-500 relative inline-block">
+                        Berkelanjutan
+                    </h1>
+
+
+                    <p className='text-white mt-2 text-sm'>Kami berkomitmen untuk membawa kemajuan dan kesejahteraan bagi desa melalui pembangunan berkelanjutan</p>
+
+
+                    <div className="flex items-center gap-10 mt-10 text-white">
+                        <div className="md:flex items-center gap-3">
+                            <h1 className='text-xl md:text-3xl font-black'>20+</h1>
+                            <div className="flex flex-col space-y-0 text-sm">
+                                <p className='font-light'>PROYEK</p>
+                                <p className='font-light'>SELESAI</p>
+                            </div>
+                        </div>
+                        <div className="md:flex items-center gap-3">
+                            <h1 className='text-xl md:text-3xl font-black'>100k+</h1>
+                            <div className="flex flex-col space-y-0 text-sm">
+                                <p className='font-light'>WARGA</p>
+                                <p className='font-light'>TERDAMPAK</p>
+                            </div>
+                        </div>
+                        <div className="md:flex items-center gap-3">
+                            <h1 className='text-xl md:text-3xl font-black'>15+</h1>
+                            <div className="flex flex-col space-y-0 text-sm">
+                                <p className='font-light'>MITRA</p>
+                                <p className='font-light'>KERJA</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
+
+            <section className='container mx-auto' >
+                <div className="grid grid-cols-2">
+                    <div className="image">
+
+                        <Image src={peopleConstruct} alt='people' />
+
+
+                    </div>
+                    <div className="tex">
+                        <h1 className='text-2xl text-primary' > 25 years </h1>
+                    </div>
+                </div>
             </section>
 
-
+            {/* content api */}
             <section className='container mx-auto'>
                 <div className="filtered space-y-3 md:space-y-0 md:flex justify-between w-full items-center gap-10">
                     <h1 className='text-2xl font-bold '>Pembangunan</h1>

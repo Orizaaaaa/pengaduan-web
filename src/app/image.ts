@@ -34,6 +34,8 @@ import onlineShopping from '../assets/online-shopping.png'
 import leftPatern from '../assets/pattern-blue-left.png'
 import rightPatern from '../assets/pattern-blue-white.png'
 import bgPengaduan from '../assets/pengaduanBg.png'
+import building2 from '../assets/building2.png'
+import peopleConstruct from '../assets/peopleConstruct.png'
 
 
 
@@ -41,7 +43,7 @@ import bgPengaduan from '../assets/pengaduanBg.png'
 
 
 export {
-    logo, logo2, employe, human1, warning, titleGaleri,
+    logo, logo2, employe, human1, warning, titleGaleri, building2, peopleConstruct,
     bgPengaduan, camera,
     headerShop, shop1, shop2, shop3, shop4, shop5, shop6, shop7,
     headerPengaduan, manusiaLaptop,
