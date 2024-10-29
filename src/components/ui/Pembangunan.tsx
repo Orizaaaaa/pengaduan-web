@@ -85,19 +85,25 @@ const Pembangunan = (props: Props) => {
             </div>
 
 
-            <section className='container mx-auto' >
-                <div className="grid grid-cols-2">
+            <section className='container mx-auto mb-7 lg:px-8'>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div className="image">
-
-                        <Image src={peopleConstruct} alt='people' />
-
-
+                        <Image className='rounded-lg' src={peopleConstruct} alt='people' />
                     </div>
-                    <div className="tex">
-                        <h1 className='text-2xl text-primary' > 25 years </h1>
+                    <div className="text">
+                        <h1 className='text-2xl text-primary font-extrabold'>25 Tahun</h1>
+                        <h1 className='text-xl text-black'>Mengabdi pada <span className='text-yellow-500' >masyarakat</span> </h1>
+                        <p className='mt-5'>
+                            Selama 25 tahun, Desa kami terus berkomitmen untuk meningkatkan kesejahteraan masyarakat
+                            dengan program pembangunan yang berkelanjutan. Berbagai proyek telah dilaksanakan mulai dari
+                            pembangunan infrastruktur jalan, fasilitas umum, hingga program pemberdayaan masyarakat.
+                            Kami percaya bahwa dengan gotong royong dan kerjasama, kita dapat mencapai desa yang lebih maju
+                            dan sejahtera.
+                        </p>
                     </div>
                 </div>
             </section>
+
 
             {/* content api */}
             <section className='container mx-auto'>
