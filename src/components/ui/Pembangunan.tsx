@@ -12,6 +12,7 @@ import SekeletonReport from '../fragemnts/sekeleton/SekeletonReport'
 import Footer from '../fragemnts/LandingPage/footer/Footer'
 import Image from 'next/image'
 import { building2, peopleConstruct } from '@/app/image'
+import SearchNotFound from '../fragemnts/SearchNotFound/SearchNotFound'
 
 type Props = {}
 
@@ -128,6 +129,12 @@ const Pembangunan = (props: Props) => {
                         ))
                     )}
                 </div>
+
+                {!isLoading && (!filteredData || filteredData.length === 0) && (
+                    <div className="w-full flex items-center justify-center">
+                        <SearchNotFound text="Pembangunan tidak ditemukan" height="300px" width="300px" />
+                    </div>
+                )}
             </section>
             <Footer />
         </>
