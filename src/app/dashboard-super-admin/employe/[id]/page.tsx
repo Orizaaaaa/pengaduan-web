@@ -322,7 +322,7 @@ const Page = (props: Props) => {
                         <div className="text-white px-1 md:px-0 ">
                             <div className="flex flex-col justify-center items-center md:flex-row gap-10">
                                 <div className="image flex bg-white rounded-md justify-center items-center h-40 w-40 md:h-56 md:w-56">
-                                    <img src={data.image} className="w-full h-full object-cover rounded-xl" />
+                                    <img src={data.image} className="w-full h-full object-top object-cover rounded-xl" />
                                 </div>
                                 <div className="data-employe space-y-2">
                                     <div className="grid grid-cols-10 gap-x-2">

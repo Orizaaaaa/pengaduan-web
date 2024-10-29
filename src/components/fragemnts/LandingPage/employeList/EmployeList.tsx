@@ -60,7 +60,12 @@ const EmployeList = (props: Props) => {
                     <SwiperSlide key={index} >
                         <div className="bg-primary rounded-t-md flex justify-end items-center flex-col">
                             <div className="h-[300px] w-full rounded-t-md">
-                                <img className="w-full h-full object-cover rounded-t-md" src={item.image} alt="human" />
+                                <img
+                                    className="w-full h-full object-cover object-top rounded-t-md"
+                                    src={item.image}
+                                    alt="human"
+                                />
+
                             </div>
 
                             <div className="p-4 bg-white w-full text-center">
