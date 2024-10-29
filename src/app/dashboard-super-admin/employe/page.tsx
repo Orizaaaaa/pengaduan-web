@@ -77,47 +77,42 @@ const Page = () => {
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, InputSelect: string) => {
-        const selectedImage = e.target.files?.[0];
-
-        if (!selectedImage) {
-            console.log('No file selected');
-            return;
-        }
-
         if (InputSelect === 'add') {
-            // Validasi tipe file
-            const allowedTypes = ['image/png', 'image/jpeg'];
-            if (!allowedTypes.includes(selectedImage.type)) {
+            const selectedImage = e.target.files?.[0];
+
+            if (selectedImage) {
+                // Validasi tipe file
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(selectedImage.type)) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*',
+                    }));
+                    return; // Tidak update state jika tipe file tidak valid
+                }
+
+                // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
+                const maxSize = 5 * 1024 * 1024;
+                if (selectedImage.size > maxSize) {
+                    setErrorMsg((prev) => ({
+                        ...prev,
+                        image: '*Ukuran file maksimal 5 MB',
+                    }));
+                    return; // Tidak update state jika ukuran file lebih dari 5MB
+                }
+
+                // Hapus pesan error jika file valid
                 setErrorMsg((prev) => ({
                     ...prev,
-                    image: '*Hanya file PNG dan JPG yang diperbolehkan',
+                    image: '',
                 }));
-                return;
+
+                // Update state dengan file yang valid
+                setForm({ ...form, image: selectedImage });
+            } else {
+                console.log('error');
             }
-
-            // Validasi ukuran file (dalam byte, 5MB = 5 * 1024 * 1024)
-            const maxSize = 5 * 1024 * 1024;
-            if (selectedImage.size > maxSize) {
-                setErrorMsg((prev) => ({
-                    ...prev,
-                    image: '*Ukuran file maksimal 5 MB',
-                }));
-                return;
-            }
-
-            // Hapus pesan error jika file valid
-            setErrorMsg((prev) => ({
-                ...prev,
-                image: '',
-            }));
-
-            // Update state form dengan file yang valid
-            setForm((prevState: any) => ({
-                ...prevState,
-                image: [...prevState.image, selectedImage],
-            }));
         }
-
     };
 
 
