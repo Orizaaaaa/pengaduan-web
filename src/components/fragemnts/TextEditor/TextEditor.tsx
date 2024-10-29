@@ -189,7 +189,7 @@ const TextEditor = ({ desc }: any) => {
                         <JoditEditor
                             value={form.description}         // This is important
                             config={config}         // Only use when you declare some custom configs
-                            onChange={handleChangeEditor} // Handle the changes
+                            onChange={() => handleChangeEditor} // Handle the changes
                             className="w-full h-[70%] text-black bg-white"
                         />
                         <style>
