@@ -223,6 +223,9 @@ const OfficerList = () => {
         if (formData.nik.trim() === '') {
             setErrorMsg((prev) => ({ ...prev, nik: '*NIK tidak boleh kosong' }));
             hasError = true;
+        } else if (formData.nik.trim().length !== 16) {
+            setErrorMsg((prev) => ({ ...prev, nik: '*NIK harus terdiri dari 16 digit' }));
+            hasError = true;
         }
         if (formData.password.trim() === '') {
             setErrorMsg((prev) => ({ ...prev, password: '*Password tidak boleh kosong' }));
