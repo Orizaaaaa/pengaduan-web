@@ -86,7 +86,7 @@ const Page = () => {
                 if (!allowedTypes.includes(selectedImage.type)) {
                     setErrorMsg((prev) => ({
                         ...prev,
-                        image: '*',
+                        image: '*Hanya file PNG dan JPG yang diperbolehkan',
                     }));
                     return; // Tidak update state jika tipe file tidak valid
                 }
@@ -298,7 +298,7 @@ const Page = () => {
 
                 <Table aria-label="Example static collection table">
                     <TableHeader>
-                        <TableColumn>N0</TableColumn>
+                        <TableColumn>FOTO</TableColumn>
                         <TableColumn>NAME</TableColumn>
                         <TableColumn>EMAIL</TableColumn>
                         <TableColumn>NO HP</TableColumn>
@@ -324,11 +324,12 @@ const Page = () => {
                             )) :
                             (filteredData?.map((user: any, index: any) => (
                                 <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{<Link className="flex items-center gap-2 underline" href={`/dashboard-super-admin/employe/${user._id}`}>
-                                        <div className="h-10 w-10 rounded-full bg-primary">
-                                            <img className=" w-full h-full rounded-full object-cover" src={user.image} alt="" />
+                                    <TableCell>
+                                        {<div className="h-10 w-10 rounded-full bg-primary">
+                                            <img className=" w-full h-full rounded-full object-cover " src={user.image} alt="" />
                                         </div>
+                                        }</TableCell>
+                                    <TableCell>{<Link className="flex items-center gap-2 underline" href={`/dashboard-super-admin/employe/${user._id}`}>
                                         <p  >{capitalizeWords(user.name)}</p>
                                     </Link>}</TableCell>
                                     <TableCell>{(user.email)}</TableCell>
