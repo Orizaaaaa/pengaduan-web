@@ -280,11 +280,6 @@ const GaleryAdmin = (props: Props) => {
                                     <img className='rounded-lg w-full h-full object-cover' src={item} alt='header' />
                                     {/* Overlay Hitam */}
                                     <div className="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
-
-                                    <div className="p-4 mx-auto absolute flex flex-col justify-center items-center md:items-start inset-0 z-10">
-                                        <p className='text-white'>"Kami ingin melihat dunia dari sudut pandangmu! Unggah foto dan berikan warna pada galeri kami!"</p>
-                                        <ButtonPrimary onClick={openModalCreate} className='py-1 px-3 rounded-lg mt-3' >Tambah Galeri</ButtonPrimary>
-                                    </div>
                                 </div>
 
                             </SwiperSlide>
@@ -296,6 +291,9 @@ const GaleryAdmin = (props: Props) => {
 
             {/* list gambar */}
             <section className="image-list mt-4">
+
+                <ButtonPrimary onClick={openModalCreate} className='py-2 px-3 rounded-lg my-3' >Tambah Galeri</ButtonPrimary>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4  gap-4">
                     {dataImage?.map((item: any, index: any) => (
                         <div className="cover group relative" key={index}>
