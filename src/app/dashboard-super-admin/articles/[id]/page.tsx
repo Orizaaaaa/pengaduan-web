@@ -243,6 +243,9 @@ const Page = (props: Props) => {
                                     onChange={(e) => handleChangeEditor(e)} // Handle the changes
                                     className="w-full h-[70%] text-black bg-white"
                                 />
+                                <style>
+                                    {`.jodit-wysiwyg{min-height: 300px !important;}`}
+                                </style>
                             </div>
 
                             <div className="flex justify-end w-full my-4">
