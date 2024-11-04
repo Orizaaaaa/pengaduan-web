@@ -20,8 +20,8 @@ export const getAllArticle = (callback: any) => {
         });
 }
 
-export const updateArticle = (id: any, form: any, callback: any) => {
-    axiosInterceptor.put(`/news/${id}`, form)
+export const updateArticle = async (id: any, form: any, callback: any) => {
+    await axiosInterceptor.put(`/news/${id}`, form)
         .then((result) => {
             callback(result.data)
         }).catch((err) => {

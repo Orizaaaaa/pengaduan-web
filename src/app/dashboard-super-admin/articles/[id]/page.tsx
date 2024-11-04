@@ -13,7 +13,7 @@ import { Skeleton, Spinner, useDisclosure } from '@nextui-org/react'
 import dynamic from 'next/dynamic'
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { FaTrashAlt } from 'react-icons/fa'
 import { FaPen } from 'react-icons/fa6'
 import useSWR, { mutate } from 'swr'
@@ -42,11 +42,14 @@ const Page = (props: Props) => {
 
     const dataArticle = data?.data
     useEffect(() => {
-        setForm({
-            title: dataArticle?.title,
-            description: dataArticle?.description,
-            image: dataArticle?.image
-        })
+        if (dataArticle) {
+            setForm({
+                title: dataArticle.title,
+                description: dataArticle.description,
+                image: dataArticle.image,
+            });
+            editorContentRef.current = dataArticle.description;
+        }
     }, [dataArticle]);
 
 
@@ -87,8 +90,25 @@ const Page = (props: Props) => {
     );
 
     /* Function to handle the changes in the editor */
-    const handleChangeEditor = (value: any) => {
-        setForm({ ...form, description: value });
+    const editorContentRef = useRef(form.description);
+    const editorInstanceRef = useRef(null)
+
+    // Modifikasi pada handleSave untuk menjamin pembaruan state selesai
+    const handleSave = (): Promise<void> => {
+        return new Promise((resolve) => {
+            setForm((prevForm) => {
+                // Pastikan form.description diperbarui dengan nilai terbaru dari editor
+                return {
+                    ...prevForm,
+                    description: editorContentRef.current,
+                };
+            });
+            resolve(); // Selesaikan promise setelah setForm dipanggil
+        });
+    };
+
+    const handleChangeEditor = (newContent: string) => {
+        editorContentRef.current = newContent;
     };
 
     const handleChange = (e: any) => {
@@ -99,27 +119,35 @@ const Page = (props: Props) => {
 
     // handle update article
     const handleUpdateArticle = async () => {
+        await handleSave();
+        console.log(form);
+
         setLoading(true)
-        if (form.image instanceof Blob) {
-            const imageUrl = await postImage({ image: form.image });
+        // Membaca form terbaru langsung setelah handleSave dijalankan
+        const latestForm = {
+            ...form,
+            description: editorContentRef.current,
+        };
+
+        if (latestForm.image instanceof Blob) {
+            const imageUrl = await postImage({ image: latestForm.image });
 
             if (imageUrl) {
-                const data: any = { ...form, image: imageUrl }
+                const data: any = { ...latestForm, image: imageUrl };
                 updateArticle(id, data, (result: any) => {
                     console.log(result);
-                    mutate(`${url}/news/${id}`)
-                    setUpdateOpen(false)
-                    setLoading(false)
-                })
+                    mutate(`${url}/news/${id}`);
+                    setUpdateOpen(false);
+                    setLoading(false);
+                });
             }
-
         } else {
-            await updateArticle(id, form, (result: any) => {
+            await updateArticle(id, latestForm, (result: any) => {
                 console.log(result);
-                mutate(`${url}/news/${id}`)
-                setUpdateOpen(false)
-                setLoading(false)
-            })
+                mutate(`${url}/news/${id}`);
+                setUpdateOpen(false);
+                setLoading(false);
+            });
         }
 
 
@@ -143,6 +171,7 @@ const Page = (props: Props) => {
     }
 
     console.log(dataArticle);
+    console.log(form);
 
     const isLoading = !data && !error
 
@@ -208,9 +237,10 @@ const Page = (props: Props) => {
 
                                 <InputForm htmlFor="title" placeholder="Masukan judul artikel" type="text" onChange={handleChange} value={form.title} />
                                 <JoditEditor
-                                    value={form.description}
-                                    config={config}
-                                    onChange={handleChangeEditor}
+                                    ref={editorInstanceRef}
+                                    value={editorContentRef.current}       // This is important
+                                    config={config}         // Only use when you declare some custom configs
+                                    onChange={(e) => handleChangeEditor(e)} // Handle the changes
                                     className="w-full h-[70%] text-black bg-white"
                                 />
                             </div>

@@ -1,6 +1,6 @@
 /* Imports */
 'use client'
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 import { usePathname, useRouter } from 'next/navigation';
@@ -31,6 +31,27 @@ const TextEditor = ({ desc }: any) => {
         image: null as File | null,
     })
 
+    /* Function to handle the changes in the editor */
+    const editorContentRef = useRef(form.description);
+    const editorInstanceRef = useRef(null)
+
+    // Modifikasi pada handleSave untuk menjamin pembaruan state selesai
+    const handleSave = (): Promise<void> => {
+        return new Promise((resolve) => {
+            setForm((prevForm) => {
+                // Pastikan form.description diperbarui dengan nilai terbaru dari editor
+                return {
+                    ...prevForm,
+                    description: editorContentRef.current,
+                };
+            });
+            resolve(); // Selesaikan promise setelah setForm dipanggil
+        });
+    };
+
+    const handleChangeEditor = (newContent: string) => {
+        editorContentRef.current = newContent;
+    };
 
 
     //input gambar
@@ -66,10 +87,7 @@ const TextEditor = ({ desc }: any) => {
         []
     );
 
-    /* Function to handle the changes in the editor */
-    const handleChangeEditor = (value: any) => {
-        setForm({ ...form, description: value });
-    };
+
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -95,7 +113,7 @@ const TextEditor = ({ desc }: any) => {
     // handle submit article
     const handleCreateArticle = async () => {
         setLoading(true);
-
+        await handleSave();
         // Gunakan isDescriptionEmpty untuk mengecek apakah deskripsi kosong
         const errors = {
             title: form.title.trim() ? '' : '*Judul artikel tidak boleh kosong',
@@ -121,6 +139,7 @@ const TextEditor = ({ desc }: any) => {
                 const formSubmit = {
                     ...form,
                     image: imageUrl,
+                    description: editorContentRef.current,
                 };
 
                 // Kirim data ke server
@@ -187,9 +206,10 @@ const TextEditor = ({ desc }: any) => {
                         {/* This is the main initialization of the Jodit editor */}
                         <InputForm errorMsg={errorMsg.title} htmlFor="title" placeholder='Masukan judul artikel' type="text" onChange={handleChange} value={form.title} />
                         <JoditEditor
-                            value={form.description}         // This is important
+                            ref={editorInstanceRef}
+                            value={editorContentRef.current}       // This is important
                             config={config}         // Only use when you declare some custom configs
-                            onChange={() => handleChangeEditor} // Handle the changes
+                            onChange={(e) => handleChangeEditor(e)} // Handle the changes
                             className="w-full h-[70%] text-black bg-white"
                         />
                         <style>
