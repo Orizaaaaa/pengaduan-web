@@ -125,7 +125,11 @@ const Page = (props: Props) => {
                         <div className="user mt-10  ">
                             <div className="flex  gap-3">
                                 <div className="w-15 h-15">
-                                    <img className='rounded-full object-cover w-full h-full' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaNkwLyEyzTkzMxP-UkOMaOArlSmqK6O9GFw&s' alt="user" />
+                                    <img className='rounded-full object-cover w-full h-full'
+                                        src={dataProduct?.user?.image || 'https://i.pinimg.com/564x/0f/78/5d/0f785d55cea2a407ac8c1d0c6ef19292.jpg'}
+                                        onError={(e: any) => {
+                                            e.target.src = 'https://i.pinimg.com/564x/0f/78/5d/0f785d55cea2a407ac8c1d0c6ef19292.jpg';
+                                        }} alt="user" />
                                 </div>
                                 <div className="text">
                                     <h1 className='font-medium'> {capitalizeWords(dataProduct?.user?.name)} </h1>

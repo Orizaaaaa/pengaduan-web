@@ -61,11 +61,11 @@ const DropdownUser = () => {
         </span>
 
         <span className="h-12 w-12">
-          <img
-            src={image ? image : "/assets/images/user.png"}
-            className="object-cover rounded-full w-full h-full"
-            alt="User"
-          />
+          <img className='rounded-full object-cover w-full h-full'
+            src={image || 'https://i.pinimg.com/564x/0f/78/5d/0f785d55cea2a407ac8c1d0c6ef19292.jpg'}
+            onError={(e: any) => {
+              e.target.src = 'https://i.pinimg.com/564x/0f/78/5d/0f785d55cea2a407ac8c1d0c6ef19292.jpg';
+            }} alt="user" />
         </span>
       </div>
 
