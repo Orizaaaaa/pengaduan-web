@@ -62,7 +62,7 @@ const LandingUi = () => {
                     <h1 className="text-primary font-medium">Lokasi</h1>
                     <h1 className="text-primary font-bold">Lokasi Desa Kami</h1>
                 </div>
-                <Map addres='PT INTI ( Gedung Utama ) lt 4, JL. Moch. Toha No.77, Cigelereng, Kec.Regol, Kota Bandung, Jawa Barat 40253' lat={-6.937998511449565} lng={107.60711431503297} />
+                <Map addres='Jl. Pembangunan No.185, Sukagalih, Kec. Tarogong Kidul, Kabupaten Garut, Jawa Barat 44151' lat={-7.20197979384702} lng={107.88704947092526} />
             </section>
             <Faq />
             <Footer />

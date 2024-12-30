@@ -41,15 +41,15 @@ export const navigation = [
 export const informationData = [
     {
         icon: <IoLocationOutline />,
-        text: 'Jl. Cipatat No. 12 Spanyol 16431'
+        text: 'Jl. Pembangunan No.185, Sukagalih, Kec. Tarogong Kidul, Kabupaten Garut, Jawa Barat 44151'
     },
     {
         icon: <MdOutlineMail />,
-        text: 'garut@gmail.com'
+        text: 'disparbud@garutkab.go.id'
     },
     {
         icon: <FaWhatsapp />,
-        text: '0895385744763'
+        text: '(0262) 233529'
     },
 ]
 export const pages = [
